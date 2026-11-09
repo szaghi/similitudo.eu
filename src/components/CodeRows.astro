@@ -1,0 +1,30 @@
+---
+// Codes as rows: the name set large in light extended type, the tagline and the facts beside it.
+import type { CollectionEntry } from 'astro:content';
+interface Props { codes: CollectionEntry<'codes'>[] }
+const { codes } = Astro.props;
+---
+
+<ul class="index codes">
+  {
+    codes.map((c) => (
+      <li>
+        <a class="cname" href={`/codes/${c.id}/`}>{c.data.name}</a>
+        <p class="tag">{c.data.tagline}</p>
+        <p class="meta mono">{c.data.kind}{c.data.parent && ` · built on ${c.data.parent.id.toUpperCase()}`} · {c.data.license}</p>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  li { display: grid; gap: 0.35rem 2rem; }
+  .cname { font-family: var(--f-display); font-stretch: 125%; font-weight: 300; font-size: clamp(3rem, 8vw, 6.5rem); line-height: 0.9; letter-spacing: -0.02em; color: var(--text-1); text-decoration: none; }
+  .cname:hover { color: var(--link); }
+  .tag { margin: 0; max-width: 32rem; }
+  .meta { margin: 0; color: var(--text-3); }
+  @media (min-width: 64rem) {
+    li { grid-template-columns: 1.3fr 1fr; grid-template-rows: auto auto; align-items: end; }
+    .cname { grid-row: span 2; }
+  }
+</style>

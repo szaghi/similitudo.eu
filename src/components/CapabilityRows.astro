@@ -1,0 +1,31 @@
+---
+// Capabilities as a numbered index: title, what it is, and the code that backs it.
+import { capabilities } from '../data/capabilities';
+import { pad } from '../lib/site';
+---
+
+<ol class="index caps">
+  {
+    capabilities.map((c, k) => (
+      <li>
+        <span class="n mono">{pad(k)}</span>
+        <h3>{c.title}</h3>
+        <p>{c.text}</p>
+        <span class="ev mono">evidence · {c.evidence}</span>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  li { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); gap: 0.25rem 1rem; }
+  .n { color: var(--text-3); padding-top: 0.3em; grid-row: span 3; }
+  h3 { margin: 0; font-family: var(--f-display); font-stretch: 112%; font-weight: 600; font-size: 1.2rem; line-height: 1.25; }
+  p { margin: 0; color: var(--text-2); max-width: var(--measure); }
+  .ev { color: var(--text-3); white-space: nowrap; }
+  @media (min-width: 64rem) {
+    li { grid-template-columns: 3rem 2fr 3fr 9rem; align-items: baseline; column-gap: 1.5rem; }
+    .n { grid-row: auto; }
+    .ev { text-align: right; }
+  }
+</style>

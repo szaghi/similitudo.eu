@@ -1,0 +1,144 @@
+---
+// The hero's ground: a full-bleed canvas. The construction grid, and on the right a blast front (cylindrical
+// Sedov–Taylor, r ∝ t^½) drawn as an ensō; the quadtree refines on the front and coarsens behind it as it expands.
+// It plays ONCE (about 3 s), holds the final frame (the same frame the still marks show), and replays when the
+// pointer comes over the ring (or a tap lands on it). It writes the mesh it drew into `.hero-readout`.
+// Reduced motion: the final frame only. No JavaScript: the level-0 grid (CSS background in Hero.astro).
+---
+
+<canvas class="hero-mesh" aria-hidden="true"></canvas>
+
+<script>
+  import { front, heroSpec, STILL_U } from '../lib/mesh/front';
+  import { readout } from '../lib/mesh/still';
+
+  const canvas = document.querySelector<HTMLCanvasElement>('canvas.hero-mesh');
+  const hero = canvas?.closest<HTMLElement>('.hero');
+  const ctx = canvas?.getContext('2d');
+
+  if (canvas && hero && ctx) {
+    const outs = hero.querySelectorAll<HTMLElement>('.hero-readout');
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const PLAY = 3.2; // s
+    const U0 = 0.03;
+    const WIDTHS = [1, 0.9, 0.75, 0.6, 0.5, 0.4];
+    let W = 0;
+    let H = 0;
+    let spec = heroSpec(1440, 900);
+    let u = STILL_U; // the frame on screen
+    let raf = 0;
+    let lastEnd = -Infinity;
+
+    const resize = () => {
+      const r = hero.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = r.width;
+      H = r.height;
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      // Phones: fit the front in the free band between the wordmark and the nav datum.
+      const word = hero.querySelector('.word')?.getBoundingClientRect();
+      const datum = hero.querySelector('.datum')?.getBoundingClientRect();
+      const band = word && datum ? { top: word.bottom - r.top + 16, bottom: datum.top - r.top - 16 } : undefined;
+      spec = heroSpec(W, H, band);
+    };
+
+    const draw = () => {
+      const css = getComputedStyle(document.documentElement);
+      const col = (v: string) => css.getPropertyValue(v).trim();
+      const fr = front(spec, u);
+      ctx.clearRect(0, 0, W, H);
+
+      ctx.strokeStyle = col('--grid');
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let x = spec.h0; x < W; x += spec.h0) { ctx.moveTo(Math.round(x) + 0.5, 0); ctx.lineTo(Math.round(x) + 0.5, H); }
+      for (let y = spec.h0; y < H; y += spec.h0) { ctx.moveTo(0, Math.round(y) + 0.5); ctx.lineTo(W, Math.round(y) + 0.5); }
+      ctx.stroke();
+
+      ctx.strokeStyle = col('--grid-fine');
+      for (let l = 0; l <= spec.maxLevel; l++) {
+        ctx.lineWidth = WIDTHS[l] ?? 0.35;
+        ctx.beginPath();
+        for (const n of fr.mesh.internal) {
+          if (n.l !== l) continue;
+          ctx.moveTo(n.x, n.y + n.s / 2); ctx.lineTo(n.x + n.s, n.y + n.s / 2);
+          ctx.moveTo(n.x + n.s / 2, n.y); ctx.lineTo(n.x + n.s / 2, n.y + n.s);
+        }
+        ctx.stroke();
+      }
+
+      // Tapered stroke along the front.
+      const pts = fr.ink.pts;
+      const n = 200;
+      const left: [number, number][] = [];
+      const right: [number, number][] = [];
+      for (let k = 0; k <= n; k++) {
+        const s = k / n;
+        const i = Math.min(pts.length - 2, Math.floor(s * (pts.length - 1)));
+        const [ax, ay] = pts[i];
+        const [bx, by] = pts[i + 1];
+        const f = s * (pts.length - 1) - i;
+        const dl = Math.hypot(bx - ax, by - ay) || 1;
+        const nx = -(by - ay) / dl;
+        const ny = (bx - ax) / dl;
+        const hw = fr.width(s) / 2;
+        const px = ax + f * (bx - ax);
+        const py = ay + f * (by - ay);
+        left.push([px + nx * hw, py + ny * hw]);
+        right.push([px - nx * hw, py - ny * hw]);
+      }
+      ctx.fillStyle = col('--stroke');
+      ctx.beginPath();
+      [...left, ...right.reverse()].forEach(([x, y], k) => (k ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+      ctx.closePath();
+      ctx.fill();
+
+      const text = readout(fr.mesh.maxLevelUsed, fr.mesh.leaves, u);
+      outs.forEach((o) => (o.textContent = text));
+    };
+
+    const play = () => {
+      if (still || raf) return;
+      const t0 = performance.now();
+      const step = (now: number) => {
+        const tau = Math.min(1, (now - t0) / 1000 / PLAY);
+        u = U0 + (STILL_U - U0) * tau; // uniform in time: r ∝ t^½ does the slowing down
+        draw();
+        if (tau < 1) raf = requestAnimationFrame(step);
+        else { raf = 0; lastEnd = performance.now(); }
+      };
+      raf = requestAnimationFrame(step);
+    };
+
+    // Replay when the pointer reaches the ring (not more often than every 1.5 s after a play ends).
+    const nearRing = (e: PointerEvent) => {
+      const r = hero.getBoundingClientRect();
+      const d = Math.hypot(e.clientX - r.left - spec.cx, e.clientY - r.top - spec.cy);
+      return d < spec.rmax * Math.sqrt(STILL_U) + 24;
+    };
+    hero.addEventListener('pointermove', (e) => {
+      if (e.pointerType === 'mouse' && nearRing(e) && performance.now() - lastEnd > 1500) play();
+    });
+    hero.addEventListener('pointerdown', (e) => {
+      if (e.target === canvas || (e.target as HTMLElement).classList.contains('hero')) if (nearRing(e)) play();
+    });
+
+    // Redraw the held frame when the theme or the size changes.
+    new MutationObserver(() => { if (!raf) draw(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (!raf) draw(); });
+    new ResizeObserver(() => { resize(); if (!raf) draw(); }).observe(hero);
+
+    resize();
+    if (still) draw();
+    else if (document.hidden) {
+      u = U0;
+      document.addEventListener('visibilitychange', () => { if (!document.hidden && lastEnd < 0) play(); }, { once: true });
+    } else play();
+  }
+</script>
+
+<style>
+  .hero-mesh { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+</style>

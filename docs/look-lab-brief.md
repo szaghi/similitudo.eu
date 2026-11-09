@@ -109,3 +109,21 @@ Implementation:
 
 Trunk only (`main`), no branches; never commit or push (Stefano does); no claude.ai Artifacts; fonts self-hosted;
 mobile without horizontal page scroll; reduced-motion safe.
+
+## Outcome (2026-11-09)
+
+- Four looks were built and compared (B1 Plaster, B2 Charcoal, B3 Ink, then B4 = B1 + B2). **B4 was picked and
+  promoted**; the lab (`src/lab/`, its routes, the screenshots) was deleted afterwards.
+- B4: B1's system (extended Archivo wordmark top-left with the seal, the nav on a hairline datum, numbered indexes,
+  plaster / charcoal) with B2's live object as the hero ground: a cylindrical blast front (r ∝ t^½) drawn as an ensō,
+  the quadtree refining on it and coarsening behind it, the readout printing the mesh actually drawn.
+- The hero **plays once** (3.2 s), holds the final frame (t = 0.60, the same frame as the still marks on inner pages)
+  and replays when the pointer reaches the ring. Reason: a looping, expanding ring reads as a loading spinner, and it
+  costs CPU for as long as the hero is visible.
+- B3 (Mincho, washi, brushed stroke) was rejected as closest to the "Japanese theme" risk; Shippori Mincho was
+  uninstalled. Amber is gone from the parent site; the seal is vermilion in both themes.
+- **Lesson:** a `getStaticPaths()` that returns `[]` in production does *not* keep a page out of the build: Vite still
+  bundles the page module and emits its CSS and fonts into `dist/_astro/`. A dev-only page needs routes injected by an
+  integration only when `command === 'dev'` (`injectRoute` in `astro:config:setup`).
+- **Not used:** the FLUME gallery media (720 px, colour-mapped frames) cannot carry a full-bleed hero; that would
+  need new greyscale renders at about 2880 px from existing outputs.

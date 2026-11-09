@@ -1,0 +1,25 @@
+---
+// The nav on its hairline datum. The current page is marked with a dot (and aria-current).
+import { nav, isCurrent } from '../lib/site';
+interface Props { class?: string }
+const { class: cls } = Astro.props;
+const here = Astro.url.pathname;
+---
+
+<nav class:list={['datum', cls]} aria-label="Main">
+  <ul>
+    {nav.map((n) => <li><a href={n.href} aria-current={isCurrent(here, n.href) ? 'page' : undefined}>{n.label}</a></li>)}
+  </ul>
+</nav>
+
+<style>
+  .datum { border-top: 1px solid var(--text-1); padding-top: 0.5rem; }
+  ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.25rem 1rem; list-style: none; margin: 0; padding: 0; }
+  a { color: var(--text-1); text-decoration: none; font-size: 0.95rem; }
+  a:hover { text-decoration: underline; }
+  a[aria-current='page']::before { content: ''; display: inline-block; width: 0.4em; height: 0.4em; margin-right: 0.45em; background: var(--text-1); border-radius: 50%; vertical-align: 0.15em; }
+  @media (min-width: 48rem) {
+    ul { display: flex; justify-content: space-between; }
+    a { font-size: 1rem; }
+  }
+</style>

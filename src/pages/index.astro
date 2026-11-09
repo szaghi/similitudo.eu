@@ -2,40 +2,48 @@
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
+import CapabilityRows from '../components/CapabilityRows.astro';
+import CodeRows from '../components/CodeRows.astro';
+import ProjectRows from '../components/ProjectRows.astro';
 import { isPublished, byOrder } from '../lib/content';
+import { partner } from '../lib/site';
 
-const codes = (await getCollection('codes', isPublished)).sort(byOrder).slice(0, 3);
+const codes = (await getCollection('codes', isPublished)).sort(byOrder);
+const projects = (await getCollection('projects', isPublished))
+  .sort((a, b) => b.data.start.getTime() - a.data.start.getTime())
+  .slice(0, 3);
 ---
 
-<Base>
+<Base home>
   <Hero />
+  <main id="main" class="page">
+    <section class="sec">
+      <p class="label mono">01 — Partner profile</p>
+      <p class="statement">{partner}</p>
+    </section>
 
-  <section>
-    <h2>For research consortia</h2>
-    <!-- TODO: two or three sentences on the role similitudo plays in a proposal (partner profile). -->
-    <p>
-      similitudo joins research projects as the partner for numerical methods and high-performance simulation:
-      designing the schemes, writing the solvers, porting them to GPUs and verifying the results.
-    </p>
-  </section>
+    <section class="sec">
+      <p class="label mono">02 — Capabilities</p>
+      <div>
+        <CapabilityRows />
+        <p class="more"><a href="/capabilities/">Capabilities</a> <span aria-hidden="true">→</span></p>
+      </div>
+    </section>
 
-  <section>
-    <h2>Codes</h2>
-    <div class="grid">
-      {
-        codes.map((c) => (
-          <a class="card code" href={`/codes/${c.id}/`}>
-            <h3>{c.data.name}</h3>
-            <p class="muted">{c.data.tagline}</p>
-          </a>
-        ))
-      }
-    </div>
-    <p><a href="/codes/">All codes →</a></p>
-  </section>
+    <section class="sec">
+      <p class="label mono">03 — Codes</p>
+      <div>
+        <CodeRows codes={codes} />
+        <p class="more"><a href="/codes/">All codes</a> <span aria-hidden="true">→</span></p>
+      </div>
+    </section>
+
+    <section class="sec">
+      <p class="label mono">04 — Projects</p>
+      <div>
+        {projects.length > 0 ? <ProjectRows projects={projects} dense /> : <p class="muted">The project list is in preparation.</p>}
+        <p class="more"><a href="/projects/">All projects</a> <span aria-hidden="true">→</span></p>
+      </div>
+    </section>
+  </main>
 </Base>
-
-<style>
-  .code { color: inherit; text-decoration: none; }
-  .code:hover { border-color: var(--link); }
-</style>

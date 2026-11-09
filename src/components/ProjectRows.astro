@@ -1,0 +1,61 @@
+---
+// Project index: numbered rows on hairline rules. `dense` (home) keeps one line per project on wide screens;
+// otherwise each row also carries the codes used and the project's own text.
+import { getEntries, render, type CollectionEntry } from 'astro:content';
+import { pad } from '../lib/site';
+
+interface Props {
+  projects: CollectionEntry<'projects'>[];
+  dense?: boolean;
+}
+const { projects, dense = false } = Astro.props;
+const year = (d: Date) => d.getUTCFullYear();
+const rows = await Promise.all(
+  projects.map(async (p) => ({
+    p,
+    codes: await getEntries(p.data.codes),
+    Body: dense ? undefined : (await render(p)).Content,
+  })),
+);
+---
+
+<ol class:list={['index', 'rows', { dense }]}>
+  {
+    rows.map(({ p, codes, Body }, k) => (
+      <li class="row">
+        <span class="n mono">{pad(k)}</span>
+        <span class="acr">{p.data.url ? <a href={p.data.url}>{p.data.acronym}</a> : p.data.acronym}</span>
+        <span class="title">{p.data.title}{p.data.draft && <span class="mono draft"> · draft</span>}</span>
+        <span class="prog mono">{p.data.programme}{p.data.grant && ` · grant ${p.data.grant}`}</span>
+        <span class="role">{p.data.role}</span>
+        <span class="yrs mono">{year(p.data.start)}–{p.data.end ? year(p.data.end) : 'ongoing'}</span>
+        {!dense && codes.length > 0 && (
+          <span class="codes mono">
+            {codes.map((c, i) => (<>{i > 0 && ' · '}<a href={`/codes/${c.id}/`}>{c.data.name}</a></>))}
+          </span>
+        )}
+        {Body && <div class="body prose"><Body /></div>}
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .row { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr) auto; grid-template-areas: 'n acr yrs' 'n title title' 'n prog prog' 'n role role' 'n codes codes' 'n body body'; gap: 0.15rem 1rem; }
+  .n { grid-area: n; color: var(--text-3); padding-top: 0.45em; }
+  .acr { grid-area: acr; font-family: var(--f-display); font-stretch: 125%; font-weight: 600; font-size: clamp(1.35rem, 2vw, 1.75rem); line-height: 1.1; letter-spacing: -0.01em; white-space: nowrap; }
+  .acr a { color: inherit; }
+  .title { grid-area: title; }
+  .draft { color: var(--seal); }
+  .prog { grid-area: prog; color: var(--text-2); }
+  .role { grid-area: role; color: var(--text-2); font-size: 0.95rem; }
+  .yrs { grid-area: yrs; color: var(--text-2); padding-top: 0.5em; }
+  .codes { grid-area: codes; color: var(--text-2); }
+  .body { grid-area: body; margin-top: 0.5rem; color: var(--text-2); }
+  .body :global(p:last-child) { margin-bottom: 0; }
+  @media (min-width: 64rem) {
+    .row { grid-template-columns: 3rem minmax(15rem, 2fr) 3fr 2fr 1.4fr 7rem; grid-template-areas: 'n acr title prog role yrs' 'n acr codes codes codes codes' 'n acr body body body body'; align-items: baseline; column-gap: 1.5rem; }
+    .dense .row { grid-template-areas: 'n acr title prog role yrs'; }
+    .yrs { text-align: right; }
+  }
+</style>

@@ -1,0 +1,31 @@
+---
+// Inner-page head: giant extended title anchored left, an optional count, the lead, and optionally a still frame of
+// the mark on the right (hidden on phones, where it would sit behind the title).
+import MeshStill from './MeshStill.astro';
+import { still } from '../lib/mesh/still';
+
+interface Props {
+  title: string;
+  lead?: string;
+  count?: number;
+  mark?: boolean;
+}
+const { title, lead, count, mark = false } = Astro.props;
+const s = mark ? still({ w: 1600, h: 400, cx: 1330, cy: 200, rmin: 20, rmax: 175, wmax: 14, h0: 100, maxLevel: 5 }) : undefined;
+---
+
+<section class="head">
+  {s && <div class="mark"><MeshStill s={s} /></div>}
+  <h1 class="display">{title}{count !== undefined && <sup class="mono">({String(count).padStart(2, '0')})</sup>}</h1>
+  {lead && <p class="lead">{lead}</p>}
+</section>
+
+<style>
+  .head { position: relative; margin: 0 calc(-1 * var(--gutter)); padding: 4rem var(--gutter) 2.5rem; overflow: hidden; }
+  .mark { position: absolute; inset: 0; z-index: 0; }
+  .head > :not(.mark) { position: relative; z-index: 1; }
+  @media (max-width: 47.99rem) { .mark { display: none; } }
+  h1 { margin: 0 0 0 -0.04em; font-size: clamp(3rem, 10vw, 11rem); overflow-wrap: anywhere; }
+  sup { font-size: 0.8125rem; font-weight: 400; letter-spacing: 0; vertical-align: top; margin-left: 0.4em; color: var(--text-2); }
+  .lead { margin: 1.5rem 0 0; max-width: 32rem; color: var(--text-2); }
+</style>

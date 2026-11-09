@@ -1,89 +1,20 @@
 ---
+// Inner pages: small wordmark with the seal, the theme switch, then the nav on its datum across the page.
 import Seal from './Seal.astro';
+import Nav from './Nav.astro';
 import ThemeToggle from './ThemeToggle.astro';
-
-const nav = [
-  { href: '/capabilities/', label: 'Capabilities' },
-  { href: '/codes/', label: 'Codes' },
-  { href: '/projects/', label: 'Projects' },
-  { href: '/publications/', label: 'Publications' },
-  { href: '/people/', label: 'People' },
-  { href: '/contact/', label: 'Contact' },
-];
-
-const here = Astro.url.pathname;
-const isCurrent = (href: string) => here === href || here.startsWith(href);
 ---
 
 <header class="site-header">
-  <div class="container bar">
-    <a class="brand" href="/" aria-label="similitudo, home">
-      <Seal size={28} label="" />
-      <span class="wordmark">similitudo</span>
-    </a>
-    <nav aria-label="Main">
-      <ul>
-        {
-          nav.map((item) => (
-            <li>
-              <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
-                {item.label}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
+  <div class="bar">
+    <a class="brand" href="/" aria-label="similitudo, home"><Seal size={22} label="" /><span>similitudo</span></a>
     <ThemeToggle />
   </div>
+  <Nav />
 </header>
 
 <style>
-  .site-header {
-    border-bottom: 1px solid var(--divider);
-    background: var(--bg);
-  }
-  .bar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem 1.5rem;
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
-  }
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    color: var(--text-1);
-    text-decoration: none;
-    margin-right: auto;
-  }
-  .wordmark {
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 1.35rem;
-    letter-spacing: 0.04em;
-  }
-  nav { order: 3; width: 100%; overflow-x: auto; }
-  nav ul {
-    display: flex;
-    gap: 1.1rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    max-width: none;
-  }
-  nav a {
-    color: var(--text-2);
-    text-decoration: none;
-    font-size: 0.95rem;
-    white-space: nowrap;
-  }
-  nav a:hover,
-  nav a[aria-current='page'] { color: var(--link); }
-
-  @media (min-width: 56rem) {
-    nav { order: 0; width: auto; }
-  }
+  .site-header { padding: var(--gutter) var(--gutter) 0; }
+  .bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .brand { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--text-1); text-decoration: none; font-family: var(--f-display); font-stretch: 125%; font-weight: 600; font-size: 1.05rem; letter-spacing: -0.01em; }
 </style>

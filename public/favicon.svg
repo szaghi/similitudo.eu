@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10">
   <style>
-    .seal { fill: #c73e1d; } .cut { stroke: #f3ede1; }
-    @media (prefers-color-scheme: dark) { .seal { fill: #ffb020; } .cut { stroke: #0e1116; } }
+    .seal { fill: #c73e1d; } .cut { stroke: #ecebe6; }
+    @media (prefers-color-scheme: dark) { .seal { fill: #d9472a; } .cut { stroke: #1b1b1a; } }
   </style>
   <rect class="seal" width="10" height="10" rx="1"/>
   <path class="cut" fill="none" stroke-width="1" d="M5,1.5 V8.5 M1.5,5 H8.5 M6.75,1.5 V5 M5,3.25 H8.5"/>

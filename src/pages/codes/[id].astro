@@ -22,60 +22,44 @@ const facets = [
 ---
 
 <Base title={d.name} description={d.tagline}>
-  <header class="code-head">
-    {d.logo && <CodeLogo folder={d.logo} name={d.name} size={120} />}
-    <div>
-      <h1>{d.name}</h1>
-      <p class="lead">{d.tagline}</p>
-    </div>
+  <header class="head">
+    <h1 class="display">{d.name}</h1>
+    {d.logo && <CodeLogo folder={d.logo} name={d.name} size={112} />}
+    <p class="lead">{d.tagline}</p>
   </header>
 
-  <dl class="meta">
-    {
-      parent && (
-        <>
-          <dt>Built on</dt>
-          <dd>
-            <a href={`/codes/${parent.id}/`}>{parent.data.name}</a>
-          </dd>
-        </>
-      )
-    }
-    <dt>Status</dt><dd>{d.status}</dd>
-    <dt>Licence</dt><dd>{d.license}</dd>
-    <dt>Source</dt><dd><a href={d.repo}>{d.repo.replace('https://', '')}</a></dd>
-    {d.docs && (<><dt>Documentation</dt><dd><a href={d.docs}>{d.docs.replace('https://', '')}</a></dd></>)}
-  </dl>
+  <section class="sec">
+    <p class="label mono">01 — Facts</p>
+    <dl class="facts">
+      {parent && (<><dt class="mono">Built on</dt><dd><a href={`/codes/${parent.id}/`}>{parent.data.name}</a></dd></>)}
+      <dt class="mono">Status</dt><dd>{d.status}</dd>
+      <dt class="mono">Licence</dt><dd>{d.license}</dd>
+      <dt class="mono">Source</dt><dd><a href={d.repo}>{d.repo.replace('https://', '')}</a></dd>
+      {d.docs && (<><dt class="mono">Documentation</dt><dd><a href={d.docs}>{d.docs.replace('https://', '')}</a></dd></>)}
+    </dl>
+  </section>
 
-  <Content />
+  <section class="sec">
+    <p class="label mono">02 — Overview</p>
+    <div class="prose"><Content /></div>
+  </section>
 
   {
-    facets.map((f) => (
-      <section>
-        <h2>{f.label}</h2>
-        <p>{f.items.map((i) => <span class="tag">{i}</span>)}</p>
+    facets.map((f, k) => (
+      <section class="sec">
+        <p class="label mono">{String(k + 3).padStart(2, '0')} — {f.label}</p>
+        <ul class="index facet">{f.items.map((i) => <li>{i}</li>)}</ul>
       </section>
     ))
   }
 </Base>
 
 <style>
-  .code-head {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    align-items: center;
-    margin-top: 2rem;
-  }
-  .code-head h1 { margin: 0 0 0.5rem; }
-  .code-head .lead { margin: 0; }
-  .meta {
-    display: grid;
-    grid-template-columns: max-content 1fr;
-    gap: 0.25rem 1rem;
-    margin: 2rem 0;
-    font-size: 0.95rem;
-  }
-  .meta dt { color: var(--text-2); }
-  .meta dd { margin: 0; overflow-wrap: anywhere; }
+  .head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 1rem 2rem; padding: 4rem 0 2.5rem; }
+  h1 { margin: 0 0 0 -0.04em; font-size: clamp(3rem, 12vw, 12rem); font-weight: 300; }
+  .lead { grid-column: 1 / -1; margin: 0.5rem 0 0; max-width: 34rem; color: var(--text-2); }
+  .facts { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0.5rem 2rem; margin: 0; border-top: 1px solid var(--text-1); padding-top: 1rem; }
+  .facts dt { color: var(--text-3); padding-top: 0.2em; }
+  .facts dd { margin: 0; overflow-wrap: anywhere; }
+  .facet > li { padding: 0.6rem 0; }
 </style>

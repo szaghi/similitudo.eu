@@ -1,56 +1,14 @@
 ---
-import { getCollection, getEntries, render } from 'astro:content';
+import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import ProjectRows from '../components/ProjectRows.astro';
 import { isPublished } from '../lib/content';
 
-const projects = (await getCollection('projects', isPublished)).sort(
-  (a, b) => b.data.start.getTime() - a.data.start.getTime(),
-);
-
-const fmt = (d: Date) => d.getUTCFullYear().toString();
-
-const items = await Promise.all(
-  projects.map(async (p) => ({
-    p,
-    Content: (await render(p)).Content,
-    codes: await getEntries(p.data.codes),
-  })),
-);
+const projects = (await getCollection('projects', isPublished)).sort((a, b) => b.data.start.getTime() - a.data.start.getTime());
 ---
 
 <Base title="Projects" description="Research projects similitudo takes part in.">
-  <h1>Projects</h1>
-  <p class="lead">Research projects similitudo takes part in, and the role it plays in each.</p>
-
-  {items.length === 0 && <p class="muted">The project list is in preparation.</p>}
-
-  {
-    items.map(({ p, Content, codes }) => (
-      <article class="card project">
-        {p.data.draft && <p class="draft-note">Draft: not published.</p>}
-        <h2>
-          {p.data.acronym} <span class="muted title">{p.data.title}</span>
-        </h2>
-        <p class="muted">
-          {p.data.programme}
-          {p.data.grant && <> · grant {p.data.grant}</>} · {fmt(p.data.start)}–{p.data.end ? fmt(p.data.end) : 'ongoing'}
-        </p>
-        <p><strong>Role:</strong> {p.data.role}</p>
-        <Content />
-        {p.data.competences.length > 0 && <p>{p.data.competences.map((c) => <span class="tag">{c}</span>)}</p>}
-        {codes.length > 0 && (
-          <p class="muted">
-            Codes: {codes.map((c, i) => (<>{i > 0 && ', '}<a href={`/codes/${c.id}/`}>{c.data.name}</a></>))}
-          </p>
-        )}
-        {p.data.url && <p><a href={p.data.url}>Project website</a></p>}
-      </article>
-    ))
-  }
+  <PageHead title="Projects" count={projects.length} mark lead="Research projects similitudo takes part in, and the role it plays in each." />
+  {projects.length > 0 ? <ProjectRows projects={projects} /> : <p class="muted">The project list is in preparation.</p>}
 </Base>
-
-<style>
-  .project { margin: 1.5rem 0; }
-  .project h2 { margin-top: 0; }
-  .title { font-weight: 400; font-size: 1rem; }
-</style>

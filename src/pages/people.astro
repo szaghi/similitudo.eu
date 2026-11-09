@@ -1,7 +1,9 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
 import { isPublished, byOrder } from '../lib/content';
+import { pad } from '../lib/site';
 
 const people = await Promise.all(
   (await getCollection('people', isPublished))
@@ -11,25 +13,26 @@ const people = await Promise.all(
 ---
 
 <Base title="People" description="The people behind similitudo.">
-  <h1>People</h1>
+  <PageHead title="People" />
   {
-    people.map(({ p, Content }) => (
-      <article class="person">
-        <h2>{p.data.name}</h2>
-        <p class="muted">{p.data.role}</p>
-        <Content />
-        <p class="links">
-          {p.data.orcid && <a href={`https://orcid.org/${p.data.orcid}`}>ORCID</a>}
-          {p.data.links.map((l) => <a href={l.url}>{l.label}</a>)}
-          {p.data.cv && <a href={p.data.cv}>CV (PDF)</a>}
-        </p>
+    people.map(({ p, Content }, k) => (
+      <article class="sec">
+        <p class="label mono">{pad(k)} — {p.data.role}</p>
+        <div>
+          <h2 class="name">{p.data.name}</h2>
+          <div class="prose"><Content /></div>
+          <p class="links mono">
+            {p.data.orcid && <a href={`https://orcid.org/${p.data.orcid}`}>ORCID</a>}
+            {p.data.links.map((l) => <a href={l.url}>{l.label}</a>)}
+            {p.data.cv && <a href={p.data.cv}>CV (PDF)</a>}
+          </p>
+        </div>
       </article>
     ))
   }
 </Base>
 
 <style>
-  .person h2 { margin-bottom: 0.25rem; }
-  .person > .muted { margin-top: 0; }
-  .links { display: flex; flex-wrap: wrap; gap: 1rem; }
+  .name { margin: 0 0 1rem; font-family: var(--f-display); font-stretch: 125%; font-weight: 560; font-size: clamp(1.8rem, 4vw, 3rem); letter-spacing: -0.02em; line-height: 1; }
+  .links { display: flex; flex-wrap: wrap; gap: 1.25rem; margin: 1rem 0 0; }
 </style>
