@@ -2,7 +2,9 @@
 // The hero's ground: a full-bleed canvas. The construction grid, and on the right a blast front (cylindrical
 // Sedov–Taylor, r ∝ t^½) drawn as an ensō; the quadtree refines on the front and coarsens behind it as it expands.
 // It plays ONCE (about 3 s), holds the final frame (the same frame the still marks show), and replays when the
-// pointer comes over the ring (or a tap lands on it). It writes the mesh it drew into `.hero-readout`.
+// pointer comes over the ring (or a tap lands on it). Then scroll is simulation time: as the hero leaves the screen
+// the front keeps expanding (t 0.60 → 1.00) and the mesh coarsens behind it; scrolling back rewinds it. Nothing is
+// hijacked: the page scrolls natively. It writes the mesh it drew into `.hero-readout`.
 // Reduced motion: the final frame only. No JavaScript: the level-0 grid (CSS background in Hero.astro).
 ---
 
@@ -28,6 +30,7 @@
     let u = STILL_U; // the frame on screen
     let raf = 0;
     let lastEnd = -Infinity;
+    const scrolled = () => Math.min(1, Math.max(0, window.scrollY / Math.max(1, hero.offsetHeight)));
 
     const resize = () => {
       const r = hero.getBoundingClientRect();
@@ -119,11 +122,27 @@
       return d < spec.rmax * Math.sqrt(STILL_U) + 24;
     };
     hero.addEventListener('pointermove', (e) => {
-      if (e.pointerType === 'mouse' && nearRing(e) && performance.now() - lastEnd > 1500) play();
+      if (e.pointerType === 'mouse' && scrolled() === 0 && nearRing(e) && performance.now() - lastEnd > 1500) play();
     });
     hero.addEventListener('pointerdown', (e) => {
+      if (scrolled() > 0) return;
       if (e.target === canvas || (e.target as HTMLElement).classList.contains('hero')) if (nearRing(e)) play();
     });
+
+    // Scroll is time. The opening play owns the frame until the reader scrolls; then the scroll position does.
+    let scrollRaf = 0;
+    const onScroll = () => {
+      if (still || scrollRaf) return;
+      scrollRaf = requestAnimationFrame(() => {
+        scrollRaf = 0;
+        const p = scrolled();
+        if (p === 0 && raf) return;
+        if (raf) { cancelAnimationFrame(raf); raf = 0; lastEnd = performance.now(); }
+        const next = STILL_U + (1 - STILL_U) * p;
+        if (next !== u) { u = next; draw(); }
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
 
     // Redraw the held frame when the theme or the size changes.
     new MutationObserver(() => { if (!raf) draw(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
@@ -132,7 +151,11 @@
 
     resize();
     if (still) draw();
-    else if (document.hidden) {
+    else if (scrolled() > 0) {
+      u = STILL_U + (1 - STILL_U) * scrolled(); // reload mid-page: no opening play, the scroll position rules
+      lastEnd = 0;
+      draw();
+    } else if (document.hidden) {
       u = U0;
       document.addEventListener('visibilitychange', () => { if (!document.hidden && lastEnd < 0) play(); }, { once: true });
     } else play();

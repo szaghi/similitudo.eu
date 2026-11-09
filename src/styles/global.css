@@ -145,6 +145,24 @@ code { font-family: var(--f-mono); font-size: 0.9em; background: var(--bg-alt); 
   :root:not([data-theme='light']) .light-only { display: none; }
 }
 
+/* Reveals (src/components/Reveal.astro): one-shot, not scrubbed. When a section first enters, its rule draws from the
+   left and its rows rise in, staggered; then they stay solid. Only content below the fold at load is hidden, and only
+   by the script (class .js-reveal), so a failed script or reduced motion shows everything. */
+.js-reveal .sec.rv, .js-reveal .index.rv { position: relative; border-top-color: transparent; }
+.js-reveal .rv::before {
+  content: '';
+  position: absolute;
+  inset: -1px 0 auto 0;
+  border-top: 1px solid var(--rule);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.js-reveal .index.rv::before { border-top-color: var(--text-1); }
+.js-reveal .rv.in::before { transform: none; }
+.js-reveal .ri { opacity: 0; translate: 0 1rem; transition: opacity 0.6s ease-out, translate 0.7s cubic-bezier(0.2, 0.7, 0.2, 1); transition-delay: calc(var(--i, 0) * 70ms); }
+.js-reveal .ri.in { opacity: 1; translate: none; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }

@@ -1,0 +1,26 @@
+---
+// One-shot reveals (styles in global.css, under .js-reveal). Marks only what is below the fold when the page loads,
+// so nothing already on screen flashes; each section's rule and rows animate once when they first enter, then stay.
+// Skipped under reduced motion or without IntersectionObserver: everything is simply shown.
+---
+
+<script>
+  const ok = 'IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (ok) {
+    const below = (el: Element) => el.getBoundingClientRect().top > window.innerHeight;
+    const rules = [...document.querySelectorAll('.sec, .index')].filter(below);
+    const items = [...document.querySelectorAll('.sec > .label, .statement, .prose, .more, .index > li, .site-footer > *')].filter(below);
+    rules.forEach((el) => el.classList.add('rv'));
+    items.forEach((el) => {
+      el.classList.add('ri');
+      const sibs = el.parentElement ? [...el.parentElement.children] : [];
+      (el as HTMLElement).style.setProperty('--i', String(Math.min(sibs.indexOf(el), 6)));
+    });
+    document.documentElement.classList.add('js-reveal');
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }),
+      { rootMargin: '0px 0px -4% 0px' },
+    );
+    [...rules, ...items].forEach((el) => io.observe(el));
+  }
+</script>

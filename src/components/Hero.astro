@@ -54,6 +54,15 @@ const initial = still(heroSpec(1440, 900)).readout; // shown until the script dr
   .cta { margin: 0; font-weight: 600; }
   .readout { grid-row: 6; margin: 1.25rem 0 0; color: var(--text-3); max-width: 40rem; font-variant-numeric: tabular-nums; }
 
+  /* Parallax as the hero scrolls out: the wordmark lags behind the page (CSS scroll timeline; browsers
+     without it simply scroll). */
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .word { animation: lag-word linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
+    }
+  }
+  @keyframes lag-word { to { translate: 0 32vh; } }
+
   @media (min-width: 48rem) {
     .ground { background-size: 100px 100px; }
     .hero { grid-template-columns: minmax(0, 1fr) minmax(0, 24rem); column-gap: 2rem; }

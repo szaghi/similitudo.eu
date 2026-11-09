@@ -1,0 +1,88 @@
+---
+// Quell-style chrome. Once the page's nav datum has scrolled away, a slim bar slides in (seal, wordmark, "Menu");
+// the menu opens the nav full-screen in large extended type. While the datum is on screen the bar is inert.
+// Also the reading-progress hairline at the bottom (Lattice), filled by a CSS scroll timeline where supported.
+import Seal from './Seal.astro';
+import { nav, pad, isCurrent } from '../lib/site';
+const here = Astro.url.pathname;
+---
+
+<div class="bar" data-bar inert>
+  <a class="brand" href="/" aria-label="similitudo, home"><Seal size={18} label="" /><span>similitudo</span></a>
+  <button class="menu" type="button" aria-expanded="false" aria-controls="menu-panel">Menu</button>
+</div>
+<div class="panel" id="menu-panel" hidden>
+  <nav aria-label="Main (menu)">
+    <ol>
+      {nav.map((n, k) => <li><a href={n.href} aria-current={isCurrent(here, n.href) ? 'page' : undefined}><span class="n mono">{pad(k)}</span>{n.label}</a></li>)}
+    </ol>
+  </nav>
+</div>
+<div class="progress" aria-hidden="true"></div>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('[data-bar]');
+  const button = bar?.querySelector<HTMLButtonElement>('.menu');
+  const panel = document.getElementById('menu-panel');
+  const datum = document.querySelector('.datum');
+
+  if (bar && button && panel) {
+    const setOpen = (open: boolean, refocus = true) => {
+      button.setAttribute('aria-expanded', String(open));
+      button.textContent = open ? 'Close' : 'Menu';
+      panel.hidden = !open;
+      document.documentElement.classList.toggle('menu-open', open);
+      if (open) panel.querySelector('a')?.focus();
+      else if (refocus) button.focus();
+    };
+    button.addEventListener('click', () => setOpen(panel.hidden));
+    panel.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) setOpen(false, false); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden) setOpen(false); });
+
+    const show = (on: boolean) => {
+      bar.classList.toggle('on', on);
+      bar.inert = !on;
+      if (!on && !panel.hidden) setOpen(false, false);
+    };
+    if (datum) {
+      new IntersectionObserver(([e]) => show(!e.isIntersecting && e.boundingClientRect.top < 0)).observe(datum);
+    } else show(true);
+  }
+</script>
+
+<style>
+  .bar {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem var(--gutter);
+    background: var(--bg);
+    border-bottom: 1px solid var(--text-1);
+    transform: translateY(-101%);
+    transition: transform 0.3s ease;
+  }
+  .bar.on { transform: none; }
+  .brand { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--text-1); text-decoration: none; font-family: var(--f-display); font-stretch: 125%; font-weight: 600; letter-spacing: -0.01em; }
+  .menu { font: inherit; font-size: 0.95rem; color: var(--text-1); background: transparent; border: 1px solid var(--text-1); border-radius: 999px; padding: 0.2rem 0.9rem; cursor: pointer; }
+  .menu:hover { background: var(--text-1); color: var(--bg); }
+
+  .panel { position: fixed; inset: 0; z-index: 29; overflow-y: auto; background: var(--bg); padding: 5rem var(--gutter) 2rem; }
+  .panel ol { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--text-1); }
+  .panel li { border-bottom: 1px solid var(--rule); }
+  .panel a { display: flex; align-items: center; gap: 1.25rem; padding: 0.6rem 0; color: var(--text-1); text-decoration: none; font-family: var(--f-display); font-stretch: 125%; font-weight: 560; font-size: clamp(2rem, 6vw, 4.5rem); line-height: 1.05; letter-spacing: -0.03em; }
+  .panel a:hover, .panel a[aria-current='page'] { color: var(--link); }
+  .n { color: var(--text-3); letter-spacing: 0; }
+
+  .progress { display: none; }
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .progress { display: block; position: fixed; left: var(--gutter); right: var(--gutter); bottom: 0.6rem; z-index: 20; height: 1px; background: var(--rule); pointer-events: none; }
+      .progress::after { content: ''; position: absolute; inset: 0; background: var(--text-1); transform-origin: left; animation: fill linear both; animation-timeline: scroll(root); }
+    }
+  }
+  @keyframes fill { from { transform: scaleX(0); } }
+  :global(html.menu-open) { overflow: hidden; }
+</style>
