@@ -19,9 +19,10 @@ export const lead = 'Fluids and plasmas, simulated on adaptive grids at GPU spee
 export const description =
   'Numerical methods and GPU-accelerated simulation software for research projects: adaptive grids, compressible flows, magnetohydrodynamics and plasmas, from a laptop to GPU clusters.';
 
-// Partner profile: shown in the footer, not on the home page, until it is backed by projects (docs/TODO.md).
+// About: shown in the footer of every page. similitudo is not a legal entity: it is the name under which Stefano Zaghi
+// works, so the copy says so instead of presenting it as a company or a consortium partner (docs/TODO.md).
 export const partner =
-  'similitudo joins research projects as the partner for numerical methods and high-performance simulation: designing the schemes, writing the solvers, porting them to GPUs and verifying the results.';
+  'similitudo is the name under which Stefano Zaghi works with research projects on numerical methods and high-performance simulation: designing the schemes, writing the solvers, porting them to GPUs and verifying the results.';
 
 /** Two-digit index label: 0 → "01". */
 export const pad = (k: number) => String(k + 1).padStart(2, '0');

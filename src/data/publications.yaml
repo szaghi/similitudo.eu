@@ -1,6 +1,7 @@
 # Publications: journal articles, book chapters and conference papers.
 # Generated 2026-11-09 from ~/documenti_amministrativi/curriculum_vitae/publications.bib (article, incollection,
 # inproceedings), DOIs completed from ORCID 0000-0001-9834-9590 and checked at doi.org. Edit by hand from here on.
+# zaghi-2010-ichd left out: the same paper as zaghi-2010 (ICHD 2010 proceedings, published in J. Hydrodynamics).
 # Keys are the BibTeX keys. Entries are validated against the schema in src/content.config.ts.
 
 zaghi-2023:
@@ -305,13 +306,6 @@ zaghi-2010:
   year: 2010
   kind: journal
   doi: "10.1016/S1001-6058(09)60250-X"
-zaghi-2010-ichd:
-  title: "Experimental and numerical investigations on fast catamarans interference effects"
-  authors: ["S. Zaghi", "R. Broglia", "A. Di Mascio"]
-  venue: "9th International Conference on Hydrodynamics, ICHD 2010, pp. 528–533"
-  year: 2010
-  kind: conference
-  doi: "10.1016/s1001-6058(09)60250-x"
 broglia-2009-isope:
   title: "Analysis of the hydrodynamic performances of high-speed catamarans by viscous flow solver"
   authors: ["R. Broglia", "S. Zaghi", "A. Di Mascio"]

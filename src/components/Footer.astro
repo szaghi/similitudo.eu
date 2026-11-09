@@ -1,17 +1,16 @@
 ---
-// Footer on every page: the partner profile (kept low-key until projects back it, docs/TODO.md), the contact
-// address, then the colophon.
+// Footer on every page: what similitudo is, the contact address, then the colophon (with the privacy note).
 import { partner, email } from '../lib/site';
 const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
-  <p class="label mono">Partner profile</p>
+  <p class="label mono">About</p>
   <p class="profile">{partner}</p>
   <p class="mail"><a href={`mailto:${email}`}>{email}</a></p>
   <div class="colophon">
     <p class="mono small">© {year} Stefano Zaghi · similitudo.eu</p>
-    <p class="mono small"><a href="https://github.com/szaghi">github.com/szaghi</a></p>
+    <p class="mono small"><a href="/privacy/">Privacy</a> · <a href="https://github.com/szaghi">github.com/szaghi</a></p>
   </div>
 </footer>
 

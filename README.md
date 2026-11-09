@@ -23,6 +23,7 @@ One entry point, `./site` (run it alone for the list):
 | `./site prod` | production build served at http://localhost:4322 (Ctrl-C stops): exactly what GitHub Pages publishes |
 | `./site check` | builds, then tests every page at 390 and 1440 px, light and dark: no console errors or failed requests, no horizontal scroll, nav links not covered, internal links resolve, no lab or draft content in `dist/`. Exit 1 on any problem: run it before a push |
 | `./site shots` | builds, then writes a screenshot sheet of every page (desktop and phone) to `shots/index.html` (gitignored) |
+| `./site og` | regenerates `public/og.png`, the 1200×630 card shown when a link to the site is shared, from the home hero |
 | `./site fresh` | stops the dev server and clears Astro's caches: use when `dev` shows errors that `check` does not (a stale content cache after a schema change) |
 
 `prod`, `check` and `shots` take `--no-build` to reuse the last build. `dist/` is served by a small static server inside

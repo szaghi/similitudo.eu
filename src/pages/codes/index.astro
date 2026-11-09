@@ -16,8 +16,8 @@ const groups = [
 const shown = groups.map((g) => ({ ...g, items: codes.filter((c) => c.data.kind === g.kind) })).filter((g) => g.items.length > 0);
 ---
 
-<Base title="Codes" description="The simulation codes developed by similitudo.">
-  <PageHead title="Codes" count={codes.length} lead="Open-source simulation software, developed and maintained by similitudo." />
+<Base title="Codes" description="Open-source simulation codes by Stefano Zaghi and co-authors.">
+  <PageHead title="Codes" count={codes.length} lead="Open-source simulation software by Stefano Zaghi and co-authors." />
   {
     shown.map((g, k) => (
       <section class="sec">

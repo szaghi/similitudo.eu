@@ -24,6 +24,12 @@ jobs:
         uses: withastro/action@v6
         with:
           node-version: 24
+      # Gate the deploy: if any page fails (console errors, horizontal scroll, covered nav, broken links, leaked drafts,
+      # doubled theme images), this job fails and `deploy` (needs: build) never runs. Same check as `./site check`.
+      - name: Install Chromium for the site checks
+        run: npx playwright-core install --with-deps chromium
+      - name: Check every page (390 and 1440 px, light and dark)
+        run: node scripts/site-check.mjs --no-build
 
   deploy:
     needs: build

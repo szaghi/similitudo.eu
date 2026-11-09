@@ -15,9 +15,9 @@ underscore, add the entry back to `nav` in `src/lib/site.ts`, and, where noted, 
 
 ## Copy
 
-- **Partner profile** (`partner` in `src/lib/site.ts`): shown low-key in the footer of every page, not on the home
-  page, until projects back it. Bring it back to the home page with the Projects section; refine it to two or three
-  sentences on the role similitudo plays in a proposal.
+- **About** (`partner` in `src/lib/site.ts`, footer of every page): similitudo is not a legal entity (2026-11-09), so
+  the copy presents it as the name under which Stefano Zaghi works, never as a company or consortium partner. If that
+  changes (a registered business), revisit it, plus the legal notice and the VAT number Italian law then requires.
 - **Capabilities** (`src/data/capabilities.ts`): phrased as assignable tasks, each linked to the documentation
   (ADAM landing page for generic items, the FLUME / PRISM starting pages for theirs) (2026-11-09).
   Refine the wording as projects come in.

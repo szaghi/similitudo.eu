@@ -4,6 +4,7 @@
 //   node scripts/site-check.mjs           check every page: exit 1 on any failure
 //   node scripts/site-check.mjs --shots   write a screenshot sheet to shots/index.html (desktop + phone)
 //   node scripts/site-check.mjs --serve   build, then serve dist/ at http://localhost:4322 until Ctrl-C
+//   node scripts/site-check.mjs --og      write public/og.png (1200×630 link-preview image) from the home hero
 //   add --no-build to reuse the existing dist/
 //
 // dist/ is served by a small static server built in here, not by `astro preview`: in Astro 7 that is a background
@@ -27,6 +28,7 @@ import { chromium } from 'playwright-core';
 
 const args = new Set(process.argv.slice(2));
 const SHOTS = args.has('--shots');
+const OG = args.has('--og');
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const DIST = path.join(ROOT, 'dist');
 const SERVE = args.has('--serve');
@@ -183,7 +185,16 @@ const browser = await chromium.launch({ executablePath: browserPath() });
 let failed = false;
 try {
   const list = pages();
-  if (SHOTS) await shots(browser, list);
+  if (OG) {
+    // The link preview: the home hero at its final frame, light theme, without the switch, bar or progress line.
+    const page = await browser.newPage({ viewport: { width: 1200, height: 630 }, colorScheme: 'light' });
+    await page.goto(BASE + '/', { waitUntil: 'networkidle' });
+    await page.waitForTimeout(3800);
+    await page.addStyleTag({ content: '.toggle,.progress,[data-bar],.hero-nav ul{visibility:hidden!important}*{animation:none!important;transition:none!important}' });
+    await page.waitForTimeout(500);
+    await page.screenshot({ path: path.join(ROOT, 'public', 'og.png') });
+    console.log(ok('✓ ') + 'public/og.png (rebuild to publish it)');
+  } else if (SHOTS) await shots(browser, list);
   else {
     const leaks = leakCheck();
     leaks.forEach((l) => console.log(bad('✗ ') + l));
