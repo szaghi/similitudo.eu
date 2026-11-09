@@ -19,3 +19,6 @@ npm-debug.log*
 Thumbs.db
 *.swp
 *~
+
+# screenshot sheet from ./site shots
+shots/

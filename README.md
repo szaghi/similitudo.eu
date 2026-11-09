@@ -15,12 +15,19 @@ GPU-accelerated simulation software for research projects.
 
 ## Develop
 
-```bash
-npm install
-npm run dev       # http://localhost:4321, draft entries included
-npm run build     # production build into dist/, drafts excluded
-npm run preview   # serve dist/
-```
+One entry point, `./site` (run it alone for the list):
+
+| Command | What it does |
+|---|---|
+| `./site dev` | live editing at http://localhost:4321, drafts shown, reloads on save |
+| `./site prod` | production build served at http://localhost:4322 (Ctrl-C stops): exactly what GitHub Pages publishes |
+| `./site check` | builds, then tests every page at 390 and 1440 px, light and dark: no console errors or failed requests, no horizontal scroll, nav links not covered, internal links resolve, no lab or draft content in `dist/`. Exit 1 on any problem: run it before a push |
+| `./site shots` | builds, then writes a screenshot sheet of every page (desktop and phone) to `shots/index.html` (gitignored) |
+
+`prod`, `check` and `shots` take `--no-build` to reuse the last build. `dist/` is served by a small static server inside
+`scripts/site-check.mjs`, not by `astro preview` (in Astro 7 that runs as a single background service per project). They drive the Chromium cached by Playwright
+(`~/.cache/ms-playwright/chromium-*`) or `$CHROMIUM_PATH`; `playwright-core` is pinned to the version that matches it.
+The same commands exist as `npm run dev | prod | check | shots`.
 
 ## Content
 

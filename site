@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# similitudo.eu: one easy-to-remember entry point. Run `./site` for the list.
+set -euo pipefail
+cd "$(dirname "$0")"
+
+case "${1:-help}" in
+  dev)   exec npm run dev ;;                    # live editing, drafts shown
+  prod)  shift; exec node scripts/site-check.mjs --serve "$@" ;;   # the real thing, served locally
+  check) shift; exec node scripts/site-check.mjs "$@" ;;
+  shots) shift; exec node scripts/site-check.mjs --shots "$@" ;;
+  *)
+    cat <<'HELP'
+similitudo.eu
+
+  ./site dev     edit live        http://localhost:4321  (drafts shown, reloads on save)
+  ./site prod    see the release  http://localhost:4322  (exactly what GitHub Pages publishes; Ctrl-C stops)
+  ./site check   test everything  every page, phone + desktop, light + dark; exit 1 on any problem
+  ./site shots   picture sheet    shots/index.html, every page on desktop and phone
+
+  prod / check / shots accept --no-build to reuse the last build.
+  Before a push:  ./site check
+HELP
+    ;;
+esac
