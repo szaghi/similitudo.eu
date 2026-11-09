@@ -1,0 +1,21 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Node-based generators (VitePress, Astro, ...)
+node_modules/
+.vitepress/cache/
+.vitepress/dist/
+dist/
+
+# Python-based generators (MkDocs, Pelican, ...)
+.venv/
+__pycache__/
+site/
+output/
+
+# Generic build output
+_site/
+.cache/
