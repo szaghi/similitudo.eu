@@ -1,0 +1,10 @@
+# Publications and talks. Keys are stable ids; entries are validated against the schema in src/content.config.ts.
+# `draft: true` entries are shown only by `npm run dev`.
+example-placeholder:
+  title: Example publication title (placeholder)
+  authors: [S. Zaghi]
+  venue: Journal name
+  year: 2026
+  kind: journal
+  doi: 10.0000/placeholder
+  draft: true

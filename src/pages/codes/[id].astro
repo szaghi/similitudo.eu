@@ -1,0 +1,81 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import CodeLogo from '../../components/CodeLogo.astro';
+import { isPublished } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const codes = await getCollection('codes', isPublished);
+  return codes.map((code) => ({ params: { id: code.id }, props: { code } }));
+}
+
+const { code } = Astro.props;
+const { Content } = await render(code);
+const parent = code.data.parent ? await getEntry(code.data.parent) : undefined;
+const d = code.data;
+
+const facets = [
+  { label: 'Physics', items: d.physics },
+  { label: 'Methods', items: d.methods },
+  { label: 'Parallelism', items: d.parallelism },
+].filter((f) => f.items.length > 0);
+---
+
+<Base title={d.name} description={d.tagline}>
+  <header class="code-head">
+    {d.logo && <CodeLogo folder={d.logo} name={d.name} size={120} />}
+    <div>
+      <h1>{d.name}</h1>
+      <p class="lead">{d.tagline}</p>
+    </div>
+  </header>
+
+  <dl class="meta">
+    {
+      parent && (
+        <>
+          <dt>Built on</dt>
+          <dd>
+            <a href={`/codes/${parent.id}/`}>{parent.data.name}</a>
+          </dd>
+        </>
+      )
+    }
+    <dt>Status</dt><dd>{d.status}</dd>
+    <dt>Licence</dt><dd>{d.license}</dd>
+    <dt>Source</dt><dd><a href={d.repo}>{d.repo.replace('https://', '')}</a></dd>
+    {d.docs && (<><dt>Documentation</dt><dd><a href={d.docs}>{d.docs.replace('https://', '')}</a></dd></>)}
+  </dl>
+
+  <Content />
+
+  {
+    facets.map((f) => (
+      <section>
+        <h2>{f.label}</h2>
+        <p>{f.items.map((i) => <span class="tag">{i}</span>)}</p>
+      </section>
+    ))
+  }
+</Base>
+
+<style>
+  .code-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: center;
+    margin-top: 2rem;
+  }
+  .code-head h1 { margin: 0 0 0.5rem; }
+  .code-head .lead { margin: 0; }
+  .meta {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.25rem 1rem;
+    margin: 2rem 0;
+    font-size: 0.95rem;
+  }
+  .meta dt { color: var(--text-2); }
+  .meta dd { margin: 0; overflow-wrap: anywhere; }
+</style>

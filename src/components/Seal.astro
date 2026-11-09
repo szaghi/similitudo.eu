@@ -1,0 +1,31 @@
+---
+// The sumi seal: a square carved with one refined quadrant. It is the element ADAM, FLUME and PRISM share,
+// so it is similitudo's own mark. Geometry copied from the seal in ~/fortran/adam/docs/public/logo.svg
+// (rect 10x10, rx 1; carved lines at stroke-width 0.8), translated to the origin.
+interface Props {
+  size?: number;
+  label?: string;
+  class?: string;
+}
+const { size = 32, label = 'similitudo seal', class: className } = Astro.props;
+---
+
+<svg
+  class:list={['seal', className]}
+  viewBox="0 0 10 10"
+  width={size}
+  height={size}
+  role="img"
+  aria-label={label}
+>
+  <rect width="10" height="10" rx="1" fill="var(--seal)"></rect>
+  <path
+    fill="none"
+    stroke="var(--bg)"
+    stroke-width={size < 24 ? 1 : 0.8}
+    d="M5,1.5 V8.5 M1.5,5 H8.5 M6.75,1.5 V5 M5,3.25 H8.5"></path>
+</svg>
+
+<style>
+  .seal { flex: none; display: block; }
+</style>

@@ -1,0 +1,43 @@
+---
+// Light (washi) / dark (silver ink) switch. The choice is a per-viewer convenience kept in localStorage;
+// without it the page follows prefers-color-scheme. The early script in Base.astro applies it before paint.
+---
+
+<button class="theme-toggle" type="button" aria-label="Switch light or dark theme" title="Switch theme">
+  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+    <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.6"></circle>
+    <path d="M12 4 A8 8 0 0 1 12 20 Z" fill="currentColor"></path>
+  </svg>
+</button>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>('.theme-toggle');
+  button?.addEventListener('click', () => {
+    const root = document.documentElement;
+    const current =
+      root.dataset.theme ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    const next = current === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try {
+      localStorage.setItem('theme', next);
+    } catch {
+      /* storage unavailable: the choice lasts for this page view only */
+    }
+  });
+</script>
+
+<style>
+  .theme-toggle {
+    display: inline-grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--text-2);
+    cursor: pointer;
+  }
+  .theme-toggle:hover { color: var(--text-1); }
+</style>

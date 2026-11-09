@@ -1,0 +1,57 @@
+---
+import Base from '../layouts/Base.astro';
+
+// TODO: refine. Each capability should read as a work-package role a coordinator can assign, backed by evidence.
+const capabilities = [
+  {
+    title: 'Adaptive mesh refinement',
+    text: 'Block-structured octree/quadtree AMR with Morton ordering, load balancing and parallel I/O.',
+    evidence: 'ADAM',
+  },
+  {
+    title: 'GPU acceleration',
+    text: 'Solvers that run on GPU clusters through OpenACC (nvfortran) and OpenMP offloading (amdflang), with MPI across nodes.',
+    evidence: 'ADAM',
+  },
+  {
+    title: 'Compressible flows and MHD',
+    text: 'Compressible Euler and ideal MHD with dissipative terms, gravity, self-gravity, cooling and sink particles.',
+    evidence: 'FLUME',
+  },
+  {
+    title: 'Electromagnetics and plasmas',
+    text: 'Maxwell equations coupled with particle-in-cell plasmas.',
+    evidence: 'PRISM',
+  },
+  {
+    title: 'Complex geometries',
+    text: 'Immersed boundaries on adaptive grids.',
+    evidence: 'ADAM',
+  },
+  {
+    title: 'Verification and validation',
+    text: 'Convergence studies, verification suites and validation campaigns that a project can cite.',
+    evidence: 'TODO',
+  },
+];
+---
+
+<Base title="Capabilities" description="What similitudo brings to a research project.">
+  <h1>Capabilities</h1>
+  <p class="lead">What similitudo brings to a research project.</p>
+  <div class="grid">
+    {
+      capabilities.map((c) => (
+        <div class="card">
+          <h3>{c.title}</h3>
+          <p>{c.text}</p>
+          <p class="muted evidence">Evidence: {c.evidence}</p>
+        </div>
+      ))
+    }
+  </div>
+</Base>
+
+<style>
+  .evidence { font-size: 0.85rem; margin-top: 0.75rem; }
+</style>

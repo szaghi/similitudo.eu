@@ -1,0 +1,18 @@
+---
+// A code's sumi logo, washi version on light, silver-ink version on dark (BRAND.md: never swap them).
+interface Props {
+  folder: string;
+  name: string;
+  size?: number;
+}
+const { folder, name, size = 96 } = Astro.props;
+---
+
+<span class="code-logo" style={`width:${size}px;height:${size}px`}>
+  <img class="light-only" src={`${folder}/logo.svg`} alt={`${name} logo`} width={size} height={size} loading="lazy" />
+  <img class="dark-only" src={`${folder}/logo-dark.svg`} alt={`${name} logo`} width={size} height={size} loading="lazy" />
+</span>
+
+<style>
+  .code-logo { display: inline-block; flex: none; }
+</style>

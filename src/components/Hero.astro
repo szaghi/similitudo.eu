@@ -1,0 +1,56 @@
+---
+// PLACEHOLDER hero. The planned animation (built as a standalone prototype first, then dropped in here):
+// empty washi -> the ink stroke is drawn -> the AMR quadtree refines underneath, finest where the ink lands ->
+// the seal is stamped last. Under prefers-reduced-motion it shows the final frame. The text never waits for it.
+import Seal from './Seal.astro';
+---
+
+<section class="hero">
+  <div class="text">
+    <h1>similitudo</h1>
+    <p class="lead">
+      Numerical methods and GPU-accelerated simulation software for research projects: adaptive grids, compressible
+      flows, magnetohydrodynamics and plasmas, from a laptop to GPU clusters.
+    </p>
+    <p class="actions">
+      <a class="button" href="/capabilities/">What we bring to a project</a>
+      <a href="/codes/">The codes</a>
+    </p>
+  </div>
+  <div class="mark" aria-hidden="true">
+    <Seal size={160} label="" />
+  </div>
+</section>
+
+<style>
+  .hero {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+    padding: 3rem 0 2rem;
+  }
+  .hero h1 {
+    font-size: clamp(2.75rem, 9vw, 5rem);
+    margin: 0 0 1rem;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem;
+    margin-top: 1.75rem;
+  }
+  .mark {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    max-width: 22rem;
+    width: 100%;
+    justify-self: center;
+    border: 1px dashed var(--border); /* placeholder frame for the animation */
+    border-radius: var(--radius);
+  }
+  @media (min-width: 56rem) {
+    .hero { grid-template-columns: 3fr 2fr; padding: 5rem 0 3rem; }
+  }
+</style>

@@ -1,0 +1,55 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import CodeLogo from '../../components/CodeLogo.astro';
+import { isPublished, byOrder } from '../../lib/content';
+
+const codes = (await getCollection('codes', isPublished)).sort(byOrder);
+
+const groups = [
+  { kind: 'sdk', title: 'Software development kits' },
+  { kind: 'solver', title: 'Solvers' },
+  { kind: 'tool', title: 'Tools' },
+  { kind: 'library', title: 'Libraries' },
+] as const;
+---
+
+<Base title="Codes" description="The simulation codes developed by similitudo.">
+  <h1>Codes</h1>
+  <p class="lead">Open-source simulation software, developed and maintained by similitudo.</p>
+
+  {
+    groups.map((g) => {
+      const items = codes.filter((c) => c.data.kind === g.kind);
+      return (
+        items.length > 0 && (
+          <section>
+            <h2>{g.title}</h2>
+            <div class="grid">
+              {items.map((c) => (
+                <a class="card code" href={`/codes/${c.id}/`}>
+                  {c.data.logo && <CodeLogo folder={c.data.logo} name={c.data.name} size={72} />}
+                  <div>
+                    <h3>{c.data.name}</h3>
+                    <p class="muted">{c.data.tagline}</p>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        )
+      );
+    })
+  }
+</Base>
+
+<style>
+  .code {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    color: inherit;
+    text-decoration: none;
+  }
+  .code:hover { border-color: var(--link); }
+</style>

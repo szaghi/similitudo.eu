@@ -1,0 +1,40 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { isPublished } from '../lib/content';
+
+const pubs = (await getCollection('publications', isPublished)).sort((a, b) => b.data.year - a.data.year);
+const years = [...new Set(pubs.map((p) => p.data.year))];
+---
+
+<Base title="Publications" description="Publications and talks.">
+  <h1>Publications</h1>
+  <p class="lead">Papers, talks and reports.</p>
+
+  {pubs.length === 0 && <p class="muted">The publication list is in preparation.</p>}
+
+  {
+    years.map((y) => (
+      <section>
+        <h2>{y}</h2>
+        <ul class="pubs">
+          {pubs
+            .filter((p) => p.data.year === y)
+            .map((p) => (
+              <li>
+                {p.data.draft && <span class="tag">draft</span>}
+                {p.data.authors.join(', ')}. <strong>{p.data.title}</strong>. <em>{p.data.venue}</em>, {p.data.year}.
+                {p.data.doi && (<> <a href={`https://doi.org/${p.data.doi}`}>doi:{p.data.doi}</a></>)}
+                {!p.data.doi && p.data.url && (<> <a href={p.data.url}>link</a></>)}
+              </li>
+            ))}
+        </ul>
+      </section>
+    ))
+  }
+</Base>
+
+<style>
+  .pubs { padding-left: 1.1rem; }
+  .pubs li { margin-bottom: 0.75rem; }
+</style>

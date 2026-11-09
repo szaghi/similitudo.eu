@@ -1,0 +1,35 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { isPublished, byOrder } from '../lib/content';
+
+const people = await Promise.all(
+  (await getCollection('people', isPublished))
+    .sort(byOrder)
+    .map(async (p) => ({ p, Content: (await render(p)).Content })),
+);
+---
+
+<Base title="People" description="The people behind similitudo.">
+  <h1>People</h1>
+  {
+    people.map(({ p, Content }) => (
+      <article class="person">
+        <h2>{p.data.name}</h2>
+        <p class="muted">{p.data.role}</p>
+        <Content />
+        <p class="links">
+          {p.data.orcid && <a href={`https://orcid.org/${p.data.orcid}`}>ORCID</a>}
+          {p.data.links.map((l) => <a href={l.url}>{l.label}</a>)}
+          {p.data.cv && <a href={p.data.cv}>CV (PDF)</a>}
+        </p>
+      </article>
+    ))
+  }
+</Base>
+
+<style>
+  .person h2 { margin-bottom: 0.25rem; }
+  .person > .muted { margin-top: 0; }
+  .links { display: flex; flex-wrap: wrap; gap: 1rem; }
+</style>
