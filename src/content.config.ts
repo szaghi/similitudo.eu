@@ -20,19 +20,21 @@ const codes = defineCollection({
     physics: z.array(z.string()).default([]),
     methods: z.array(z.string()).default([]),
     parallelism: z.array(z.string()).default([]),
-    // Evidence a coordinator can check: one figure, measured numbers with their source page, reference papers.
-    figure: z
-      .object({
-        src: z.string(), // under public/, light version
-        dark: z.string().optional(), // dark version, same size
-        width: z.number().int(),
-        height: z.number().int(),
-        alt: z.string(),
-        caption: z.string(),
-        source: z.url().optional(),
-        animated: z.boolean().default(false), // a looping clip next to the still: <name>.webm and <name>.mp4
-      })
-      .optional(),
+    // Evidence a coordinator can check: figures, measured numbers with their source page, reference papers.
+    figures: z
+      .array(
+        z.object({
+          src: z.string(), // under public/, light version
+          dark: z.string().optional(), // dark version, same size
+          width: z.number().int(),
+          height: z.number().int(),
+          alt: z.string(),
+          caption: z.string(),
+          source: z.url().optional(),
+          animated: z.boolean().default(false), // a looping clip next to the still: <name>.webm and <name>.mp4
+        }),
+      )
+      .default([]),
     evidence: z
       .array(
         z.object({

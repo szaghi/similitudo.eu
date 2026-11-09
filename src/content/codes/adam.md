@@ -20,15 +20,15 @@ parallelism:
   - OpenMP
   - OpenACC (nvfortran)
   - OpenMP offloading (amdflang)
-figure:
-  src: /codes/adam/figure.png
-  dark: /codes/adam/figure-dark.png
-  width: 720
-  height: 262
-  alt: Density of a Mach 3 flow over a forward-facing step, on adaptive quadtree blocks
-  caption: "Woodward–Colella Mach 3 step, density to t = 4 on a forest of three quadtree realms, base spacing 1/80 with static refined boxes; the inter-realm seams dashed. Run with FLUME on ADAM."
-  animated: true
-  source: https://szaghi.github.io/adam/
+figures:
+  - src: /codes/adam/figure.png
+    dark: /codes/adam/figure-dark.png
+    width: 720
+    height: 262
+    alt: Density of a Mach 3 flow over a forward-facing step, on adaptive quadtree blocks
+    caption: "Woodward–Colella Mach 3 step, density to t = 4 on a forest of three quadtree realms, base spacing 1/80 with static refined boxes; the inter-realm seams dashed. Run with FLUME on ADAM."
+    animated: true
+    source: https://szaghi.github.io/adam/
 evidence:
   - kind: performance
     test: "Strong scaling, shock–sphere with immersed boundary, up to 7008 blocks (about 3.6 M cells), V100 GPUs of Marconi100 (CINECA)"

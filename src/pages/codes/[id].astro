@@ -43,7 +43,7 @@ const facets = [
     <p class="label mono">{num()} — Overview</p>
     <div class="overview">
       <div class="prose"><Content /></div>
-      {d.figure && <CodeFigure f={d.figure} />}
+      {d.figures.length > 0 && <div class="figs">{d.figures.map((f) => <CodeFigure f={f} />)}</div>}
     </div>
   </section>
 
@@ -106,6 +106,7 @@ const facets = [
   .facts dt { color: var(--text-3); padding-top: 0.2em; }
   .facts dd { margin: 0; overflow-wrap: anywhere; }
   .facet > li { padding: 0.6rem 0; }
+  .figs { display: grid; gap: 2rem; }
   .overview { display: grid; gap: 2rem; align-items: start; }
   @media (min-width: 64rem) { .overview { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); } }
   .ev li { display: grid; gap: 0.25rem 1.5rem; }

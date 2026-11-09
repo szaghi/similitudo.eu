@@ -60,7 +60,7 @@ const variants = [
   .frame { position: relative; }
   /* No `display` on the media: the global .light-only / .dark-only rules must decide which version shows. */
   .frame img, .frame video { width: 100%; height: auto; vertical-align: top; border: 1px solid var(--rule); }
-  .toggle { position: absolute; right: 0.5rem; bottom: 0.5rem; padding: 0.2rem 0.6rem; background: var(--bg); color: var(--text-1); border: 1px solid var(--text-1); border-radius: 999px; cursor: pointer; font-size: 0.75rem; }
+  .toggle { position: absolute; right: 0.5rem; top: 0.5rem; /* top: the clips print their time stamp bottom-right */ padding: 0.2rem 0.6rem; background: var(--bg); color: var(--text-1); border: 1px solid var(--text-1); border-radius: 999px; cursor: pointer; font-size: 0.75rem; }
   .toggle:hover { background: var(--text-1); color: var(--bg); }
   figcaption { margin-top: 0.6rem; color: var(--text-3); line-height: 1.5; }
 </style>

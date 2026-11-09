@@ -12,15 +12,15 @@ logo: /codes/prism
 physics:
   - Maxwell equations
   - Particle-in-cell plasmas
-figure:
-  src: /codes/prism/figure.png
-  dark: /codes/prism/figure-dark.png
-  width: 720
-  height: 258
-  alt: A Gaussian electromagnetic pulse leaving the box through three kinds of boundary
-  caption: "A Gaussian pulse in vacuum meets the x faces of the box. Left to right: PEC, first-order Silver–Müller, Silver–Müller with a classic PML (outlined). PRISM tutorials 2 and 3."
-  animated: true
-  source: https://szaghi.github.io/adam/applications/prism/
+figures:
+  - src: /codes/prism/figure.png
+    dark: /codes/prism/figure-dark.png
+    width: 720
+    height: 258
+    alt: A Gaussian electromagnetic pulse leaving the box through three kinds of boundary
+    caption: "A Gaussian pulse in vacuum meets the x faces of the box. Left to right: PEC, first-order Silver–Müller, Silver–Müller with a classic PML (outlined). PRISM tutorials 2 and 3."
+    animated: true
+    source: https://szaghi.github.io/adam/applications/prism/
 evidence:
   - kind: verification
     test: "Slice convergence, 16 → 32 cells, CPU and GPU"
