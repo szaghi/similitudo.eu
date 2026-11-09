@@ -2,8 +2,13 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
+import PubRows from '../components/PubRows.astro';
 import { isPublished, byOrder } from '../lib/content';
 import { pad } from '../lib/site';
+
+// Publications live under People (one author today): the newest journal articles here, the full list on its own page.
+const pubs = await getCollection('publications', isPublished);
+const selected = pubs.filter((p) => p.data.kind === 'journal').sort((a, b) => b.data.year - a.data.year).slice(0, 4);
 
 const people = await Promise.all(
   (await getCollection('people', isPublished))
@@ -29,6 +34,17 @@ const people = await Promise.all(
         </div>
       </article>
     ))
+  }
+  {
+    selected.length > 0 && (
+      <section class="sec">
+        <p class="label mono">{pad(people.length)} — Selected publications</p>
+        <div>
+          <PubRows pubs={selected} />
+          <p class="more"><a href="/people/publications/">All publications ({pubs.length})</a> <span aria-hidden="true">→</span></p>
+        </div>
+      </section>
+    )
   }
 </Base>
 

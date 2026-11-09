@@ -14,6 +14,16 @@ const { Content } = await render(code);
 const parent = code.data.parent ? await getEntry(code.data.parent) : undefined;
 const d = code.data;
 
+// FLUME and PRISM are built on ADAM: until they have papers of their own, show the platform's, labelled as such.
+const papers = d.papers.length > 0 ? { list: d.papers, from: undefined } : parent && parent.data.papers.length > 0 ? { list: parent.data.papers, from: parent.data.name } : undefined;
+const evidence = [
+  { kind: 'verification', title: 'Verification' },
+  { kind: 'performance', title: 'Performance' },
+].map((g) => ({ ...g, items: d.evidence.filter((e) => e.kind === g.kind) })).filter((g) => g.items.length > 0);
+
+let n = 0;
+const num = () => String(++n).padStart(2, '0');
+
 const facets = [
   { label: 'Physics', items: d.physics },
   { label: 'Methods', items: d.methods },
@@ -29,7 +39,51 @@ const facets = [
   </header>
 
   <section class="sec">
-    <p class="label mono">01 — Facts</p>
+    <p class="label mono">{num()} — Overview</p>
+    <div class="overview">
+      <div class="prose"><Content /></div>
+      {d.figure && (
+        <figure class="fig">
+          <img class={d.figure.dark ? 'light-only' : undefined} src={d.figure.src} alt={d.figure.alt} width={d.figure.width} height={d.figure.height} loading="lazy" />
+          {d.figure.dark && <img class="dark-only" src={d.figure.dark} alt={d.figure.alt} width={d.figure.width} height={d.figure.height} loading="lazy" />}
+          <figcaption class="mono">{d.figure.caption}{d.figure.source && <> <a href={d.figure.source}>Source</a></>}</figcaption>
+        </figure>
+      )}
+    </div>
+  </section>
+
+  {
+    evidence.map((g) => (
+      <section class="sec">
+        <p class="label mono">{num()} — {g.title}</p>
+        <ol class="index ev">
+          {g.items.map((e) => (
+            <li>
+              <p class="test">{e.test}</p>
+              <p class="result">{e.result}</p>
+              <a class="src mono" href={e.source}>source →</a>
+            </li>
+          ))}
+        </ol>
+      </section>
+    ))
+  }
+
+  {
+    papers && (
+      <section class="sec">
+        <p class="label mono">{num()} — {papers.from ? `Reference paper (${papers.from} platform)` : 'Reference paper'}</p>
+        <ul class="index">
+          {papers.list.map((p) => (
+            <li><p class="cite">{p.cite}</p><a class="mono" href={`https://doi.org/${p.doi}`}>doi:{p.doi}</a></li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <section class="sec">
+    <p class="label mono">{num()} — Facts</p>
     <dl class="facts">
       {parent && (<><dt class="mono">Built on</dt><dd><a href={`/codes/${parent.id}/`}>{parent.data.name}</a></dd></>)}
       <dt class="mono">Status</dt><dd>{d.status}</dd>
@@ -39,15 +93,10 @@ const facets = [
     </dl>
   </section>
 
-  <section class="sec">
-    <p class="label mono">02 — Overview</p>
-    <div class="prose"><Content /></div>
-  </section>
-
   {
-    facets.map((f, k) => (
+    facets.map((f) => (
       <section class="sec">
-        <p class="label mono">{String(k + 3).padStart(2, '0')} — {f.label}</p>
+        <p class="label mono">{num()} — {f.label}</p>
         <ul class="index facet">{f.items.map((i) => <li>{i}</li>)}</ul>
       </section>
     ))
@@ -62,4 +111,17 @@ const facets = [
   .facts dt { color: var(--text-3); padding-top: 0.2em; }
   .facts dd { margin: 0; overflow-wrap: anywhere; }
   .facet > li { padding: 0.6rem 0; }
+  .overview { display: grid; gap: 2rem; align-items: start; }
+  @media (min-width: 64rem) { .overview { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); } }
+  .fig { margin: 0; }
+  /* No `display` here: the global .light-only / .dark-only rules must decide which version shows. */
+  .fig img { width: 100%; height: auto; vertical-align: top; border: 1px solid var(--rule); }
+  .fig figcaption { margin-top: 0.6rem; color: var(--text-3); line-height: 1.5; }
+  .ev li { display: grid; gap: 0.25rem 1.5rem; }
+  @media (min-width: 64rem) { .ev li { grid-template-columns: 2fr 1.4fr auto; align-items: baseline; } }
+  .ev p { margin: 0; }
+  .test { color: var(--text-2); }
+  .result { font-family: var(--f-display); font-stretch: 112%; font-weight: 600; }
+  .src { white-space: nowrap; }
+  .cite { margin: 0 0 0.3rem; max-width: 46rem; }
 </style>

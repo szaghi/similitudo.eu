@@ -20,6 +20,29 @@ const codes = defineCollection({
     physics: z.array(z.string()).default([]),
     methods: z.array(z.string()).default([]),
     parallelism: z.array(z.string()).default([]),
+    // Evidence a coordinator can check: one figure, measured numbers with their source page, reference papers.
+    figure: z
+      .object({
+        src: z.string(), // under public/, light version
+        dark: z.string().optional(), // dark version, same size
+        width: z.number().int(),
+        height: z.number().int(),
+        alt: z.string(),
+        caption: z.string(),
+        source: z.url().optional(),
+      })
+      .optional(),
+    evidence: z
+      .array(
+        z.object({
+          kind: z.enum(['verification', 'performance']),
+          test: z.string(), // what was run
+          result: z.string(), // the measured value, as stated in the source
+          source: z.url(),
+        }),
+      )
+      .default([]),
+    papers: z.array(z.object({ cite: z.string(), doi: z.string() })).default([]),
     draft: z.boolean().default(false),
   }),
 });
@@ -61,7 +84,7 @@ const publications = defineCollection({
     authors: z.array(z.string()),
     venue: z.string(),
     year: z.number().int(),
-    kind: z.enum(['journal', 'conference', 'talk', 'report', 'thesis', 'software']),
+    kind: z.enum(['journal', 'chapter', 'conference', 'talk', 'report', 'thesis', 'software']),
     doi: z.string().optional(),
     url: z.url().optional(),
     draft: z.boolean().default(false),

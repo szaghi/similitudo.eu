@@ -1,10 +1,360 @@
-# Publications and talks. Keys are stable ids; entries are validated against the schema in src/content.config.ts.
-# `draft: true` entries are shown only by `npm run dev`.
-example-placeholder:
-  title: Example publication title (placeholder)
-  authors: [S. Zaghi]
-  venue: Journal name
-  year: 2026
+# Publications: journal articles, book chapters and conference papers.
+# Generated 2026-11-09 from ~/documenti_amministrativi/curriculum_vitae/publications.bib (article, incollection,
+# inproceedings), DOIs completed from ORCID 0000-0001-9834-9590 and checked at doi.org. Edit by hand from here on.
+# Keys are the BibTeX keys. Entries are validated against the schema in src/content.config.ts.
+
+zaghi-2023:
+  title: "Efficient GPU Parallelization of Adaptive Mesh Refinement Technique for High-Order Compressible Solver with Immersed Boundary"
+  authors: ["S. Zaghi", "F. Salvadore", "A. Di Mascio", "G. Rossi"]
+  venue: "Computers and Fluids"
+  year: 2023
   kind: journal
-  doi: 10.0000/placeholder
-  draft: true
+  doi: "10.1016/j.compfluid.2023.106040"
+zaghi-2023-foodie:
+  title: "Exploiting Abstract Calculus Pattern for the Integration of Ordinary Differential Equations for Dynamics Systems, an Object Oriented Programming Approach in Modern Fortran"
+  authors: ["S. Zaghi", "C. Andolfi"]
+  venue: "Dynamics"
+  year: 2023
+  kind: journal
+  doi: "10.3390/dynamics3030026"
+dimascio-2021:
+  title: "An immersed boundary approach for high order weighted essentially non-oscillatory schemes"
+  authors: ["A. Di Mascio", "S. Zaghi"]
+  venue: "Computers and Fluids, vol. 222, pp. 104931"
+  year: 2021
+  kind: journal
+  doi: "10.1016/j.compfluid.2021.104931"
+testa-2021:
+  title: "Study of a FWH-based permeable-surface formulation for propeller hydroacoustics"
+  authors: ["C. Testa", "F. Porcacchia", "S. Zaghi", "M. Gennaretti"]
+  venue: "Ocean Engineering, vol. 240, pp. 109828"
+  year: 2021
+  kind: journal
+  doi: "10.1016/j.oceaneng.2021.109828"
+broglia-2019:
+  title: "Assessment of Computational Fluid Dynamics Capabilities for the Prediction of Three-Dimensional Separated Flows: The DELFT 372 Catamaran in Static Drift Conditions"
+  authors: ["R. Broglia", "S. Zaghi", "E. F. Campana", "T. Dogan", "H. Sadat-Hosseini", "F. Stern", "P. Queutey", "M. Visonneau", "E. Milanov"]
+  venue: "Journal of Fluids Engineering, vol. 141, pp. 91105"
+  year: 2019
+  kind: journal
+  doi: "10.1115/1.4042752"
+porcacchia-2018-icsv25:
+  title: "Inclined-Flow Propeller Hydroacoustics by the Permeable Ffowcs Williams Hawkings Equation"
+  authors: ["Federico Porcacchia", "M. Gennaretti", "C. Testa", "Zaghi Stefano", "G. Luca", "Dubbioso Giulio", "Muscari Roberto"]
+  venue: "International Congress on Sound and Vibration (ICSV25), pp. 4989-4996"
+  year: 2018
+  kind: conference
+bellafiore-2018:
+  title: "Modeling Ship-Induced Waves in Shallow Water Systems: the Venice Experiment"
+  authors: ["D.Bellafiore", "L. Zaggia", "R. Broglia", "C. Ferrarin", "F. Barbariol", "S. Zaghi", "G. Lorenzetti", "G. Manfè", "F. De Pascalis", "A. Benetazzo"]
+  venue: "Ocean engineering, vol. 155, pp. 227-239"
+  year: 2018
+  kind: journal
+  doi: "10.1016/j.oceaneng.2018.02.039"
+porcacchia-2017-icsv24:
+  title: "Assessment of Permeable Boundary Integral Formulations for Rotating Blades Noise Prediction"
+  authors: ["F. Porcacchia", "C. Testa", "S. Zaghi", "R. Muscari", "M. Gennaretti"]
+  venue: "Sound and Vibration, 24th International Congress, ICSV24, pp. 8"
+  year: 2017
+  kind: conference
+dubbioso-2017:
+  title: "CFD analysis of turning abilities of a submarine model"
+  authors: ["G. Dubbioso", "R. Broglia", "S. Zaghi"]
+  venue: "Ocean Engineering, vol. 129, pp. 459–479"
+  year: 2017
+  kind: journal
+  doi: "10.1016/j.oceaneng.2016.10.046"
+teatini-2017-egu:
+  title: "Digging navigable waterways through lagoon tidal flats: which short and long-term impacts on groundwater dynamics and quality?"
+  authors: ["P. Teatini", "G. Isotton", "S. Nardean", "M. Ferronato", "L. Tosi", "C. Da Lio", "L. Zaggia", "D. Bellafiore", "M. Zecchin", "L. Baradello", "et al."]
+  venue: "19th EGU General Assembly Conference, vol. 19, pp. 7402"
+  year: 2017
+  kind: conference
+calcagni-2017:
+  title: "Experimental and numerical investigations on renewable energies at CNR-INM: Challenges and future perspectives"
+  authors: ["D. Calcagni", "G. Colicchio", "L. Greco", "F. Porcacchia", "C. Testa", "S. Zaghi"]
+  venue: "Energia, ambiente e innovazione, vol. 2, pp. 36–41"
+  year: 2017
+  kind: journal
+  doi: "10.12910/EAI2017-029"
+broglia-2017-hpc-day:
+  title: "High Performance Computing al servizio dell'Idrodinamica Navale"
+  authors: ["R. Broglia", "R. Muscari", "S. Zaghi", "G. Dubbioso", "A. Posa", "A. Colagrossi", "S. Marrone"]
+  venue: "HPC Day 2017 le Architetture ad Alte Prestazioni e Cloud Computing"
+  year: 2017
+  kind: conference
+teatini-2017:
+  title: "Hydrogeological effects of dredging navigable canals through lagoon shallows. A case study in Venice"
+  authors: ["P. Teatini et al"]
+  venue: "Hydrology and Earth System Sciences, vol. 21, pp. 5627–5646"
+  year: 2017
+  kind: journal
+  doi: "10.5194/hess-21-5627-2017"
+porcacchia-2017-marine:
+  title: "On the Use of the Porous FWHE for Rotating Blades Noise Prediction"
+  authors: ["F. Porcacchia", "C. Testa", "M. Gennaretti", "S. Zaghi", "R. Muscari"]
+  venue: "Computational Methods in Marine Engineering, 7th International Conference, Marine 2017"
+  year: 2017
+  kind: conference
+zaghi-2016-jsc:
+  title: "Application of WENO-Positivity-Preserving Schemes to Highly Under-Expanded Jets"
+  authors: ["S. Zaghi", "A. Di Mascio", "B. Favini"]
+  venue: "Journal of Scientific Computing, vol. 69, pp. 1033–1057"
+  year: 2016
+  kind: journal
+  doi: "10.1007/s10915-016-0226-5"
+zaghi-2016:
+  title: "Assessment of Blockage effects in Wind Tunnel Testing of Wind Turbines"
+  authors: ["S. Zaghi", "R. Muscari", "A. Di Mascio"]
+  venue: "Journal of Wind Engineering and Industrial Aerodynamics, vol. 154, pp. 1–9"
+  year: 2016
+  kind: journal
+  doi: "10.1016/j.jweia.2016.03.012"
+broglia-2016-incol:
+  title: "Chapter 6 – CFD Validation for Flow Separation Onset and Progression using Delft Catamaran 372 in Static Drift Conditions"
+  authors: ["R. Broglia", "S. Zaghi", "E. F. Campana", "M. Visonneau", "P. Queutey", "T. Dogan", "F. Stern", "E. Milanov"]
+  venue: "Reliable Prediction of Separated Flow Onset and Progression for Air and Sea Vehicles, pp. 271–397"
+  year: 2016
+  kind: chapter
+zaghi-2016-tra:
+  title: "Hydrodynamic characterization of USV vessels with innovative SWATH configuration for coastal monitoring and low environmental impact"
+  authors: ["S. Zaghi", "G. Dubbioso", "R. Broglia", "R. Muscari"]
+  venue: "Transportation Research Procedia, 6th Transport Research Arena, pp. 8"
+  year: 2016
+  kind: conference
+  doi: "10.1016/j.trpro.2016.05.121"
+pellegrini-2016-nutts:
+  title: "Multi-Fidelity Adaptive Metamodel for Ship Hull Performance via CFD"
+  authors: ["R. Pellegrini", "C. Leotardi", "S. Zaghi", "R. Broglia", "E. Campana", "U. Iemma", "M. Diez"]
+  venue: "19th Numerical Towing Tank Symposium, NuTTS 2016, pp. 6"
+  year: 2016
+  kind: conference
+porcacchia-2016-hpc-core:
+  title: "Navier-Stokes numerical simulation of a model scale in-line HAWTs farm"
+  authors: ["F. Porcacchia", "S. Zaghi", "R. Muscari", "R. Broglia", "A. Di Mascio", "F. Salvadore"]
+  venue: "High Performance Computing-Based Computational Fluid Dynamics for Offshore Renewable Energy Workshop"
+  year: 2016
+  kind: conference
+zaghi-2016-incol:
+  title: "Numerical Models and Methods in Ships Hydrodynamic Design"
+  authors: ["E. F. Campana", "S. Zaghi"]
+  venue: "Compendium of ship hydrodynamics: Practical tools and applications, pp. 27"
+  year: 2016
+  kind: chapter
+dubbioso-2015-nutts:
+  title: "Analysis of the Manoeuvring Prediction of a Submarine by CFD Effects of Stern Appendage Configuration"
+  authors: ["G. Dubbioso", "S. Zaghi", "R. Broglia"]
+  venue: "18th Numerical Towing Tank Symposium, NuTTS 2015, pp. 6"
+  year: 2015
+  kind: conference
+zaghi-2015:
+  title: "Application of dynamic overlapping grids to the simulation of the flow around a fully-appended submarine"
+  authors: ["S. Zaghi", "A. Di Mascio", "R. Broglia", "R. Muscari"]
+  venue: "Mathematics and Computers in Simulation, vol. 116, pp. 75–88"
+  year: 2015
+  kind: journal
+  doi: "10.1016/j.matcom.2014.11.003"
+broglia-2015-wmtc:
+  title: "CFD Validation for DELFT 372 Catamaran in Static Drift Conditions, Including Onset and Progression Analysis"
+  authors: ["R. Broglia", "S. Zaghi", "E. F. Campana", "M. Visonneau", "P. Queutey", "T. Dogan", "H. Sadat-Hosseini", "F. Stern"]
+  venue: "5th World Maritime Technology Conference, WMTC15, pp. 26"
+  year: 2015
+  kind: conference
+  doi: "10.5957/WMTC-2015-146"
+zaghi-2015-udt:
+  title: "Free running manoeuvring prediction of a submarine by CFD"
+  authors: ["S. Zaghi", "G. Dubbioso", "R. Broglia"]
+  venue: "Undersea Defence Technology 2015, UDT 2015, pp. 11"
+  year: 2015
+  kind: conference
+broglia-2015-marine:
+  title: "Free running prediction of a fully appended submarine: Effects of stern plane configurations"
+  authors: ["R. Broglia", "M. Cannarozzo", "G. Dubbioso", "S. Zaghi"]
+  venue: "Computational Methods in Marine Engineering VI, MARINE 2015, pp. 670–681"
+  year: 2015
+  kind: conference
+broglia-2015-tokyo-ws:
+  title: "Numerical Computation of the JBC with and without Energy Saving Device"
+  authors: ["R. Broglia", "G. Dubbioso", "S. Zaghi"]
+  venue: "Tokyo 2015 A Workshop on CFD in Ship Hydrodynamics, pp. 6"
+  year: 2015
+  kind: conference
+zaghi-2015-nutts:
+  title: "RANS Hydrodynamic Characterization of a USV SWATH Configuration Including Design Optimization"
+  authors: ["S. Zaghi", "C. Leotardi", "R. Muscari", "G. Dubbioso", "M. Diez", "R. Broglia"]
+  venue: "18th Numerical Towing Tank Symposium, NuTTS 2015, pp. 6"
+  year: 2015
+  kind: conference
+dubbioso-2015-nav:
+  title: "Virtual PMM and Free Running Manoeuvring Predictions of a Submarine by CFD"
+  authors: ["G. Dubbioso", "S. Zaghi", "R. Broglia"]
+  venue: "18th International Conference on Ships and Shipping Research, NAV 2015, pp. 10"
+  year: 2015
+  kind: conference
+broglia-2014-udt:
+  title: "Analysis of a submarine manoeuvrability by numerical PMM tests"
+  authors: ["R. Broglia", "G. Dubbioso", "S. Zaghi", "M. Cannarozzo"]
+  venue: "Undersea Defence Technology 2014, UDT 2014, pp. 11"
+  year: 2014
+  kind: conference
+broglia-2014-hpcs:
+  title: "Enabling hydrodynamics solver for efficient parallel simulations"
+  authors: ["R. Broglia", "S. Zaghi", "R. Muscari", "F. Salvadore"]
+  venue: "2014 International Conference on High Performance Computing & Simulation, HPCS, pp. 803-810"
+  year: 2014
+  kind: conference
+  doi: "10.1109/HPCSim.2014.6903770"
+broglia-2014:
+  title: "Experimental investigation of interference effects for high-speed catamarans"
+  authors: ["R. Broglia", "B. Jacob", "S. Zaghi", "F. Stern", "A. Olivieri"]
+  venue: "Ocean Engineering, vol. 76, pp. 75–85"
+  year: 2014
+  kind: journal
+  doi: "10.1016/j.oceaneng.2013.12.003"
+zaghi-2014:
+  title: "OFF, Open source Finite volume Fluid dynamics code: A free, high-order solver based on parallel, modular, object-oriented Fortran API"
+  authors: ["S. Zaghi"]
+  venue: "Computer Physics Communications, vol. 185, pp. 2151–2194"
+  year: 2014
+  kind: journal
+  doi: "10.1016/j.cpc.2014.04.005"
+broglia-2013-udt:
+  title: "Manoeuvering analysis of a submarine by coupled EFD and CFD approaches"
+  authors: ["R. Broglia", "G. Dubbioso", "S. Zaghi", "M. Sellini", "F. La Gala", "M. Cannarozzo", "G. Bono"]
+  venue: "Undersea Defence Technology 2013, UDT 2013"
+  year: 2013
+  kind: conference
+broglia-2012-nav:
+  title: "Flow survey of a catamaran model in steady drift"
+  authors: ["R. Broglia", "G. Aloisio", "M. Falchi", "S. Grizzi", "S. Zaghi", "M. Felli", "M. Miozzi", "F. Pereira", "F. Di Felice", "F. Stern"]
+  venue: "17th International Conference on Ships and Shipping Research, NAV 2012, pp. 10"
+  year: 2012
+  kind: conference
+broglia-2012-nh:
+  title: "Measurements of the Velocity Field Around the DELFT 372 Catamaran in Steady Drift"
+  authors: ["R. Broglia", "G. Aloisio", "M. Falchi", "S. Grizzi", "S. Zaghi", "M. Felli", "M. Miozzi", "F. Pereira", "F. Di Felice", "F. Stern"]
+  venue: "29th Symposium on Naval Hydrodynamics, pp. 18"
+  year: 2012
+  kind: conference
+zaghi-2012-ichd:
+  title: "Numerical Simulation of a Rising Submarine"
+  authors: ["S. Zaghi", "G. Dubbioso", "R. Broglia"]
+  venue: "10th International Conference on Hydrodynamics, ICHD 2012, pp. 8"
+  year: 2012
+  kind: conference
+zaghi-2012-nav:
+  title: "Numerical Simulations of Fully-Appended Submarine"
+  authors: ["S. Zaghi", "G. Dubbioso", "R. Broglia"]
+  venue: "17th International Conference on Ships and Shipping Research, NAV 2012, pp. 10"
+  year: 2012
+  kind: conference
+zaghi-2012-simai:
+  title: "URANSE simulations of complex moving bodies by means of dynamic overlapping grids"
+  authors: ["S. Zaghi", "R. Broglia", "R. Muscari", "A. Di Mascio"]
+  venue: "Italian Society for Applied and Industrial Mathematics, SIMAI 2012"
+  year: 2012
+  kind: conference
+zaghi-2011-marine:
+  title: "A Numerical and Experimental Study on the Hydrodynamic of a Catamaran Varying the Demihull Separation"
+  authors: ["S. Zaghi", "R. Broglia", "A. Di Mascio"]
+  venue: "Computational Methods in Marine Engineering IV, MARINE 2011, pp. 12"
+  year: 2011
+  kind: conference
+zaghi-2011:
+  title: "Analysis of the Interference Effects for High-Speed Catamarans by Model Tests and Numerical Simulations"
+  authors: ["S. Zaghi", "R. Broglia", "A. Di Mascio"]
+  venue: "Ocean Engineering, vol. 38, pp. 2110–2122"
+  year: 2011
+  kind: journal
+  doi: "10.1016/j.oceaneng.2011.09.037"
+broglia-2011-fast:
+  title: "Calm Water and Seakeeping Investigation for a Fast Catamaran"
+  authors: ["R. Broglia", "B. Bouscasse", "B. Jacob", "A. Olivieri", "S. Zaghi", "Stern Frederick"]
+  venue: "11th International Conference on Fast Sea Transportation, FAST 2011, pp. 336–344"
+  year: 2011
+  kind: conference
+zaghi-2011-mascot:
+  title: "Hydrodynamical Numerical Simulations of Complex-Shaped Moving Bodies by means of Dynamic Overlapping Grids"
+  authors: ["S. Zaghi", "A. Di Mascio", "R. Muscari", "R. Broglia"]
+  venue: "11th Meeting on Applied Scientific Computing and Tools, MASCOT11, pp. 10"
+  year: 2011
+  kind: conference
+zaghi-2011-imam:
+  title: "Numerical and experimental analysis of the flow field around a surface combatant ship"
+  authors: ["S. Zaghi", "R. Broglia", "D. Guadalupi"]
+  venue: "Sustainable Maritime Transportation and Exploitation of Sea Resources, pp. 87–94"
+  year: 2011
+  kind: conference
+broglia-2011:
+  title: "Numerical simulation of interference effects for a high-speed catamaran"
+  authors: ["R. Broglia", "S. Zaghi", "A. Di Mascio"]
+  venue: "Journal of Marine Science and Technology, vol. 16, pp. 254–269"
+  year: 2011
+  kind: journal
+  doi: "10.1007/s00773-011-0132-3"
+dimascio-2011-esp:
+  title: "On the Aerodynamic Heating of VEGA Launcher: Compressible Chimera Navier-Stokes Simulation with Complex Surfaces"
+  authors: ["A. Di Mascio", "S. Zaghi", "R. Muscari", "R. Broglia", "B. Favini", "A. Scaccia"]
+  venue: "7th European Aerothermodynamics Symposium, pp. 8"
+  year: 2011
+  kind: conference
+zaghi-2010:
+  title: "Experimental and numerical investigations on fast catamarans interference effects"
+  authors: ["S. Zaghi", "R. Broglia", "A. Di Mascio"]
+  venue: "Journal of Hydrodynamics, Ser. B, vol. 22, pp. 528–533"
+  year: 2010
+  kind: journal
+  doi: "10.1016/S1001-6058(09)60250-X"
+zaghi-2010-ichd:
+  title: "Experimental and numerical investigations on fast catamarans interference effects"
+  authors: ["S. Zaghi", "R. Broglia", "A. Di Mascio"]
+  venue: "9th International Conference on Hydrodynamics, ICHD 2010, pp. 528–533"
+  year: 2010
+  kind: conference
+  doi: "10.1016/s1001-6058(09)60250-x"
+broglia-2009-isope:
+  title: "Analysis of the hydrodynamic performances of high-speed catamarans by viscous flow solver"
+  authors: ["R. Broglia", "S. Zaghi", "A. Di Mascio"]
+  venue: "19th International Offshore and Polar Engineering Conference, ISOPE 2009, pp. 740–747"
+  year: 2009
+  kind: conference
+zaghi-2009-jpc:
+  title: "Comparison Between Different Pressurant Gases for Ignition Transient of P80 SRM"
+  authors: ["S. Zaghi", "B. Favini", "A. Attili", "M. Di Giacinto", "F. Serraglia"]
+  venue: "45th AIAA/ASME/SAE/ASEE Joint Propulsion Conference, AIAA-2009-4980, pp. 14"
+  year: 2009
+  kind: conference
+  doi: "10.2514/6.2009-4980"
+zaghi-2008-jpc:
+  title: "3D Simulations of pre-Ignition Transient of P80 SRM"
+  authors: ["S. Zaghi", "B. Favini", "M. Di Giacinto", "F. Serraglia"]
+  venue: "44th AIAA/ASME/SAE/ASEE Joint Propulsion Conference, AIAA-2008-4606, pp. 13"
+  year: 2008
+  kind: conference
+  doi: "10.2514/6.2008-4606"
+zaghi-2008-sp:
+  title: "Ignition Transient of Vega's Solid Rocket Motors"
+  authors: ["S. Zaghi", "B. Favini", "M. Di Giacinto", "F. Serraglia"]
+  venue: "2nd International Symposium on Propulsion for Space Transportation"
+  year: 2008
+  kind: conference
+favini-2007-jpc:
+  title: "A Fully Three Dimensional Analysis of Pre-Ignition Transient in Solid Rocket Motors"
+  authors: ["B. Favini", "S. Zaghi", "M. Di Giacinto", "F. Serraglia"]
+  venue: "43rd AIAA/ASME/SAE/ASEE Joint Propulsion Conference, AIAA 2007-5781, pp. 21"
+  year: 2007
+  kind: conference
+  doi: "10.2514/6.2007-5781"
+favini-2006-jpc:
+  title: "3D Numerical Simulation of Ignition Transient in SRM"
+  authors: ["B. Favini", "S. Zaghi", "F. Serraglia", "M. Di Giacinto"]
+  venue: "42nd AIAA/ASME/SAE/ASEE Joint Propulsion Conference, AIAA 2006-4953, pp. 19"
+  year: 2006
+  kind: conference
+  doi: "10.2514/6.2006-4953"
+zaghi-2006-pegasus:
+  title: "Multidimensional Analysis of Pre-Ignition Transient in Solid Rocket Motor"
+  authors: ["S. Zaghi"]
+  venue: "4th Pegasus-AIAA Conference"
+  year: 2006
+  kind: conference

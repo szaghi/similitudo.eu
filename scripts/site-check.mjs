@@ -13,7 +13,8 @@
 //   - no console error, no uncaught exception, no failed request;
 //   - no horizontal scroll;
 //   - every nav link is on top at its centre (nothing, e.g. the hero canvas, covers it);
-//   - every internal link resolves (HTTP 200).
+//   - every internal link resolves (HTTP 200);
+//   - theme pairs (.light-only / .dark-only) never show both versions at once.
 // And once, on dist/: no lab pages and no draft placeholders leaked into the build.
 //
 // Browser: $CHROMIUM_PATH, else the newest ~/.cache/ms-playwright/chromium-*/chrome-linux64/chrome.
@@ -119,13 +120,16 @@ async function check(browser, list) {
             return a.contains(el) ? [] : [`${a.textContent.trim().replace(/\s+/g, ' ')} covered by <${el?.tagName.toLowerCase()} class="${el?.className}">`];
           });
           window.scrollTo(0, 0);
+          const pairs = [...document.querySelectorAll('.light-only, .dark-only')].filter((e) => getComputedStyle(e).display !== 'none');
+          const doubled = pairs.filter((e) => e.classList.contains('light-only') && e.nextElementSibling?.classList.contains('dark-only') && getComputedStyle(e.nextElementSibling).display !== 'none').map((e) => e.getAttribute('src') ?? e.tagName);
           const links = [...document.querySelectorAll('a[href^="/"]')].map((a) => a.getAttribute('href').split('#')[0]);
-          return { sw, blocked, links };
+          return { sw, blocked, links, doubled };
         });
         r.links.forEach((l) => internal.add(l));
         const issues = [...errs];
         if (r.sw > w) issues.push(`horizontal scroll: ${r.sw}px > ${w}px`);
         r.blocked.forEach((b) => issues.push(`nav link not clickable: ${b}`));
+        r.doubled.forEach((d) => issues.push(`light and dark versions both visible: ${d}`));
         const tag = `${p.padEnd(16)} ${String(w).padStart(4)}px ${scheme.padEnd(5)}`;
         if (issues.length) { failures.push([tag, issues]); console.log(bad('✗ ') + tag); issues.forEach((i) => console.log('    ' + i)); }
         else console.log(ok('✓ ') + tag);
@@ -154,7 +158,8 @@ async function shots(browser, list) {
       await page.goto(BASE + p, { waitUntil: 'networkidle' });
       await page.waitForTimeout(p === '/' ? 3600 : 300); // let the hero's single play finish
       // Freeze motion in its final state, so nothing is captured half-revealed.
-      await page.addStyleTag({ content: '.ri{opacity:1!important;translate:none!important}.rv::before{transform:none!important}*{animation:none!important}' });
+      await page.addStyleTag({ content: '.ri{opacity:1!important;translate:none!important}.rv::before{transform:none!important}*{animation:none!important;transition:none!important}.progress,[data-bar]{display:none!important}' });
+      await page.waitForTimeout(1000); // let the override settle (rules caught mid-draw otherwise)
       await page.screenshot({ path: path.join(out, `${tag}-${name(p)}.png`), fullPage: true });
       await page.close();
     }

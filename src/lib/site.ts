@@ -4,7 +4,7 @@ export const nav = [
   { href: '/codes/', label: 'Codes' },
   { href: '/people/', label: 'People' },
   { href: '/contact/', label: 'Contact' },
-  // Parked until they have real content (docs/TODO.md): Projects, Publications.
+  // Parked until it has real content (docs/TODO.md): Projects.
 ];
 
 /** Forwarded by Cloudflare Email Routing (receive only). */

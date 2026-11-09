@@ -1,0 +1,34 @@
+---
+// Publications as a numbered index: year, title, authors (S. Zaghi highlighted), venue, DOI.
+import type { CollectionEntry } from 'astro:content';
+interface Props { pubs: CollectionEntry<'publications'>[] }
+const { pubs } = Astro.props;
+const me = (a: string) => /Zaghi$/.test(a);
+---
+
+<ol class="index pubs">
+  {
+    pubs.map((p) => (
+      <li>
+        <span class="y mono">{p.data.year}</span>
+        <div>
+          <p class="t">{p.data.doi ? <a href={`https://doi.org/${p.data.doi}`}>{p.data.title}</a> : p.data.title}</p>
+          <p class="a">{p.data.authors.map((a, i) => (<>{i > 0 && ', '}{me(a) ? <strong>{a}</strong> : a}</>))}</p>
+          <p class="v mono">{p.data.venue}{p.data.doi && <> · doi:{p.data.doi}</>}</p>
+        </div>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  li { display: grid; grid-template-columns: 3.5rem minmax(0, 1fr); gap: 0 1rem; }
+  .y { color: var(--text-3); padding-top: 0.25em; }
+  p { margin: 0; max-width: 46rem; }
+  .t { font-family: var(--f-display); font-stretch: 112%; font-weight: 600; font-size: 1.05rem; line-height: 1.3; }
+  .t a { color: var(--text-1); text-decoration-color: var(--rule); }
+  .t a:hover { color: var(--link); text-decoration-color: currentColor; }
+  .a { color: var(--text-2); margin-top: 0.2rem; font-size: 0.95rem; }
+  .a strong { color: var(--text-1); font-weight: 600; }
+  .v { color: var(--text-3); margin-top: 0.3rem; overflow-wrap: anywhere; }
+</style>

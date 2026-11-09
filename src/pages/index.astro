@@ -4,10 +4,15 @@ import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import CapabilityRows from '../components/CapabilityRows.astro';
 import CodeRows from '../components/CodeRows.astro';
+import PubRows from '../components/PubRows.astro';
 import { isPublished, byOrder } from '../lib/content';
 import QuantumScroll from '../components/QuantumScroll.astro';
 
 const codes = (await getCollection('codes', isPublished)).sort(byOrder);
+const selected = (await getCollection('publications', isPublished))
+  .filter((p) => p.data.kind === 'journal')
+  .sort((a, b) => b.data.year - a.data.year)
+  .slice(0, 4);
 ---
 
 <Base home>
@@ -26,6 +31,14 @@ const codes = (await getCollection('codes', isPublished)).sort(byOrder);
       <div>
         <CodeRows codes={codes} />
         <p class="more"><a href="/codes/">All codes</a> <span aria-hidden="true">→</span></p>
+      </div>
+    </section>
+
+    <section class="sec">
+      <p class="label mono">03 — Selected publications</p>
+      <div>
+        <PubRows pubs={selected} />
+        <p class="more"><a href="/people/publications/">All publications</a> <span aria-hidden="true">→</span></p>
       </div>
     </section>
   </main>

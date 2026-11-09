@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import PubRows from '../../components/PubRows.astro';
+import { isPublished } from '../../lib/content';
+
+const pubs = (await getCollection('publications', isPublished)).sort((a, b) => b.data.year - a.data.year || a.data.title.localeCompare(b.data.title));
+const groups = [
+  { kind: 'journal', title: 'Journal articles' },
+  { kind: 'chapter', title: 'Book chapters' },
+  { kind: 'conference', title: 'Conference papers' },
+].map((g) => ({ ...g, items: pubs.filter((p) => p.data.kind === g.kind) })).filter((g) => g.items.length > 0);
+---
+
+<Base title="Publications" description="Publications of Stefano Zaghi: journal articles, book chapters and conference papers.">
+  <p class="crumb mono"><a href="/people/">People</a> / Stefano Zaghi</p>
+  <PageHead title="Publications" count={pubs.length} lead="Stefano Zaghi: journal articles, book chapters and conference papers, newest first." />
+  {
+    groups.map((g, k) => (
+      <section class="sec">
+        <p class="label mono">{String(k + 1).padStart(2, '0')} — {g.title} ({g.items.length})</p>
+        <PubRows pubs={g.items} />
+      </section>
+    ))
+  }
+</Base>
+
+<style>
+  .crumb { margin: 2rem 0 -2rem; color: var(--text-3); }
+  .crumb a { color: inherit; }
+</style>
