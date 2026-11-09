@@ -40,8 +40,8 @@
       canvas.width = Math.round(W * dpr);
       canvas.height = Math.round(H * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      // Phones: fit the front in the free band between the wordmark and the nav datum.
-      const word = hero.querySelector('.word')?.getBoundingClientRect();
+      // Phones: fit the front in the free band between the headline (or the wordmark) and the nav datum.
+      const word = (hero.querySelector('.hero-lead') ?? hero.querySelector('.word'))?.getBoundingClientRect();
       const datum = hero.querySelector('.datum')?.getBoundingClientRect();
       const band = word && datum ? { top: word.bottom - r.top + 16, bottom: datum.top - r.top - 16 } : undefined;
       spec = heroSpec(W, H, band);
