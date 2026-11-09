@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import { email } from '../lib/site';
+---
+
+<Base title="Contact" description="Get in touch with similitudo about a research project.">
+  <PageHead title="Contact" lead="Preparing a proposal and looking for a partner in numerical methods and simulation? Write to us." />
+  <section class="sec">
+    <p class="label mono">01 — Email</p>
+    <p class="mail"><a class="display" href={`mailto:${email}`}>{email}</a></p>
+  </section>
+</Base>
+
+<style>
+  .mail { margin: 0; }
+  .mail a { font-size: clamp(1.6rem, 5vw, 4rem); line-height: 1; letter-spacing: -0.03em; overflow-wrap: anywhere; text-decoration-thickness: 1px; }
+</style>

@@ -5,7 +5,7 @@ import Hero from '../components/Hero.astro';
 import CapabilityRows from '../components/CapabilityRows.astro';
 import CodeRows from '../components/CodeRows.astro';
 import { isPublished, byOrder } from '../lib/content';
-import { partner } from '../lib/site';
+import QuantumScroll from '../components/QuantumScroll.astro';
 
 const codes = (await getCollection('codes', isPublished)).sort(byOrder);
 ---
@@ -14,12 +14,7 @@ const codes = (await getCollection('codes', isPublished)).sort(byOrder);
   <Hero />
   <main id="main" class="page">
     <section class="sec">
-      <p class="label mono">01 — Partner profile</p>
-      <p class="statement">{partner}</p>
-    </section>
-
-    <section class="sec">
-      <p class="label mono">02 — Capabilities</p>
+      <p class="label mono">01 — Capabilities</p>
       <div>
         <CapabilityRows />
         <p class="more"><a href="/capabilities/">Capabilities</a> <span aria-hidden="true">→</span></p>
@@ -27,11 +22,12 @@ const codes = (await getCollection('codes', isPublished)).sort(byOrder);
     </section>
 
     <section class="sec">
-      <p class="label mono">03 — Codes</p>
+      <p class="label mono">02 — Codes</p>
       <div>
         <CodeRows codes={codes} />
         <p class="more"><a href="/codes/">All codes</a> <span aria-hidden="true">→</span></p>
       </div>
     </section>
   </main>
+  <QuantumScroll />
 </Base>

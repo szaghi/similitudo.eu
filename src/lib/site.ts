@@ -3,13 +3,17 @@ export const nav = [
   { href: '/capabilities/', label: 'Capabilities' },
   { href: '/codes/', label: 'Codes' },
   { href: '/people/', label: 'People' },
-  // Parked until they have real content (docs/TODO.md): Projects, Publications, Contact.
+  { href: '/contact/', label: 'Contact' },
+  // Parked until they have real content (docs/TODO.md): Projects, Publications.
 ];
+
+/** Forwarded by Cloudflare Email Routing (receive only). */
+export const email = 'contact@similitudo.eu';
 
 export const lead =
   'Numerical methods and GPU-accelerated simulation software for research projects: adaptive grids, compressible flows, magnetohydrodynamics and plasmas, from a laptop to GPU clusters.';
 
-// TODO: two or three sentences on the role similitudo plays in a proposal (partner profile).
+// Partner profile: shown in the footer, not on the home page, until it is backed by projects (docs/TODO.md).
 export const partner =
   'similitudo joins research projects as the partner for numerical methods and high-performance simulation: designing the schemes, writing the solvers, porting them to GPUs and verifying the results.';
 
