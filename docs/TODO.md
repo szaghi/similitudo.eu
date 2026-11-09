@@ -18,7 +18,8 @@ underscore, add the entry back to `nav` in `src/lib/site.ts`, and, where noted, 
 - **Partner profile** (`partner` in `src/lib/site.ts`): shown low-key in the footer of every page, not on the home
   page, until projects back it. Bring it back to the home page with the Projects section; refine it to two or three
   sentences on the role similitudo plays in a proposal.
-- **Capabilities** (`src/data/capabilities.ts`): phrased as assignable tasks, each linked to evidence (2026-11-09).
+- **Capabilities** (`src/data/capabilities.ts`): phrased as assignable tasks, each linked to the documentation
+  (ADAM landing page for generic items, the FLUME / PRISM starting pages for theirs) (2026-11-09).
   Refine the wording as projects come in.
 - **People** (`src/content/people/stefano-zaghi.md`): bio written (sources: the CV `.tex` files, ORCID, CNR
   IRIS). Still to do: confirm the title, CV PDF in `public/cv/`, update the ORCID record (it still says CNR-INSEAN).
