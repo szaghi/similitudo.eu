@@ -3,14 +3,13 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
-  <p class="ask display">Preparing a proposal?</p>
-  <p class="to"><a href="/contact/">Get in touch</a> <span aria-hidden="true">→</span></p>
   <p class="mono small">© {year} Stefano Zaghi · similitudo.eu</p>
+  <p class="mono small"><a href="https://github.com/szaghi">github.com/szaghi</a></p>
 </footer>
 
 <style>
-  .site-footer { margin-top: 2rem; padding: 4rem var(--gutter) 2.5rem; border-top: 1px solid var(--text-1); }
-  .ask { margin: 0; font-size: clamp(2.2rem, 7vw, 6.5rem); line-height: 0.95; letter-spacing: -0.03em; }
-  .to { margin: 1.25rem 0 3rem; font-weight: 600; }
+  /* The "Preparing a proposal? → Get in touch" call is parked with the Contact page (docs/TODO.md). */
+  .site-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; margin-top: 4rem; padding: 1.25rem var(--gutter) 2.5rem; border-top: 1px solid var(--text-1); }
   .small { margin: 0; color: var(--text-3); }
+  .small a { color: inherit; }
 </style>

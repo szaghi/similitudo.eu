@@ -31,5 +31,7 @@ npm run preview   # serve dist/
 | People | `src/content/people/*.md` | frontmatter + body |
 | Publications | `src/data/publications.yaml` | one keyed entry each |
 
+Projects, Publications and Contact are parked until they have real content: see `docs/TODO.md`.
+
 Schemas live in `src/content.config.ts`; a missing or malformed field fails the build. Set `draft: true` to keep an
 entry out of production while still seeing it in `npm run dev`. Search for `TODO` to find unfinished copy.

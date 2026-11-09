@@ -11,7 +11,7 @@ import { pad } from '../lib/site';
         <span class="n mono">{pad(k)}</span>
         <h3>{c.title}</h3>
         <p>{c.text}</p>
-        <span class="ev mono">evidence · {c.evidence}</span>
+        {c.evidence && <span class="ev mono">evidence · {c.evidence}</span>}
       </li>
     ))
   }

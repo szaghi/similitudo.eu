@@ -4,14 +4,10 @@ import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import CapabilityRows from '../components/CapabilityRows.astro';
 import CodeRows from '../components/CodeRows.astro';
-import ProjectRows from '../components/ProjectRows.astro';
 import { isPublished, byOrder } from '../lib/content';
 import { partner } from '../lib/site';
 
 const codes = (await getCollection('codes', isPublished)).sort(byOrder);
-const projects = (await getCollection('projects', isPublished))
-  .sort((a, b) => b.data.start.getTime() - a.data.start.getTime())
-  .slice(0, 3);
 ---
 
 <Base home>
@@ -35,14 +31,6 @@ const projects = (await getCollection('projects', isPublished))
       <div>
         <CodeRows codes={codes} />
         <p class="more"><a href="/codes/">All codes</a> <span aria-hidden="true">→</span></p>
-      </div>
-    </section>
-
-    <section class="sec">
-      <p class="label mono">04 — Projects</p>
-      <div>
-        {projects.length > 0 ? <ProjectRows projects={projects} dense /> : <p class="muted">The project list is in preparation.</p>}
-        <p class="more"><a href="/projects/">All projects</a> <span aria-hidden="true">→</span></p>
       </div>
     </section>
   </main>

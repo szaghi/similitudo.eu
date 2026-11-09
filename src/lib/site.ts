@@ -2,10 +2,8 @@
 export const nav = [
   { href: '/capabilities/', label: 'Capabilities' },
   { href: '/codes/', label: 'Codes' },
-  { href: '/projects/', label: 'Projects' },
-  { href: '/publications/', label: 'Publications' },
   { href: '/people/', label: 'People' },
-  { href: '/contact/', label: 'Contact' },
+  // Parked until they have real content (docs/TODO.md): Projects, Publications, Contact.
 ];
 
 export const lead =
