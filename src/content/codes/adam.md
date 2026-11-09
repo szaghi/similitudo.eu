@@ -27,6 +27,7 @@ figure:
   height: 262
   alt: Density of a Mach 3 flow over a forward-facing step, on adaptive quadtree blocks
   caption: "Woodward–Colella Mach 3 step, density to t = 4 on a forest of three quadtree realms, base spacing 1/80 with static refined boxes; the inter-realm seams dashed. Run with FLUME on ADAM."
+  animated: true
   source: https://szaghi.github.io/adam/
 evidence:
   - kind: performance

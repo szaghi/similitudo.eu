@@ -23,6 +23,7 @@ figure:
   height: 742
   alt: Density of the Orszag–Tang MHD vortex on adaptive blocks
   caption: "Orszag–Tang vortex, ideal MHD with GLM cleaning: density to t = 0.5 on 128², the blocks outlined. FLUME case MV-12."
+  animated: true
   source: https://szaghi.github.io/adam/applications/flume/
 evidence:
   - kind: verification

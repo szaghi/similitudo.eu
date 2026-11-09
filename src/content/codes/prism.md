@@ -19,6 +19,7 @@ figure:
   height: 258
   alt: A Gaussian electromagnetic pulse leaving the box through three kinds of boundary
   caption: "A Gaussian pulse in vacuum meets the x faces of the box. Left to right: PEC, first-order Silver–Müller, Silver–Müller with a classic PML (outlined). PRISM tutorials 2 and 3."
+  animated: true
   source: https://szaghi.github.io/adam/applications/prism/
 evidence:
   - kind: verification

@@ -30,6 +30,7 @@ const codes = defineCollection({
         alt: z.string(),
         caption: z.string(),
         source: z.url().optional(),
+        animated: z.boolean().default(false), // a looping clip next to the still: <name>.webm and <name>.mp4
       })
       .optional(),
     evidence: z
