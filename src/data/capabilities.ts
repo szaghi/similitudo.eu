@@ -1,9 +1,10 @@
 // Capabilities, phrased as the task a coordinator can assign in a work package. Each links to the documentation
 // (GitHub Pages), which follows the codebase: generic capabilities to the ADAM landing page, application-specific ones
-// to the FLUME or PRISM starting page. Measured numbers live on the code pages, next to their source.
+// to the FLUME or PRISM starting page, the GPU layer to FUNDAL's. Measured numbers live on the code pages, next to their source.
 const ADAM = 'https://szaghi.github.io/adam/';
 const FLUME = `${ADAM}applications/flume/`;
 const PRISM = `${ADAM}applications/prism/`;
+const FUNDAL = 'https://szaghi.github.io/FUNDAL/';
 
 export interface Capability {
   title: string;
@@ -22,8 +23,8 @@ export const capabilities: Capability[] = [
   {
     title: 'GPU acceleration',
     task: 'Porting and scaling solvers on GPU clusters',
-    text: 'OpenACC (nvfortran) and OpenMP offloading (amdflang), MPI across nodes.',
-    evidence: { label: 'ADAM docs', url: ADAM },
+    text: 'A programming-model-agnostic device layer, FUNDAL: one Fortran API and one kernel source for OpenACC (NVIDIA GPUs) and OpenMP offloading (AMD GPUs), plus a CPU mode, chosen at compile time; MPI across nodes, one device per rank.',
+    evidence: { label: 'FUNDAL docs', url: FUNDAL },
   },
   {
     title: 'Compressible flows and MHD',
