@@ -1,7 +1,7 @@
 // Capabilities, phrased as the task a coordinator can assign in a work package. Each links to the documentation
 // (GitHub Pages), which follows the codebase: generic capabilities to the ADAM landing page, application-specific ones
 // to the FLUME or PRISM starting page, the GPU layer to FUNDAL's, geometry to FOSSIL's, visualisation output to MOTIOn's and VTKFortran's,
-// software engineering to StringiFor's. Measured numbers live on the code pages, next to their source.
+// software engineering to the general-purpose libraries'. Measured numbers live on the code pages, next to their source.
 const ADAM = 'https://szaghi.github.io/adam/';
 const FLUME = `${ADAM}applications/flume/`;
 const PRISM = `${ADAM}applications/prism/`;
@@ -10,6 +10,8 @@ const FOSSIL = 'https://szaghi.github.io/FOSSIL/';
 const VTKFORTRAN = 'https://szaghi.github.io/VTKFortran/';
 const MOTION = 'https://szaghi.github.io/MOTIOn/';
 const STRINGIFOR = 'https://szaghi.github.io/StringiFor/';
+const PENF = 'https://szaghi.github.io/PENF/';
+const BEFOR64 = 'https://szaghi.github.io/BeFoR64/';
 
 export interface Capability {
   title: string;
@@ -73,7 +75,11 @@ export const capabilities: Capability[] = [
   {
     title: 'Modern Fortran engineering',
     task: 'Maintainable, tested Fortran for the codes of a project',
-    text: 'Fortran 2008+ libraries designed for reuse, documented, and tested in CI with coverage. StringiFor, a string library in the open since 2016, is used by other open-source projects; its documentation examples are programs compiled and run, and it builds with FoBiS.py, fpm, CMake or Make.',
-    evidence: [{ label: 'StringiFor docs', url: STRINGIFOR }],
+    text: 'Modern Fortran libraries designed for reuse, documented, and tested in CI with coverage; general-purpose ones used by other open-source projects: PENF, portable kinds and number–string conversions, the base layer of the other libraries; BeFoR64, Base64 for any intrinsic type; StringiFor, a string type with the methods of Python.',
+    evidence: [
+      { label: 'PENF docs', url: PENF },
+      { label: 'BeFoR64 docs', url: BEFOR64 },
+      { label: 'StringiFor docs', url: STRINGIFOR },
+    ],
   },
 ];
