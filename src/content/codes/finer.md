@@ -2,7 +2,7 @@
 name: FiNeR
 tagline: INI configuration files read and written from Fortran.
 kind: general
-order: 15
+order: 16
 status: active
 license: GPLv3 / BSD / MIT
 repo: https://github.com/szaghi/FiNeR

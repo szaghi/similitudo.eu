@@ -2,7 +2,7 @@
 name: FLAP
 tagline: Command lines for Fortran programs, described once, parsed, checked and documented.
 kind: general
-order: 16
+order: 17
 status: active
 license: GPLv3 / BSD / MIT
 repo: https://github.com/szaghi/FLAP

@@ -1,7 +1,8 @@
 // Capabilities, phrased as the task a coordinator can assign in a work package. Each links to the documentation
 // (GitHub Pages), which follows the codebase: generic capabilities to the ADAM landing page, application-specific ones
 // to the FLUME or PRISM starting page, the GPU layer to FUNDAL's, geometry to ADAM's, FOSSIL's and VecFor's, visualisation output to MOTIOn's, VTKFortran's and foresight's;
-// software engineering to the general-purpose libraries on the Codes page (each linking its own docs) and to FoBiS's. Measured numbers live on the code pages, next to their source.
+// software engineering to the general-purpose libraries on the Codes page (each linking its own docs) and to FoBiS's,
+// the state of the art to mosaic's. Measured numbers live on the code pages, next to their source.
 const ADAM = 'https://szaghi.github.io/adam/';
 const FLUME = `${ADAM}applications/flume/`;
 const PRISM = `${ADAM}applications/prism/`;
@@ -12,6 +13,7 @@ const VTKFORTRAN = 'https://szaghi.github.io/VTKFortran/';
 const MOTION = 'https://szaghi.github.io/MOTIOn/';
 const FORESIGHT = 'https://szaghi.github.io/foresight/';
 const FOBIS = 'https://szaghi.github.io/FoBiS/';
+const MOSAIC = 'https://szaghi.github.io/mosaic/';
 
 export interface Capability {
   title: string;
@@ -79,5 +81,11 @@ export const capabilities: Capability[] = [
       { label: 'General-purpose libraries', url: '/codes/#general' },
       { label: 'FoBiS docs', url: FOBIS },
     ],
+  },
+  {
+    title: 'State of the art',
+    task: 'The literature review of a work package, kept current through the project',
+    text: 'The literature searched across 22 scientific databases at once and merged by DOI, kept in a local library with the PDFs one is entitled to read; ranked, summarised and compared by a language model whose statements cite the papers; citation maps of the field, and saved searches that report only the new papers. With mosaic.',
+    evidence: [{ label: 'mosaic docs', url: MOSAIC }],
   },
 ];
