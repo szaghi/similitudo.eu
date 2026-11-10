@@ -1,12 +1,13 @@
 // Capabilities, phrased as the task a coordinator can assign in a work package. Each links to the documentation
 // (GitHub Pages), which follows the codebase: generic capabilities to the ADAM landing page, application-specific ones
-// to the FLUME or PRISM starting page, the GPU layer to FUNDAL's, geometry to FOSSIL's, visualisation output to MOTIOn's and VTKFortran's,
+// to the FLUME or PRISM starting page, the GPU layer to FUNDAL's, geometry to FOSSIL's and VecFor's, visualisation output to MOTIOn's and VTKFortran's,
 // software engineering to the general-purpose libraries'. Measured numbers live on the code pages, next to their source.
 const ADAM = 'https://szaghi.github.io/adam/';
 const FLUME = `${ADAM}applications/flume/`;
 const PRISM = `${ADAM}applications/prism/`;
 const FUNDAL = 'https://szaghi.github.io/FUNDAL/';
 const FOSSIL = 'https://szaghi.github.io/FOSSIL/';
+const VECFOR = 'https://szaghi.github.io/VecFor/';
 const VTKFORTRAN = 'https://szaghi.github.io/VTKFortran/';
 const MOTION = 'https://szaghi.github.io/MOTIOn/';
 const STRINGIFOR = 'https://szaghi.github.io/StringiFor/';
@@ -54,8 +55,11 @@ export const capabilities: Capability[] = [
   {
     title: 'Geometry for simulation',
     task: 'The geometry pipeline of a solver, from CAD surfaces to the grid',
-    text: 'Surfaces read, repaired and measured with certified bounds; signed distances and level sets; immersed-boundary queries, AMR tagging and exact cut cells; overset assembly and body-fitted grids; moving bodies and collision detection; on the CPU or bit for bit on the GPU.',
-    evidence: [{ label: 'FOSSIL docs', url: FOSSIL }],
+    text: 'Surfaces read, repaired and measured with certified bounds; signed distances and level sets; immersed-boundary queries, AMR tagging and exact cut cells; overset assembly and body-fitted grids; moving bodies and collision detection; on the CPU or bit for bit on the GPU. Built on VecFor, vector algebra callable inside GPU kernels.',
+    evidence: [
+      { label: 'FOSSIL docs', url: FOSSIL },
+      { label: 'VecFor docs', url: VECFOR },
+    ],
   },
   {
     title: 'Output for visualisation',
