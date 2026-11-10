@@ -2,7 +2,7 @@
 name: FACE
 tagline: ANSI colours and styles for Fortran strings, in one function.
 kind: general
-order: 14
+order: 15
 status: active
 license: GPLv3 / BSD / MIT
 repo: https://github.com/szaghi/FACE

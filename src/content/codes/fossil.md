@@ -2,7 +2,7 @@
 name: FOSSIL
 tagline: Geometry for simulation codes, in pure Fortran, on the CPU or bit-exact on the GPU.
 kind: library
-order: 9
+order: 10
 status: active
 license: GPLv3 / BSD / MIT
 repo: https://github.com/szaghi/FOSSIL

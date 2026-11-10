@@ -34,8 +34,10 @@ const facets = [
 
 <Base title={d.name} description={d.tagline}>
   <header class="head">
-    <h1 class="display">{d.name}</h1>
-    {d.logo && <CodeLogo folder={d.logo} name={d.name} size={112} />}
+    <div class="ident">
+      <h1 class="display">{d.name}</h1>
+      {d.logo && <CodeLogo folder={d.logo} name={d.name} size={112} />}
+    </div>
     <p class="lead">{d.tagline}</p>
   </header>
 
@@ -108,9 +110,12 @@ const facets = [
 </Base>
 
 <style>
-  .head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 1rem 2rem; padding: 3rem 0 2rem; }
+  /* the logo (when present) sits right after the name; flex, not grid: a grid max-content track measured the
+     extended display face ~50 px wider than its glyphs. A logo that does not fit wraps under the name. */
+  .head { padding: 3rem 0 2rem; }
+  .ident { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.75rem; }
   h1 { margin: 0 0 0 -0.03em; font-size: clamp(2.4rem, 6vw, 5.5rem); font-weight: 300; }
-  .lead { grid-column: 1 / -1; margin: 0.5rem 0 0; max-width: 34rem; color: var(--text-2); }
+  .lead { margin: 1.5rem 0 0; max-width: 34rem; color: var(--text-2); }
   .facts { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0.5rem 2rem; margin: 0; border-top: 1px solid var(--text-1); padding-top: 1rem; }
   .facts dt { color: var(--text-3); padding-top: 0.2em; }
   .facts dd { margin: 0; overflow-wrap: anywhere; }
