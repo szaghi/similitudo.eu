@@ -4,6 +4,7 @@ import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import CapabilityRows from '../components/CapabilityRows.astro';
 import CodeRows from '../components/CodeRows.astro';
+import CodeRing from '../components/CodeRing.astro';
 import PubRows from '../components/PubRows.astro';
 import { isPublished, byOrder } from '../lib/content';
 import QuantumScroll from '../components/QuantumScroll.astro';
@@ -27,7 +28,7 @@ const selected = (await getCollection('publications', isPublished))
     </section>
 
     <section class="sec">
-      <p class="label mono">02 — Codes</p>
+      <div class="label"><CodeRing codes={codes} index="02" /></div>
       <div>
         <CodeRows codes={codes} />
         <p class="more"><a href="/codes/">All codes</a> <span aria-hidden="true">→</span></p>

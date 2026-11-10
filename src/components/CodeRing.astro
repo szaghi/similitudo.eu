@@ -1,0 +1,50 @@
+---
+// The home page's Codes label as a ring: the word in the middle, the code logos around it on a circle, each a link
+// to its page. Desktop only (≥64rem), where the label column has the room; phones keep the plain label.
+import type { CollectionEntry } from 'astro:content';
+import CodeLogo from './CodeLogo.astro';
+
+interface Props {
+  codes: CollectionEntry<'codes'>[];
+  index: string; // the section number, e.g. "02"
+}
+const { codes, index } = Astro.props;
+const ringed = codes.filter((c) => c.data.logo);
+const size = 40; // logo, px
+const radius = 112; // circle through the logo centres, px
+const box = 2 * radius + size; // the square the ring sits in
+const at = (k: number) => {
+  const a = -Math.PI / 2 + (2 * Math.PI * k) / ringed.length; // from the top, clockwise
+  return { x: radius * Math.cos(a), y: radius * Math.sin(a) };
+};
+---
+
+<p class="label mono plain">{index} — Codes</p>
+<div class="ring" style={`width:${box}px;height:${box}px`}>
+  <p class="word"><span class="mono">{index}</span>Codes</p>
+  {
+    ringed.map((c, k) => {
+      const { x, y } = at(k);
+      return (
+        <a class="dot" href={`/codes/${c.id}/`} aria-label={c.data.name} title={c.data.name}
+           style={`left:calc(50% + ${x.toFixed(1)}px - ${size / 2}px);top:calc(50% + ${y.toFixed(1)}px - ${size / 2}px)`}>
+          <CodeLogo folder={c.data.logo!} name={c.data.name} size={size} decorative />
+        </a>
+      );
+    })
+  }
+</div>
+
+<style>
+  .ring { display: none; position: relative; margin: 0; text-transform: none; letter-spacing: normal; }
+  .word { position: absolute; inset: 0; margin: 0; display: grid; place-content: center; text-align: center; gap: 0.35rem;
+          font-family: var(--f-display); font-stretch: 125%; font-weight: 300; font-size: 1.9rem; line-height: 1; color: var(--text-1); }
+  .word .mono { font-size: 0.75rem; font-stretch: normal; font-weight: 400; letter-spacing: 0.06em; color: var(--text-3); }
+  .dot { position: absolute; display: block; line-height: 0; border-radius: 4px; transition: transform 0.2s ease; }
+  .dot:hover, .dot:focus-visible { transform: scale(1.25); }
+  @media (min-width: 64rem) {
+    .ring { display: block; }
+    .plain { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .dot { transition: none; } }
+</style>

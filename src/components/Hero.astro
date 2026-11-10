@@ -8,8 +8,13 @@ import HeroMesh from './HeroMesh.astro';
 import { heroSpec } from '../lib/mesh/front';
 import { still } from '../lib/mesh/still';
 import { lead } from '../lib/site';
+import { getCollection } from 'astro:content';
+import { isPublished, byOrder } from '../lib/content';
 
 const initial = still(heroSpec(1440, 900)).readout; // shown until the script draws
+// The code logos orbit the nav's Codes link (desktop only, see Nav).
+const ring = (await getCollection('codes', isPublished)).sort(byOrder).filter((c) => c.data.logo)
+  .map((c) => ({ id: c.id, name: c.data.name, logo: c.data.logo! }));
 ---
 
 <header class="hero">
@@ -17,7 +22,7 @@ const initial = still(heroSpec(1440, 900)).readout; // shown until the script dr
   <h1 class="word display">similitudo<span class="stamp"><Seal size={64} label="" /></span></h1>
   <div class="toggle"><ThemeToggle /></div>
   <p class="lead hero-lead">{lead.map((line, i) => (<>{i > 0 && " "}<span class="line">{line}</span></>))}</p>
-  <Nav class="hero-nav" />
+  <Nav class="hero-nav" ring={ring} />
   <p class="readout mono hero-readout">{initial}</p>
 </header>
 
@@ -83,4 +88,7 @@ const initial = still(heroSpec(1440, 900)).readout; // shown until the script dr
     .hero :global(.hero-nav ul) { width: min(100%, 52%); }
     .readout { grid-row: 6; grid-column: 2; align-self: end; text-align: right; margin: 0; }
   }
+  /* with the code orbit around Codes (Nav, >=80rem) the links pack from the left at their natural width, so the
+     orbit's margins push only what follows Codes, by ~60 px, and Contact stays clear of the blast ring */
+  @media (min-width: 80rem) { .hero :global(.hero-nav ul) { width: max-content; } }
 </style>

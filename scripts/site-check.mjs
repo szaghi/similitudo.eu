@@ -115,7 +115,7 @@ async function check(browser, list) {
         await page.goto(BASE + p, { waitUntil: 'networkidle' });
         const r = await page.evaluate(() => {
           const sw = document.documentElement.scrollWidth;
-          const blocked = [...document.querySelectorAll('nav.datum a')].flatMap((a) => {
+          const blocked = [...document.querySelectorAll('nav.datum a')].filter((a) => a.getClientRects().length > 0).flatMap((a) => { // hidden links (the phone-hidden orbit) have no box
             a.scrollIntoView({ block: 'center' });
             const b = a.getBoundingClientRect();
             const el = document.elementFromPoint(b.x + b.width / 2, b.y + b.height / 2);
