@@ -7,6 +7,7 @@ status: active
 license: GPLv3 / BSD / MIT
 repo: https://github.com/szaghi/StringiFor
 docs: https://szaghi.github.io/StringiFor/
+logo: /codes/stringifor
 methods:
   - A string of any length, a drop-in for character
   - Split, join, slice, replace, strip, case conversion, justified layout

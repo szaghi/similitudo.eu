@@ -4,13 +4,15 @@ interface Props {
   folder: string;
   name: string;
   size?: number;
+  decorative?: boolean; // next to the name it repeats: empty alt, so it is not read twice
 }
-const { folder, name, size = 96 } = Astro.props;
+const { folder, name, size = 96, decorative = false } = Astro.props;
+const alt = decorative ? '' : `${name} logo`;
 ---
 
 <span class="code-logo" style={`width:${size}px;height:${size}px`}>
-  <img class="light-only" src={`${folder}/logo.svg`} alt={`${name} logo`} width={size} height={size} loading="lazy" />
-  <img class="dark-only" src={`${folder}/logo-dark.svg`} alt={`${name} logo`} width={size} height={size} loading="lazy" />
+  <img class="light-only" src={`${folder}/logo.svg`} alt={alt} width={size} height={size} loading="lazy" />
+  <img class="dark-only" src={`${folder}/logo-dark.svg`} alt={alt} width={size} height={size} loading="lazy" />
 </span>
 
 <style>

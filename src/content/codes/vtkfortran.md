@@ -7,6 +7,7 @@ status: active
 license: GPLv3 / BSD / MIT
 repo: https://github.com/szaghi/VTKFortran
 docs: https://szaghi.github.io/VTKFortran/
+logo: /codes/vtkfortran
 methods:
   - Image, rectilinear, structured and unstructured grids (polyhedra included), polygonal data
   - ASCII, base64 binary, raw binary appended, zlib compression
