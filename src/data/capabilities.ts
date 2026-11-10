@@ -1,10 +1,11 @@
 // Capabilities, phrased as the task a coordinator can assign in a work package. Each links to the documentation
 // (GitHub Pages), which follows the codebase: generic capabilities to the ADAM landing page, application-specific ones
-// to the FLUME or PRISM starting page, the GPU layer to FUNDAL's. Measured numbers live on the code pages, next to their source.
+// to the FLUME or PRISM starting page, the GPU layer to FUNDAL's, geometry to FOSSIL's. Measured numbers live on the code pages, next to their source.
 const ADAM = 'https://szaghi.github.io/adam/';
 const FLUME = `${ADAM}applications/flume/`;
 const PRISM = `${ADAM}applications/prism/`;
 const FUNDAL = 'https://szaghi.github.io/FUNDAL/';
+const FOSSIL = 'https://szaghi.github.io/FOSSIL/';
 
 export interface Capability {
   title: string;
@@ -43,6 +44,12 @@ export const capabilities: Capability[] = [
     task: 'Flows around complex bodies without body-fitted meshes',
     text: 'Immersed boundaries on adaptive grids, running on GPUs.',
     evidence: { label: 'ADAM docs', url: ADAM },
+  },
+  {
+    title: 'Geometry for simulation',
+    task: 'The geometry pipeline of a solver, from CAD surfaces to the grid',
+    text: 'Surfaces read, repaired and measured with certified bounds; signed distances and level sets; immersed-boundary queries, AMR tagging and exact cut cells; overset assembly and body-fitted grids; moving bodies and collision detection; on the CPU or bit for bit on the GPU.',
+    evidence: { label: 'FOSSIL docs', url: FOSSIL },
   },
   {
     title: 'Verification and validation',

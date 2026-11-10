@@ -1,12 +1,17 @@
 ---
-// A code's figure: a still (light / dark), or, when `animated`, the same run as a looping clip with the still as its
-// poster. Clips sit next to the stills with the same name (figure.png → figure.webm, figure.mp4). Accessibility:
-// muted, no download until needed (preload="none"), plays only while on screen, a pause/play button (WCAG 2.2.2:
-// the loop runs past 5 s), and the still only under reduced motion or without JavaScript.
+// A code's figure, one of three kinds:
+//   - a still (PNG, light / dark);
+//   - a clip (`animated`, PNG still + <name>.webm / <name>.mp4 next to it, light / dark);
+//   - an animated SVG (`animated`, src ending in .svg: SMIL animation, one version for both themes, as FOSSIL's are).
+// Accessibility, same for clips and SVGs: nothing loads until it is near the screen, it plays only while on screen,
+// a pause/play button (WCAG 2.2.2: the loops run past 5 s), and under reduced motion the clip shows its still and the
+// SVG its first frame. Without JavaScript: the still, or the SVG as a plain image. An SVG sits in an <object>, not
+// inline, so the ids inside several SVGs on one page cannot collide; SMIL is then paused through its own document.
 interface Props {
   f: { src: string; dark?: string; width: number; height: number; alt: string; caption: string; source?: string; animated: boolean };
 }
 const { f } = Astro.props;
+const svg = f.animated && f.src.endsWith('.svg');
 const clip = (png: string) => png.replace(/\.png$/, '');
 const variants = [
   { src: f.src, cls: f.dark ? 'light-only' : undefined },
@@ -17,15 +22,22 @@ const variants = [
 <figure class="fig" data-animated={f.animated ? '' : undefined}>
   <div class="frame">
     {
-      variants.map((v) =>
-        f.animated ? (
-          <video class={v.cls} muted loop playsinline preload="none" poster={v.src} width={f.width} height={f.height} aria-label={f.alt}>
-            <source src={`${clip(v.src)}.webm`} type="video/webm" />
-            <source src={`${clip(v.src)}.mp4`} type="video/mp4" />
-          </video>
-        ) : (
-          <img class={v.cls} src={v.src} alt={f.alt} width={f.width} height={f.height} loading="lazy" />
-        ),
+      svg ? (
+        <>
+          <object class="svg-anim" type="image/svg+xml" data-src={f.src} role="img" aria-label={f.alt} style={`aspect-ratio: ${f.width} / ${f.height}`} />
+          <noscript><img src={f.src} alt={f.alt} width={f.width} height={f.height} /></noscript>
+        </>
+      ) : (
+        variants.map((v) =>
+          f.animated ? (
+            <video class={v.cls} muted loop playsinline preload="none" poster={v.src} width={f.width} height={f.height} aria-label={f.alt}>
+              <source src={`${clip(v.src)}.webm`} type="video/webm" />
+              <source src={`${clip(v.src)}.mp4`} type="video/mp4" />
+            </video>
+          ) : (
+            <img class={v.cls} src={v.src} alt={f.alt} width={f.width} height={f.height} loading="lazy" />
+          ),
+        )
       )
     }
     {f.animated && <button class="toggle mono" type="button" hidden>pause</button>}
@@ -35,11 +47,48 @@ const variants = [
 
 <script>
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   document.querySelectorAll<HTMLElement>('figure.fig[data-animated]').forEach((fig) => {
-    if (still) return; // posters only
-    const videos = [...fig.querySelectorAll('video')];
     const button = fig.querySelector<HTMLButtonElement>('.toggle')!;
+    const obj = fig.querySelector<HTMLObjectElement>('object.svg-anim');
     let paused = false; // the reader's choice, kept while scrolling
+    let onScreen = false;
+
+    if (obj) {
+      // Animated SVG: load when near the screen; drive SMIL through the embedded document.
+      const svgRoot = () => obj.contentDocument?.documentElement as unknown as SVGSVGElement | undefined;
+      const sync = () => {
+        const s = svgRoot();
+        if (!s || typeof s.pauseAnimations !== 'function') return;
+        if (still || paused || !onScreen) s.pauseAnimations();
+        else s.unpauseAnimations();
+      };
+      obj.addEventListener('load', () => {
+        if (still) svgRoot()?.setCurrentTime?.(0); // reduced motion: hold the first frame
+        sync();
+      });
+      new IntersectionObserver(
+        ([e]) => {
+          if (e.isIntersecting && !obj.data) obj.data = obj.dataset.src!;
+          onScreen = e.isIntersecting && e.intersectionRatio >= 0.25;
+          sync();
+        },
+        { rootMargin: '200px 0px', threshold: [0, 0.25] },
+      ).observe(fig);
+      if (!still) {
+        button.hidden = false;
+        button.addEventListener('click', () => {
+          paused = !paused;
+          button.textContent = paused ? 'play' : 'pause';
+          sync();
+        });
+      }
+      return;
+    }
+
+    // Clip: posters only under reduced motion.
+    if (still) return;
+    const videos = [...fig.querySelectorAll('video')];
     const visible = () => videos.filter((v) => v.offsetParent !== null); // the version of the current theme
     const play = () => visible().forEach((v) => { v.preload = 'auto'; v.play().catch(() => {}); });
     const stop = () => videos.forEach((v) => v.pause());
@@ -59,8 +108,10 @@ const variants = [
   .fig { margin: 0; }
   .frame { position: relative; }
   /* No `display` on the media: the global .light-only / .dark-only rules must decide which version shows. */
-  .frame img, .frame video { width: 100%; height: auto; vertical-align: top; border: 1px solid var(--rule); }
-  .toggle { position: absolute; right: 0.5rem; top: 0.5rem; /* top: the clips print their time stamp bottom-right */ padding: 0.2rem 0.6rem; background: var(--bg); color: var(--text-1); border: 1px solid var(--text-1); border-radius: 999px; cursor: pointer; font-size: 0.75rem; }
+  .frame img, .frame video, .frame object { width: 100%; height: auto; vertical-align: top; border: 1px solid var(--rule); }
+  .frame object { display: block; background: #1b1714; } /* FOSSIL's plate colour, so the box is not empty while it loads */
+  /* top: the clips print their time stamp bottom-right */
+  .toggle { position: absolute; right: 0.5rem; top: 0.5rem; padding: 0.2rem 0.6rem; background: var(--bg); color: var(--text-1); border: 1px solid var(--text-1); border-radius: 999px; cursor: pointer; font-size: 0.75rem; }
   .toggle:hover { background: var(--text-1); color: var(--bg); }
   figcaption { margin-top: 0.6rem; color: var(--text-3); line-height: 1.5; }
 </style>

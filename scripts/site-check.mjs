@@ -159,6 +159,9 @@ async function shots(browser, list) {
       const page = await ctx.newPage();
       await page.goto(BASE + p, { waitUntil: 'networkidle' });
       await page.waitForTimeout(p === '/' ? 3600 : 300); // let the hero's single play finish
+      // Lazy SVG animations load on scroll; a full-page shot does not scroll, so load them up front.
+      await page.evaluate(() => document.querySelectorAll('object.svg-anim').forEach((o) => { if (!o.data) o.data = o.dataset.src; }));
+      await page.waitForTimeout(800);
       // Freeze motion in its final state, so nothing is captured half-revealed.
       await page.addStyleTag({ content: '.ri{opacity:1!important;translate:none!important}.rv::before{transform:none!important}*{animation:none!important;transition:none!important}.progress,[data-bar]{display:none!important}' });
       await page.waitForTimeout(1000); // let the override settle (rules caught mid-draw otherwise)

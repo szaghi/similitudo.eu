@@ -43,9 +43,18 @@ const facets = [
     <p class="label mono">{num()} — Overview</p>
     <div class="overview">
       <div class="prose"><Content /></div>
-      {d.figures.length > 0 && <div class="figs">{d.figures.map((f) => <CodeFigure f={f} />)}</div>}
+      {d.figures.length > 0 && d.figures.length <= 2 && <div class="figs">{d.figures.map((f) => <CodeFigure f={f} />)}</div>}
     </div>
   </section>
+
+  {
+    d.figures.length > 2 && (
+      <section class="sec">
+        <p class="label mono">{num()} — Gallery</p>
+        <div class="gallery">{d.figures.map((f) => <CodeFigure f={f} />)}</div>
+      </section>
+    )
+  }
 
   {
     evidence.map((g) => (
@@ -107,6 +116,9 @@ const facets = [
   .facts dd { margin: 0; overflow-wrap: anywhere; }
   .facet > li { padding: 0.6rem 0; }
   .figs { display: grid; gap: 2rem; }
+  /* More than two figures: a gallery under the overview instead of a tall column beside it. */
+  .gallery { display: grid; gap: 2.5rem 2rem; }
+  @media (min-width: 64rem) { .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; } }
   .overview { display: grid; gap: 2rem; align-items: start; }
   @media (min-width: 64rem) { .overview { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); } }
   .ev li { display: grid; gap: 0.25rem 1.5rem; }
