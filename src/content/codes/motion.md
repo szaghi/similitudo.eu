@@ -7,6 +7,7 @@ status: active
 license: GPLv3 / BSD / MIT
 repo: https://github.com/szaghi/MOTIOn
 docs: https://szaghi.github.io/MOTIOn/
+logo: /codes/motion
 methods:
   - One object for the HDF5 data file and its XDMF descriptor
   - Uniform Cartesian, Cartesian and curvilinear blocks
