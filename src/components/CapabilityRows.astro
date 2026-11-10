@@ -11,7 +11,7 @@ import { pad } from '../lib/site';
         <span class="n mono">{pad(k)}</span>
         <div class="head"><h3>{c.title}</h3><p class="task mono">{c.task}</p></div>
         <p>{c.text}</p>
-        {c.evidence && <a class="ev mono" href={c.evidence.url}>{c.evidence.label} →</a>}
+        <p class="ev mono">{c.evidence.map((e) => <a href={e.url}>{e.label} →</a>)}</p>
       </li>
     ))
   }
@@ -24,11 +24,12 @@ import { pad } from '../lib/site';
   .task { margin: 0; color: var(--text-3); max-width: none; }
   h3 { margin: 0; font-family: var(--f-display); font-stretch: 112%; font-weight: 600; font-size: 1.2rem; line-height: 1.25; }
   p { margin: 0; color: var(--text-2); max-width: var(--measure); }
-  .ev { color: var(--link); white-space: nowrap; text-decoration: none; }
-  .ev:hover { text-decoration: underline; }
+  .ev { display: flex; flex-wrap: wrap; gap: 0.2rem 1.25rem; max-width: none; }
+  .ev a { color: var(--link); white-space: nowrap; text-decoration: none; }
+  .ev a:hover { text-decoration: underline; }
   @media (min-width: 64rem) {
     li { grid-template-columns: 3rem 2fr 3fr 15rem; align-items: baseline; column-gap: 1.5rem; }
     .n { grid-row: auto; }
-    .ev { text-align: right; }
+    .ev { flex-direction: column; align-items: flex-end; }
   }
 </style>
