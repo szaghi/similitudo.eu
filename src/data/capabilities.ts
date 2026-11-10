@@ -14,6 +14,7 @@ const STRINGIFOR = 'https://szaghi.github.io/StringiFor/';
 const PENF = 'https://szaghi.github.io/PENF/';
 const BEFOR64 = 'https://szaghi.github.io/BeFoR64/';
 const FINER = 'https://szaghi.github.io/FiNeR/';
+const FLAP = 'https://szaghi.github.io/FLAP/';
 
 export interface Capability {
   title: string;
@@ -80,12 +81,13 @@ export const capabilities: Capability[] = [
   {
     title: 'Modern Fortran engineering',
     task: 'Maintainable, tested Fortran for the codes of a project',
-    text: 'Modern Fortran libraries designed for reuse, documented, and tested in CI with coverage; general-purpose ones used by other open-source projects: PENF, portable kinds and number–string conversions, the base layer of the other libraries; BeFoR64, Base64 for any intrinsic type; StringiFor, a string type with the methods of Python; FiNeR, INI configuration files read and written.',
+    text: 'Modern Fortran libraries designed for reuse, documented, and tested in CI with coverage; general-purpose ones used by other open-source projects: PENF, portable kinds and number–string conversions, the base layer of the other libraries; BeFoR64, Base64 for any intrinsic type; StringiFor, a string type with the methods of Python; FiNeR, INI configuration files read and written; FLAP, command lines parsed, checked and documented.',
     evidence: [
       { label: 'PENF docs', url: PENF },
       { label: 'BeFoR64 docs', url: BEFOR64 },
       { label: 'StringiFor docs', url: STRINGIFOR },
       { label: 'FiNeR docs', url: FINER },
+      { label: 'FLAP docs', url: FLAP },
     ],
   },
 ];
