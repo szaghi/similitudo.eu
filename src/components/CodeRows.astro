@@ -3,6 +3,7 @@
 import type { CollectionEntry } from 'astro:content';
 interface Props { codes: CollectionEntry<'codes'>[] }
 const { codes } = Astro.props;
+const kindLabel = (k: string) => (k === 'general' ? 'general-purpose library' : k);
 ---
 
 <ul class="index codes">
@@ -11,7 +12,7 @@ const { codes } = Astro.props;
       <li>
         <a class="cname" href={`/codes/${c.id}/`}>{c.data.name}</a>
         <p class="tag">{c.data.tagline}</p>
-        <p class="meta mono">{c.data.kind}{c.data.parent && ` · built on ${c.data.parent.id.toUpperCase()}`} · {c.data.license}</p>
+        <p class="meta mono">{kindLabel(c.data.kind)}{c.data.parent && ` · built on ${c.data.parent.id.toUpperCase()}`} · {c.data.license}</p>
       </li>
     ))
   }

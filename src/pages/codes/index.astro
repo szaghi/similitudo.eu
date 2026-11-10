@@ -11,7 +11,8 @@ const groups = [
   { kind: 'sdk', title: 'Development kits' },
   { kind: 'solver', title: 'Solvers' },
   { kind: 'tool', title: 'Tools' },
-  { kind: 'library', title: 'Libraries' },
+  { kind: 'library', title: 'Scientific libraries' },
+  { kind: 'general', title: 'General-purpose libraries' },
 ] as const;
 const shown = groups.map((g) => ({ ...g, items: codes.filter((c) => c.data.kind === g.kind) })).filter((g) => g.items.length > 0);
 ---

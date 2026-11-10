@@ -9,7 +9,7 @@ const codes = defineCollection({
   schema: z.object({
     name: z.string(),
     tagline: z.string(),
-    kind: z.enum(['sdk', 'solver', 'library', 'tool']),
+    kind: z.enum(['sdk', 'solver', 'library', 'general', 'tool']), // library: scientific; general: general-purpose
     parent: reference('codes').optional(), // e.g. FLUME and PRISM are built on ADAM
     order: z.number().default(100),
     status: z.enum(['active', 'maintained', 'archived']).default('active'),
@@ -32,6 +32,7 @@ const codes = defineCollection({
           caption: z.string(),
           source: z.url().optional(),
           animated: z.boolean().default(false), // a looping clip next to the still: <name>.webm and <name>.mp4
+          hold: z.number().nonnegative().optional(), // animated SVG: the time (s) of the frame held under reduced motion, default 0
         }),
       )
       .default([]),

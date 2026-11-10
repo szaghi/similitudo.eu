@@ -5,10 +5,10 @@
 //   - an animated SVG (`animated`, src ending in .svg: SMIL animation, one version for both themes, as FOSSIL's are).
 // Accessibility, same for clips and SVGs: nothing loads until it is near the screen, it plays only while on screen,
 // a pause/play button (WCAG 2.2.2: the loops run past 5 s), and under reduced motion the clip shows its still and the
-// SVG its first frame. Without JavaScript: the still, or the SVG as a plain image. An SVG sits in an <object>, not
+// SVG the frame at `hold` seconds (the first by default; a terminal cast starts blank, so it holds the finished session). Without JavaScript: the still, or the SVG as a plain image. An SVG sits in an <object>, not
 // inline, so the ids inside several SVGs on one page cannot collide; SMIL is then paused through its own document.
 interface Props {
-  f: { src: string; dark?: string; width: number; height: number; alt: string; caption: string; source?: string; animated: boolean };
+  f: { src: string; dark?: string; width: number; height: number; alt: string; caption: string; source?: string; animated: boolean; hold?: number };
 }
 const { f } = Astro.props;
 const svg = f.animated && f.src.endsWith('.svg');
@@ -24,7 +24,7 @@ const variants = [
     {
       svg ? (
         <>
-          <object class="svg-anim" type="image/svg+xml" data-src={f.src} role="img" aria-label={f.alt} style={`aspect-ratio: ${f.width} / ${f.height}`} />
+          <object class="svg-anim" type="image/svg+xml" data-src={f.src} data-hold={f.hold} role="img" aria-label={f.alt} style={`aspect-ratio: ${f.width} / ${f.height}`} />
           <noscript><img src={f.src} alt={f.alt} width={f.width} height={f.height} /></noscript>
         </>
       ) : (
@@ -64,7 +64,7 @@ const variants = [
         else s.unpauseAnimations();
       };
       obj.addEventListener('load', () => {
-        if (still) svgRoot()?.setCurrentTime?.(0); // reduced motion: hold the first frame
+        if (still) svgRoot()?.setCurrentTime?.(Number(obj.dataset.hold ?? 0)); // reduced motion: hold one frame
         sync();
       });
       new IntersectionObserver(
