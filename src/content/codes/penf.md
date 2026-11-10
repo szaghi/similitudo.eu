@@ -2,7 +2,7 @@
 name: PENF
 tagline: Portable kind parameters for Fortran, and the conversions between numbers and strings.
 kind: general
-order: 10
+order: 11
 status: active
 license: GPLv3 / BSD / MIT
 repo: https://github.com/szaghi/PENF

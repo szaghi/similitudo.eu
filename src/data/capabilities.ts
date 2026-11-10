@@ -1,7 +1,7 @@
 // Capabilities, phrased as the task a coordinator can assign in a work package. Each links to the documentation
 // (GitHub Pages), which follows the codebase: generic capabilities to the ADAM landing page, application-specific ones
 // to the FLUME or PRISM starting page, the GPU layer to FUNDAL's, geometry to FOSSIL's and VecFor's, visualisation output to MOTIOn's, VTKFortran's and foresight's;
-// software engineering to the general-purpose libraries on the Codes page, each linking its own docs. Measured numbers live on the code pages, next to their source.
+// software engineering to the general-purpose libraries on the Codes page (each linking its own docs) and to FoBiS's. Measured numbers live on the code pages, next to their source.
 const ADAM = 'https://szaghi.github.io/adam/';
 const FLUME = `${ADAM}applications/flume/`;
 const PRISM = `${ADAM}applications/prism/`;
@@ -11,6 +11,7 @@ const VECFOR = 'https://szaghi.github.io/VecFor/';
 const VTKFORTRAN = 'https://szaghi.github.io/VTKFortran/';
 const MOTION = 'https://szaghi.github.io/MOTIOn/';
 const FORESIGHT = 'https://szaghi.github.io/foresight/';
+const FOBIS = 'https://szaghi.github.io/FoBiS/';
 
 export interface Capability {
   title: string;
@@ -78,7 +79,10 @@ export const capabilities: Capability[] = [
   {
     title: 'Modern Fortran engineering',
     task: 'Maintainable, tested Fortran for the codes of a project',
-    text: 'Fortran libraries designed for reuse, documented and tested in CI with coverage; seven general-purpose ones, several used by other open-source projects: PENF (portable kinds), FACE (terminal colours), BeFoR64 (Base64), StringiFor (strings), FiNeR (INI files), FLAP (command lines), forbear (progress bars).',
-    evidence: [{ label: 'General-purpose libraries', url: '/codes/#general' }],
+    text: 'Fortran libraries designed for reuse, documented and tested in CI with coverage; seven general-purpose ones, several used by other open-source projects: PENF (portable kinds), FACE (terminal colours), BeFoR64 (Base64), StringiFor (strings), FiNeR (INI files), FLAP (command lines), forbear (progress bars). All built and tested with FoBiS, a Fortran build system used beyond these codes.',
+    evidence: [
+      { label: 'General-purpose libraries', url: '/codes/#general' },
+      { label: 'FoBiS docs', url: FOBIS },
+    ],
   },
 ];
