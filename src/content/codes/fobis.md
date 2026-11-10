@@ -1,6 +1,6 @@
 ---
 name: FoBiS
-tagline: Build, test, verify, lint and release modern Fortran, one repository or many, with AI assistance whose every claim is checked.
+tagline: Build, test, verify, lint and release modern Fortran, one repository or many, with AI assistance that cites a source for every claim.
 kind: tool
 order: 4
 status: active
