@@ -17,11 +17,11 @@ const groups = [
 const shown = groups.map((g) => ({ ...g, items: codes.filter((c) => c.data.kind === g.kind) })).filter((g) => g.items.length > 0);
 ---
 
-<Base title="Codes" description="Open-source simulation codes by Stefano Zaghi and co-authors.">
-  <PageHead title="Codes" count={codes.length} lead="Open-source simulation software by Stefano Zaghi and co-authors." />
+<Base title="Codes" description="Open-source simulation codes by Stefano Zaghi and co-authors, and the Fortran libraries under them.">
+  <PageHead title="Codes" count={codes.length} lead="Open-source simulation codes by Stefano Zaghi and co-authors, and the Fortran libraries under them." />
   {
     shown.map((g, k) => (
-      <section class="sec">
+      <section class="sec" id={g.kind}>
         <p class="label mono">{String(k + 1).padStart(2, '0')} — {g.title}</p>
         <CodeRows codes={g.items} />
       </section>
