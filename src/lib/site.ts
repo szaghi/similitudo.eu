@@ -13,7 +13,8 @@ export const email = 'contact@similitudo.eu';
 // Hero headline. Alternatives considered (2026-11-09): "Simulation software for fluids and plasmas, from the laptop to
 // the GPU cluster." · "Adaptive grids. GPU speed. Research-grade simulation." · "High-order schemes on adaptive grids,
 // built for GPUs and for research." · "We turn the equations of fluids and plasmas into fast, scalable simulations."
-export const lead = 'Fluids and plasmas, simulated on adaptive grids at GPU speed.';
+// Two lines on purpose: the break before "on adaptive grids" is part of the headline (2026-11-10).
+export const lead = ['Fluids and plasmas, numerically simulated', 'on adaptive grids at GPU speed.'];
 
 /** Meta description: the longer, plain statement of what the site is about. */
 export const description =

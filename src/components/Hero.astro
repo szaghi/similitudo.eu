@@ -1,6 +1,6 @@
 ---
 // Home hero: the wordmark anchored top-left with the seal stamped beside it, the nav on a hairline datum crossing the
-// page (and the gesture), the lead bottom-left, the mesh readout bottom-right. The text never waits for the mark.
+// page (and the gesture), the two-line headline under the wordmark, the mesh readout bottom-right. The text never waits for the mark.
 import Seal from './Seal.astro';
 import Nav from './Nav.astro';
 import ThemeToggle from './ThemeToggle.astro';
@@ -16,7 +16,7 @@ const initial = still(heroSpec(1440, 900)).readout; // shown until the script dr
   <div class="ground"><HeroMesh /></div>
   <h1 class="word display">similitudo<span class="stamp"><Seal size={64} label="" /></span></h1>
   <div class="toggle"><ThemeToggle /></div>
-  <p class="lead hero-lead">{lead}</p>
+  <p class="lead hero-lead">{lead.map((line, i) => (<>{i > 0 && " "}<span class="line">{line}</span></>))}</p>
   <Nav class="hero-nav" />
   <p class="readout mono hero-readout">{initial}</p>
 </header>
@@ -51,7 +51,6 @@ const initial = still(heroSpec(1440, 900)).readout; // shown until the script dr
     justify-self: start;
     margin: 1.25rem 0 0;
     padding: 0.2rem 0.6rem 0.3rem 0;
-    max-width: 22em;
     background: var(--bg);
     font-family: var(--f-display);
     font-stretch: 112%;
@@ -62,6 +61,9 @@ const initial = still(heroSpec(1440, 900)).readout; // shown until the script dr
   }
   /* The nav is another component: Hero's scoped `.hero > :not(.ground)` does not reach it, so lift it explicitly or the
      canvas sits on top and swallows its clicks. */
+  /* The break before "on adaptive grids" holds from 768 px up; on phones the first line cannot fit at headline size,
+     so the sentence wraps naturally there (a forced break would strand "simulated" on a line of its own). */
+  @media (min-width: 48rem) { .lead .line { display: block; white-space: nowrap; } }
   .hero :global(.hero-nav) { grid-row: 4; position: relative; z-index: 1; }
   .readout { grid-row: 6; align-self: end; margin: 1.25rem 0 0; color: var(--text-3); max-width: 40rem; font-variant-numeric: tabular-nums; }
 
