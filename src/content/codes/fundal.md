@@ -7,6 +7,7 @@ status: active
 license: GPLv3 / BSD / MIT
 repo: https://github.com/szaghi/FUNDAL
 docs: https://szaghi.github.io/FUNDAL/
+logo: /codes/fundal
 methods:
   - Structured and unstructured device memory
   - Allocate-and-copy, transposed copies
