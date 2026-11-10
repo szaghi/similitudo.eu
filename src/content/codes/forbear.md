@@ -2,7 +2,7 @@
 name: forbear
 tagline: Progress bars for long-running Fortran programs, on a terminal or in a batch log.
 kind: general
-order: 15
+order: 16
 status: active
 license: GPLv3 / BSD / MIT
 repo: https://github.com/szaghi/forbear

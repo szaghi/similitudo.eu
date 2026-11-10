@@ -2,7 +2,7 @@
 name: StringiFor
 tagline: A string type for modern Fortran, with the methods you miss from Python.
 kind: general
-order: 12
+order: 13
 status: active
 license: GPLv3 / BSD / MIT
 repo: https://github.com/szaghi/StringiFor

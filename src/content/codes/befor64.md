@@ -2,7 +2,7 @@
 name: BeFoR64
 tagline: Base64 encoding and decoding of any Fortran intrinsic type.
 kind: general
-order: 11
+order: 12
 status: active
 license: GPLv3 / BSD / MIT
 repo: https://github.com/szaghi/BeFoR64

@@ -1,6 +1,6 @@
 // Capabilities, phrased as the task a coordinator can assign in a work package. Each links to the documentation
 // (GitHub Pages), which follows the codebase: generic capabilities to the ADAM landing page, application-specific ones
-// to the FLUME or PRISM starting page, the GPU layer to FUNDAL's, geometry to FOSSIL's and VecFor's, visualisation output to MOTIOn's and VTKFortran's;
+// to the FLUME or PRISM starting page, the GPU layer to FUNDAL's, geometry to FOSSIL's and VecFor's, visualisation output to MOTIOn's, VTKFortran's and foresight's;
 // software engineering to the general-purpose libraries on the Codes page, each linking its own docs. Measured numbers live on the code pages, next to their source.
 const ADAM = 'https://szaghi.github.io/adam/';
 const FLUME = `${ADAM}applications/flume/`;
@@ -10,6 +10,7 @@ const FOSSIL = 'https://szaghi.github.io/FOSSIL/';
 const VECFOR = 'https://szaghi.github.io/VecFor/';
 const VTKFORTRAN = 'https://szaghi.github.io/VTKFortran/';
 const MOTION = 'https://szaghi.github.io/MOTIOn/';
+const FORESIGHT = 'https://szaghi.github.io/foresight/';
 
 export interface Capability {
   title: string;
@@ -60,11 +61,12 @@ export const capabilities: Capability[] = [
   },
   {
     title: 'Output for visualisation',
-    task: 'Simulation output that ParaView and VisIt open directly',
-    text: 'Two pure Fortran libraries. MOTIOn: HDF5 data with XDMF metadata from MPI codes, one file per rank and one descriptor gathered on the master. VTKFortran: VTK files of every grid type, parallel pieces with ghost cells, multi-block assemblies, time series that stay valid if a run crashes, compressed binary, arrays beyond 2 GiB. Both read their files back.',
+    task: 'Simulation output for ParaView and VisIt, and runs watched live',
+    text: 'Three Fortran libraries. MOTIOn: HDF5 data with XDMF metadata from MPI codes, one file per rank and one descriptor gathered on the master. VTKFortran: VTK files of every grid type, parallel pieces with ghost cells, multi-block assemblies, time series that stay valid if a run crashes, compressed binary, arrays beyond 2 GiB; both read their files back. foresight: gnuplot-like plots of the logs as interactive HTML, SVG or text, re-rendered while the job runs.',
     evidence: [
       { label: 'MOTIOn docs', url: MOTION },
       { label: 'VTKFortran docs', url: VTKFORTRAN },
+      { label: 'foresight docs', url: FORESIGHT },
     ],
   },
   {
