@@ -7,6 +7,7 @@ status: active
 license: GPLv3 / BSD / MIT
 repo: https://github.com/szaghi/FiNeR
 docs: https://szaghi.github.io/FiNeR/
+logo: /codes/finer
 methods:
   - INI parsed from a file or from a string, no schema
   - Continuation lines and inline comments
