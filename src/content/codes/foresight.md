@@ -2,7 +2,7 @@
 name: foresight
 tagline: gnuplot-like plots from pure Fortran, as interactive HTML, SVG or text, live while a job runs.
 kind: library
-order: 11
+order: 12
 status: active
 license: GPLv3
 repo: https://github.com/szaghi/foresight
