@@ -7,6 +7,7 @@ status: active
 license: GPLv3 / BSD / MIT
 repo: https://github.com/szaghi/MORTIF
 docs: https://szaghi.github.io/MORTIF/
+logo: /codes/mortif
 methods:
   - Two 32-bit indexes to one 64-bit Morton code and back (morton2D, demorton2D)
   - Three indexes to one 64-bit code and back, up to 21 bits per axis (morton3D, demorton3D)
