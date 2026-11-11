@@ -23,6 +23,10 @@
 
   --gutter: 1rem;
   --measure: 40rem;
+  /* The content frame: at most --maxw wide, centred, never closer than --gutter to the screen edge. Use --edge as the
+     inline padding of anything full-bleed (a percentage resolves at the use site, against that element's width). */
+  --maxw: 90rem;
+  --edge: max(var(--gutter), calc((100% - var(--maxw)) / 2));
 
   color-scheme: light;
 }
@@ -90,7 +94,7 @@ code { font-family: var(--f-mono); font-size: 0.9em; background: var(--bg-alt); 
 
 :focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
 
-.skip { position: absolute; left: var(--gutter); top: -3rem; z-index: 10; padding: 0.4rem 0.8rem; background: var(--text-1); color: var(--bg); }
+.skip { position: absolute; left: var(--edge); top: -3rem; z-index: 10; padding: 0.4rem 0.8rem; background: var(--text-1); color: var(--bg); }
 .skip:focus { top: 0.5rem; }
 
 /* Type */
@@ -117,7 +121,7 @@ code { font-family: var(--f-mono); font-size: 0.9em; background: var(--bg-alt); 
 .prose > :first-child { margin-top: 0; }
 
 /* Page frame */
-.page { padding: 0 var(--gutter); }
+.page { padding: 0 var(--edge); }
 
 /* Section on a 12-column plan: mono label in columns 1–3, content in 4–12. */
 .sec { display: grid; gap: 1rem; padding: 3.5rem 0 4rem; border-top: 1px solid var(--rule); }
@@ -146,9 +150,8 @@ code { font-family: var(--f-mono); font-size: 0.9em; background: var(--bg-alt); 
   :root:not([data-theme='light']) .light-only { display: none; }
 }
 
-/* Reveals (src/components/Reveal.astro): one-shot, not scrubbed. When a section first enters, its rule draws from the
-   left and its rows rise in, staggered; then they stay solid. Only content below the fold at load is hidden, and only
-   by the script (class .js-reveal), so a failed script or reduced motion shows everything. */
+/* Rule draws (src/components/Reveal.astro): one-shot, not scrubbed. When a section first enters, its rule draws from the
+   left; the content is never hidden. Only rules below the fold at load, and only via the script (class .js-reveal). */
 .js-reveal .sec.rv, .js-reveal .index.rv { position: relative; border-top-color: transparent; }
 .js-reveal .rv::before {
   content: '';
@@ -157,12 +160,10 @@ code { font-family: var(--f-mono); font-size: 0.9em; background: var(--bg-alt); 
   border-top: 1px solid var(--rule);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 .js-reveal .index.rv::before { border-top-color: var(--text-1); }
 .js-reveal .rv.in::before { transform: none; }
-.js-reveal .ri { opacity: 0; translate: 0 1rem; transition: opacity 0.6s ease-out, translate 0.7s cubic-bezier(0.2, 0.7, 0.2, 1); transition-delay: calc(var(--i, 0) * 70ms); }
-.js-reveal .ri.in { opacity: 1; translate: none; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }

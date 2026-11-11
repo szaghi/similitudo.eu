@@ -85,64 +85,81 @@ export interface MeshOptions {
 /**
  * Quadtree refined on the ink, then 2:1 balanced (a face neighbour is never more than one level finer), like an
  * AMR grid. The criterion scales with the node size, so the mesh is finest where the ink is.
+ *
+ * Cost: the live hero rebuilds this every frame, so nodes are keyed by a number (not a string) and the balance runs on a
+ * worklist. A leaf can only become too coarse when it is created, or when a same-level face neighbour gains a split
+ * child; so those are the only nodes (re)checked, instead of sweeping the whole tree until nothing changes. Both reach
+ * the same tree: every refinement either way is forced, and the minimal 2:1-balanced refinement is unique.
  */
 export function buildMesh(o: MeshOptions): Mesh {
-  const nodes = new Map<string, QNode>();
-  const split = new Set<string>();
-  const key = (l: number, i: number, j: number) => `${l}:${i}:${j}`;
+  const nodes = new Map<number, QNode & { d: number }>();
+  const split = new Set<number>();
+  const B = 65536; // index stride: i, j < 2^16 per level (a 100 px block at level 5 → 200 000 px), keys stay < 2^53
+  const key = (l: number, i: number, j: number) => (l * B + j) * B + i;
 
-  const make = (l: number, i: number, j: number): QNode | null => {
+  const make = (l: number, i: number, j: number) => {
     const s = o.h0 / 2 ** l;
     const x = i * s;
     const y = j * s;
     if (x >= o.w || y >= o.h) return null;
     const c = o.near ? o.near([x + s / 2, y + s / 2]) : nearest([x + s / 2, y + s / 2], o.ink);
-    const node = { l, i, j, x, y, s, t: c.t, d: c.d } as QNode & { d: number };
+    const node = { l, i, j, x, y, s, t: c.t, d: c.d };
     nodes.set(key(l, i, j), node);
     return node;
+  };
+
+  const KIDS = [[0, 0], [1, 0], [0, 1], [1, 1]];
+  const FACES = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+  const refine = (n: QNode) => {
+    split.add(key(n.l, n.i, n.j));
+    const kids: (QNode & { d: number })[] = [];
+    for (const [di, dj] of KIDS) {
+      const c = make(n.l + 1, 2 * n.i + di, 2 * n.j + dj);
+      if (c) kids.push(c);
+    }
+    return kids;
   };
 
   const queue: (QNode & { d: number })[] = [];
   const nx = Math.ceil(o.w / o.h0);
   const ny = Math.ceil(o.h / o.h0);
-  for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) queue.push(make(0, i, j) as QNode & { d: number });
-
-  const refine = (n: QNode) => {
-    split.add(key(n.l, n.i, n.j));
-    const kids: (QNode & { d: number })[] = [];
-    for (const [di, dj] of [[0, 0], [1, 0], [0, 1], [1, 1]]) {
-      const c = make(n.l + 1, 2 * n.i + di, 2 * n.j + dj);
-      if (c) kids.push(c as QNode & { d: number });
-    }
-    return kids;
-  };
-
+  for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) queue.push(make(0, i, j)!);
   while (queue.length) {
     const n = queue.pop()!;
     if (n.l < o.maxLevel && n.d - o.halfWidth(n.t) < o.k * n.s) queue.push(...refine(n));
   }
 
   // 2:1 balance: a leaf whose face neighbour (same level) has a split child must split too.
-  let changed = true;
-  while (changed) {
-    changed = false;
-    for (const n of [...nodes.values()]) {
-      if (split.has(key(n.l, n.i, n.j)) || n.l >= o.maxLevel) continue;
-      const tooCoarse = [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([di, dj]) => {
-        const ni = n.i + di;
-        const nj = n.j + dj;
-        if (!split.has(key(n.l, ni, nj))) return false;
-        return [[0, 0], [1, 0], [0, 1], [1, 1]].some(([a, b]) => split.has(key(n.l + 1, 2 * ni + a, 2 * nj + b)));
-      });
-      if (tooCoarse) {
-        refine(n);
-        changed = true;
+  const tooCoarse = (n: QNode) =>
+    FACES.some(([di, dj]) => {
+      const ni = n.i + di;
+      const nj = n.j + dj;
+      if (ni < 0 || nj < 0 || !split.has(key(n.l, ni, nj))) return false;
+      return KIDS.some(([a, b]) => split.has(key(n.l + 1, 2 * ni + a, 2 * nj + b)));
+    });
+  const work: QNode[] = [];
+  for (const n of nodes.values()) if (!split.has(key(n.l, n.i, n.j))) work.push(n);
+  while (work.length) {
+    const n = work.pop()!;
+    if (n.l >= o.maxLevel || split.has(key(n.l, n.i, n.j)) || !tooCoarse(n)) continue;
+    work.push(...refine(n)); // the new leaves may be too coarse themselves
+    if (n.l > 0) {
+      // n's parent now has a split child: the parent's face neighbours may have become too coarse
+      const pi = n.i >> 1;
+      const pj = n.j >> 1;
+      for (const [di, dj] of FACES) {
+        const q = nodes.get(key(n.l - 1, pi + di, pj + dj));
+        if (q) work.push(q);
       }
     }
   }
 
-  const internal = [...nodes.values()].filter((n) => split.has(key(n.l, n.i, n.j)));
-  const maxLevelUsed = Math.max(0, ...[...nodes.values()].map((n) => n.l));
+  const internal: QNode[] = [];
+  let maxLevelUsed = 0;
+  for (const n of nodes.values()) {
+    if (split.has(key(n.l, n.i, n.j))) internal.push(n);
+    if (n.l > maxLevelUsed) maxLevelUsed = n.l;
+  }
   return { w: o.w, h: o.h, h0: o.h0, internal, leaves: nodes.size - split.size, maxLevelUsed };
 }
 

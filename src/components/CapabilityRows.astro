@@ -1,35 +1,58 @@
 ---
-// Capabilities as a numbered index: title, what it is, and the code that backs it.
+// Capabilities as a numbered index: title, what it is, and the code that backs it. `compact` (the home page): number,
+// title and task only, each title linking to its full row on /capabilities/ (anchored by a slug of the title).
 import { capabilities } from '../data/capabilities';
 import { pad } from '../lib/site';
+interface Props { compact?: boolean }
+const { compact = false } = Astro.props;
+const slug = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 ---
 
-<ol class="index caps">
-  {
-    capabilities.map((c, k) => (
-      <li>
-        <span class="n mono">{pad(k)}</span>
-        <div class="head"><h3>{c.title}</h3><p class="task mono">{c.task}</p></div>
-        <p>{c.text}</p>
-        <p class="ev mono">{c.evidence.map((e) => <a href={e.url}>{e.label} →</a>)}</p>
-      </li>
-    ))
-  }
-</ol>
+{
+  compact ? (
+    <ol class="index caps compact">
+      {capabilities.map((c, k) => (
+        <li>
+          <span class="n mono">{pad(k)}</span>
+          <div class="head"><h3><a href={`/capabilities/#${slug(c.title)}`}>{c.title}</a></h3><p class="task mono">{c.task}</p></div>
+        </li>
+      ))}
+    </ol>
+  ) : (
+    <ol class="index caps">
+      {capabilities.map((c, k) => (
+        <li id={slug(c.title)}>
+          <span class="n mono">{pad(k)}</span>
+          <div class="head"><h3>{c.title}</h3><p class="task mono">{c.task}</p></div>
+          <p>{c.text}</p>
+          <p class="ev mono">{c.evidence.map((e) => <a href={e.url}>{e.label} →</a>)}</p>
+        </li>
+      ))}
+    </ol>
+  )
+}
 
 <style>
   li { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); gap: 0.25rem 1rem; }
+  li[id] { scroll-margin-top: 4rem; } /* a #link lands clear of the sticky bar */
   .n { color: var(--text-3); padding-top: 0.3em; grid-row: span 3; }
   .head { display: grid; gap: 0.2rem; }
   .task { margin: 0; color: var(--text-3); max-width: none; }
   h3 { margin: 0; font-family: var(--f-display); font-stretch: 112%; font-weight: 600; font-size: 1.2rem; line-height: 1.25; }
+  h3 a { color: var(--text-1); text-decoration: none; }
+  h3 a:hover, h3 a:focus-visible { color: var(--link); }
   p { margin: 0; color: var(--text-2); max-width: var(--measure); }
   .ev { display: flex; flex-wrap: wrap; gap: 0.2rem 1.25rem; max-width: none; }
   .ev a { color: var(--link); white-space: nowrap; text-decoration: none; }
   .ev a:hover { text-decoration: underline; }
+  .compact > li { padding: 0.8rem 0 0.9rem; }
+  .compact .n { grid-row: auto; }
   @media (min-width: 64rem) {
     li { grid-template-columns: 3rem 2fr 3fr 15rem; align-items: baseline; column-gap: 1.5rem; }
     .n { grid-row: auto; }
     .ev { flex-direction: column; align-items: flex-end; }
+    /* compact: two columns of title + task (the heavy top rule spans both) */
+    .compact { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1.5rem; }
+    .compact > li { grid-template-columns: 2.5rem minmax(0, 1fr); column-gap: 1rem; }
   }
 </style>

@@ -1,0 +1,38 @@
+---
+// The home page's Codes: a compact grid of every code (logo or placeholder tile, name, kind), each a link to its page.
+// The full rows, with taglines and licences, are on /codes/.
+import type { CollectionEntry } from 'astro:content';
+import CodeLogo from './CodeLogo.astro';
+interface Props { codes: CollectionEntry<'codes'>[] }
+const { codes } = Astro.props;
+const kindLabel = (k: string) => (k === 'general' ? 'general-purpose' : k);
+---
+
+<ul class="grid">
+  {
+    codes.map((c) => (
+      <li>
+        <a href={`/codes/${c.id}/`}>
+          <CodeLogo folder={c.data.logo} name={c.data.name} size={44} decorative />
+          <span class="txt"><span class="name">{c.data.name}</span><span class="kind mono">{kindLabel(c.data.kind)}</span></span>
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); column-gap: 1.5rem; border-top: 1px solid var(--text-1); }
+  li { border-bottom: 1px solid var(--rule); }
+  a { display: flex; align-items: center; gap: 0.85rem; padding: 0.75rem 0; color: var(--text-1); text-decoration: none; }
+  .txt { display: grid; min-width: 0; }
+  .name { font-family: var(--f-display); font-stretch: 112%; font-weight: 500; font-size: 1.15rem; line-height: 1.15; letter-spacing: -0.01em; overflow-wrap: anywhere; }
+  .kind { font-size: 0.75rem; color: var(--text-3); }
+  a:hover .name, a:focus-visible .name { color: var(--link); }
+  /* phones: two columns (one would stack 21 rows), names a step smaller so the longest (VTKFortran) fits */
+  @media (max-width: 47.99rem) {
+    .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1rem; }
+    a { gap: 0.6rem; }
+    .name { font-size: 1rem; }
+  }
+</style>

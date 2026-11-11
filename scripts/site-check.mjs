@@ -163,7 +163,7 @@ async function shots(browser, list) {
       await page.evaluate(() => document.querySelectorAll('object.svg-anim').forEach((o) => { if (!o.data) o.data = o.dataset.src; }));
       await page.waitForTimeout(800);
       // Freeze motion in its final state, so nothing is captured half-revealed.
-      await page.addStyleTag({ content: '.ri{opacity:1!important;translate:none!important}.rv::before{transform:none!important}*{animation:none!important;transition:none!important}.progress,[data-bar]{display:none!important}' });
+      await page.addStyleTag({ content: '.rv::before{transform:none!important}*{animation:none!important;transition:none!important}.progress,[data-bar]{display:none!important}' });
       await page.waitForTimeout(1000); // let the override settle (rules caught mid-draw otherwise)
       await page.screenshot({ path: path.join(out, `${tag}-${name(p)}.png`), fullPage: true });
       await page.close();

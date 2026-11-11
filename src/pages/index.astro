@@ -3,11 +3,9 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import CapabilityRows from '../components/CapabilityRows.astro';
-import CodeRows from '../components/CodeRows.astro';
-import CodeRing from '../components/CodeRing.astro';
+import CodeGrid from '../components/CodeGrid.astro';
 import PubRows from '../components/PubRows.astro';
 import { isPublished, byOrder } from '../lib/content';
-import QuantumScroll from '../components/QuantumScroll.astro';
 
 const codes = (await getCollection('codes', isPublished)).sort(byOrder);
 const selected = (await getCollection('publications', isPublished))
@@ -22,15 +20,15 @@ const selected = (await getCollection('publications', isPublished))
     <section class="sec">
       <p class="label mono">01 — Capabilities</p>
       <div>
-        <CapabilityRows />
-        <p class="more"><a href="/capabilities/">Capabilities</a> <span aria-hidden="true">→</span></p>
+        <CapabilityRows compact />
+        <p class="more"><a href="/capabilities/">All capabilities</a> <span aria-hidden="true">→</span></p>
       </div>
     </section>
 
     <section class="sec">
-      <div class="label"><CodeRing codes={codes} index="02" /></div>
+      <p class="label mono">02 — Codes</p>
       <div>
-        <CodeRows codes={codes} />
+        <CodeGrid codes={codes} />
         <p class="more"><a href="/codes/">All codes</a> <span aria-hidden="true">→</span></p>
       </div>
     </section>
@@ -43,5 +41,4 @@ const selected = (await getCollection('publications', isPublished))
       </div>
     </section>
   </main>
-  <QuantumScroll />
 </Base>

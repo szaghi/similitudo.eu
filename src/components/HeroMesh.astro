@@ -1,8 +1,8 @@
 ---
 // The hero's ground: a full-bleed canvas. The construction grid, and on the right a blast front (cylindrical
 // Sedov–Taylor, r ∝ t^½) drawn as an ensō; the quadtree refines on the front and coarsens behind it as it expands.
-// It plays ONCE (about 3 s), holds the final frame (the same frame the still marks show), and replays when the
-// pointer comes over the ring (or a tap lands on it). Then scroll is simulation time: as the hero leaves the screen
+// It plays ONCE (about 3 s) and holds the final frame (the same frame the still marks show); it never replays (a replay
+// on hover read as the animation resetting). Then scroll is simulation time: as the hero leaves the screen
 // the front keeps expanding (t 0.60 → 1.00) and the mesh coarsens behind it; scrolling back rewinds it. Nothing is
 // hijacked: the page scrolls natively. It writes the mesh it drew into `.hero-readout`.
 // Reduced motion: the final frame only. No JavaScript: the level-0 grid (CSS background in Hero.astro).
@@ -29,7 +29,7 @@
     let spec = heroSpec(1440, 900);
     let u = STILL_U; // the frame on screen
     let raf = 0;
-    let lastEnd = -Infinity;
+    let played = false; // the opening play has started (or the scroll position took over)
     const scrolled = () => Math.min(1, Math.max(0, window.scrollY / Math.max(1, hero.offsetHeight)));
 
     const resize = () => {
@@ -44,23 +44,28 @@
       const word = (hero.querySelector('.hero-lead') ?? hero.querySelector('.word'))?.getBoundingClientRect();
       const datum = hero.querySelector('.datum')?.getBoundingClientRect();
       const band = word && datum ? { top: word.bottom - r.top + 16, bottom: datum.top - r.top - 16 } : undefined;
-      spec = heroSpec(W, H, band);
+      // The frame: the hero's inline padding is the gutter until the screen outgrows --maxw (global.css), then more.
+      const cs = getComputedStyle(hero);
+      const fx = Math.max(0, parseFloat(cs.paddingLeft) - parseFloat(cs.paddingTop));
+      spec = heroSpec(W, H, band, matchMedia('(min-width: 48rem)').matches, fx); // the same breakpoint as the CSS grid
     };
 
-    const draw = () => {
+    // Theme colours, read once and again only when the theme changes (not on every frame).
+    let ink = '';
+    let fine = '';
+    const readColours = () => {
       const css = getComputedStyle(document.documentElement);
-      const col = (v: string) => css.getPropertyValue(v).trim();
+      ink = css.getPropertyValue('--stroke').trim();
+      fine = css.getPropertyValue('--grid-fine').trim();
+    };
+
+    // The level-0 grid is not drawn here: the CSS background of `.ground` (Hero.astro) already paints exactly those
+    // lines, at the same spacing (h0: 100 px from 48rem up, 80 px below), so drawing them again was pure overdraw.
+    const draw = () => {
       const fr = front(spec, u);
       ctx.clearRect(0, 0, W, H);
 
-      ctx.strokeStyle = col('--grid');
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      for (let x = spec.h0; x < W; x += spec.h0) { ctx.moveTo(Math.round(x) + 0.5, 0); ctx.lineTo(Math.round(x) + 0.5, H); }
-      for (let y = spec.h0; y < H; y += spec.h0) { ctx.moveTo(0, Math.round(y) + 0.5); ctx.lineTo(W, Math.round(y) + 0.5); }
-      ctx.stroke();
-
-      ctx.strokeStyle = col('--grid-fine');
+      ctx.strokeStyle = fine;
       for (let l = 0; l <= spec.maxLevel; l++) {
         ctx.lineWidth = WIDTHS[l] ?? 0.35;
         ctx.beginPath();
@@ -92,7 +97,7 @@
         left.push([px + nx * hw, py + ny * hw]);
         right.push([px - nx * hw, py - ny * hw]);
       }
-      ctx.fillStyle = col('--stroke');
+      ctx.fillStyle = ink;
       ctx.beginPath();
       [...left, ...right.reverse()].forEach(([x, y], k) => (k ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
       ctx.closePath();
@@ -104,30 +109,17 @@
 
     const play = () => {
       if (still || raf) return;
+      played = true;
       const t0 = performance.now();
       const step = (now: number) => {
         const tau = Math.min(1, (now - t0) / 1000 / PLAY);
         u = U0 + (STILL_U - U0) * tau; // uniform in time: r ∝ t^½ does the slowing down
         draw();
         if (tau < 1) raf = requestAnimationFrame(step);
-        else { raf = 0; lastEnd = performance.now(); }
+        else raf = 0;
       };
       raf = requestAnimationFrame(step);
     };
-
-    // Replay when the pointer reaches the ring (not more often than every 1.5 s after a play ends).
-    const nearRing = (e: PointerEvent) => {
-      const r = hero.getBoundingClientRect();
-      const d = Math.hypot(e.clientX - r.left - spec.cx, e.clientY - r.top - spec.cy);
-      return d < spec.rmax * Math.sqrt(STILL_U) + 24;
-    };
-    hero.addEventListener('pointermove', (e) => {
-      if (e.pointerType === 'mouse' && scrolled() === 0 && nearRing(e) && performance.now() - lastEnd > 1500) play();
-    });
-    hero.addEventListener('pointerdown', (e) => {
-      if (scrolled() > 0) return;
-      if (e.target === canvas || (e.target as HTMLElement).classList.contains('hero')) if (nearRing(e)) play();
-    });
 
     // Scroll is time. The opening play owns the frame until the reader scrolls; then the scroll position does.
     let scrollRaf = 0;
@@ -137,7 +129,7 @@
         scrollRaf = 0;
         const p = scrolled();
         if (p === 0 && raf) return;
-        if (raf) { cancelAnimationFrame(raf); raf = 0; lastEnd = performance.now(); }
+        if (raf) { cancelAnimationFrame(raf); raf = 0; }
         const next = STILL_U + (1 - STILL_U) * p;
         if (next !== u) { u = next; draw(); }
       });
@@ -145,19 +137,21 @@
     window.addEventListener('scroll', onScroll, { passive: true });
 
     // Redraw the held frame when the theme or the size changes.
-    new MutationObserver(() => { if (!raf) draw(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (!raf) draw(); });
+    const retheme = () => { readColours(); if (!raf) draw(); };
+    new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme);
     new ResizeObserver(() => { resize(); if (!raf) draw(); }).observe(hero);
 
+    readColours();
     resize();
     if (still) draw();
     else if (scrolled() > 0) {
       u = STILL_U + (1 - STILL_U) * scrolled(); // reload mid-page: no opening play, the scroll position rules
-      lastEnd = 0;
+      played = true;
       draw();
     } else if (document.hidden) {
       u = U0;
-      document.addEventListener('visibilitychange', () => { if (!document.hidden && lastEnd < 0) play(); }, { once: true });
+      document.addEventListener('visibilitychange', () => { if (!document.hidden && !played) play(); }, { once: true });
     } else play();
   }
 </script>

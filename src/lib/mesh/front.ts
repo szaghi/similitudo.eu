@@ -34,12 +34,15 @@ export function front(f: FrontSpec, u: number, turn = 0): Front {
   return { ink, width, mesh, r };
 }
 
-/** Hero placement: right of centre on wide screens; on phones, in the free band between wordmark and nav. */
-export function heroSpec(w: number, h: number, band?: { top: number; bottom: number }): FrontSpec {
-  const wide = w >= 768;
+/** Hero placement: right of centre on wide screens; on phones, in the free band between wordmark and nav. `wide` must
+ *  follow the CSS breakpoint of the ground grid (Hero.astro, 48rem), whose level-0 lines the mesh refines. `fx` is the
+ *  left margin of the content frame beyond the gutter (0 until the screen is wider than the frame): the front is placed
+ *  in the frame, the mesh still covers the whole width. */
+export function heroSpec(w: number, h: number, band?: { top: number; bottom: number }, wide = w >= 768, fx = 0): FrontSpec {
   if (wide) {
-    const rmax = Math.min(0.3 * h, 0.19 * w);
-    return { w, h, cx: 0.75 * w, cy: 0.5 * h, rmin: 0.12 * rmax, rmax, wmax: 0.085 * rmax, h0: 100, maxLevel: 5 };
+    const fw = w - 2 * fx;
+    const rmax = Math.min(0.3 * h, 0.19 * fw);
+    return { w, h, cx: fx + 0.75 * fw, cy: 0.5 * h, rmin: 0.12 * rmax, rmax, wmax: 0.085 * rmax, h0: 100, maxLevel: 5 };
   }
   const top = band?.top ?? 0.2 * h;
   const bottom = band?.bottom ?? 0.5 * h;
