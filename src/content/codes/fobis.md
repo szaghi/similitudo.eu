@@ -7,6 +7,7 @@ status: active
 license: GPLv3
 repo: https://github.com/szaghi/FoBiS
 docs: https://szaghi.github.io/FoBiS/
+logo: /codes/fobis
 methods:
   - Module, use and include dependencies parsed from the sources, compiled in order, incrementally, in parallel
   - fobos files for build modes, profiles, feature flags and rules, in place of makefiles
