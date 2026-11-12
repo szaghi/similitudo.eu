@@ -7,6 +7,7 @@ status: active
 license: GPLv3
 repo: https://github.com/szaghi/foresight
 docs: https://szaghi.github.io/foresight/
+logo: /codes/foresight
 methods:
   - A library, fig%plot from the solver, and a command line tool for gnuplot scripts, one interpreter
   - Self-contained interactive HTML pages, zoom, pan, panels zoomed together
