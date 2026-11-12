@@ -7,6 +7,7 @@ status: active
 license: GPLv3 / BSD / MIT
 repo: https://github.com/szaghi/PENF
 docs: https://szaghi.github.io/PENF/
+logo: /codes/penf
 methods:
   - Integer kinds of 1 to 8 bytes, real kinds of 4, 8 and 16 bytes
   - Numbers to strings and back, zero-padded and binary forms
