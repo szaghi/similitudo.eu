@@ -23,6 +23,6 @@
     "astro": "^7.4.7"
   },
   "devDependencies": {
-    "playwright-core": "1.58.2"
+    "playwright-core": "1.65.0"
   }
 }
