@@ -7,6 +7,7 @@ status: active
 license: GPLv3 / BSD / MIT
 repo: https://github.com/szaghi/mosaic
 docs: https://szaghi.github.io/mosaic/
+logo: /codes/mosaic
 methods:
   - arXiv, OpenAlex, Crossref, Semantic Scholar, PubMed, HAL, NASA ADS, IEEE Xplore, Scopus and more, searched in parallel and merged by DOI
   - The PDFs you are entitled to read, from the source, the open copies Unpaywall knows, or your publisher logins
