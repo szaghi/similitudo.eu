@@ -7,6 +7,7 @@ status: active
 license: GPLv3
 repo: https://github.com/szaghi/MaTiSSe
 docs: https://szaghi.github.io/MaTiSSe/
+logo: /codes/matisse
 methods:
   - Plain Markdown, chapters, sections and subsections turned into slides, a table of contents, multi-file talks
   - LaTeX math through MathJax 3
