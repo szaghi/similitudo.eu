@@ -7,6 +7,7 @@ status: active
 license: GPLv3 / BSD / MIT
 repo: https://github.com/szaghi/FACE
 docs: https://szaghi.github.io/FACE/
+logo: /codes/face
 methods:
   - One function, colorize(string, color_fg, color_bg, style)
   - Named colours and 24-bit RGB (#rrggbb), foreground and background
