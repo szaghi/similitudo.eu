@@ -7,6 +7,7 @@ status: active
 license: GPLv3 / BSD / MIT
 repo: https://github.com/szaghi/BeFoR64
 docs: https://szaghi.github.io/BeFoR64/
+logo: /codes/befor64
 methods:
   - Integers, reals (16 bytes optional), characters, unlimited polymorphic
   - Scalars and rank-1 arrays, encoded and decoded symmetrically
