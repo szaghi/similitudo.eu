@@ -2,7 +2,7 @@
 name: VTKFortran
 tagline: VTK files from pure Fortran, written and read back, from one rank or many.
 kind: library
-order: 11
+order: 8
 status: active
 license: GPLv3 / BSD / MIT
 repo: https://github.com/szaghi/VTKFortran

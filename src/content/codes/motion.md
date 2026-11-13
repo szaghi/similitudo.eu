@@ -2,7 +2,7 @@
 name: MOTIOn
 tagline: HDF5 data with XDMF metadata from MPI codes, in one Fortran API.
 kind: library
-order: 12
+order: 11
 status: active
 license: GPLv3 / BSD / MIT
 repo: https://github.com/szaghi/MOTIOn

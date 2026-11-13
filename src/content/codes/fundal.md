@@ -2,7 +2,7 @@
 name: FUNDAL
 tagline: One Fortran API for GPU programming over OpenACC and OpenMP offloading, plus a CPU mode, chosen at compile time.
 kind: library
-order: 7
+order: 9
 status: active
 license: GPLv3 / BSD / MIT
 repo: https://github.com/szaghi/FUNDAL
