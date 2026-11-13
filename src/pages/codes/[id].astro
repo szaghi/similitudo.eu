@@ -47,7 +47,7 @@ const facets = [
 
   <section class="sec">
     <p class="label mono">{num()} — Overview</p>
-    <div class="overview">
+    <div class:list={['overview', { flow: d.figures.length > 2 }]}>
       <div class="prose"><Content /></div>
       {d.figures.length > 0 && d.figures.length <= 2 && <div class="figs">{d.figures.map((f) => <CodeFigure f={f} />)}</div>}
     </div>
@@ -135,6 +135,12 @@ const facets = [
   }
   .overview { display: grid; gap: 2rem; align-items: start; }
   @media (min-width: 64rem) { .overview { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); } }
+  /* With a gallery the figures sit in their own section: the overview takes the whole row, in two text columns. */
+  @media (min-width: 64rem) {
+    .overview.flow { grid-template-columns: minmax(0, 1fr); }
+    .overview.flow .prose { max-width: none; columns: 2; column-gap: 3rem; }
+    .overview.flow .prose :global(p) { margin-top: 0; }
+  }
   .ev li { display: grid; gap: 0.25rem 1.5rem; }
   @media (min-width: 64rem) { .ev li { grid-template-columns: 2fr 1.4fr auto; align-items: baseline; } }
   .ev p { margin: 0; }
