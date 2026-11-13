@@ -5,6 +5,7 @@ import Hero from '../components/Hero.astro';
 import CapabilityRows from '../components/CapabilityRows.astro';
 import CodeGrid from '../components/CodeGrid.astro';
 import PubRows from '../components/PubRows.astro';
+import MoreLink from '../components/MoreLink.astro';
 import { isPublished, byOrder } from '../lib/content';
 
 const codes = (await getCollection('codes', isPublished)).sort(byOrder);
@@ -21,7 +22,7 @@ const selected = (await getCollection('publications', isPublished))
       <p class="label mono">01 — Expertise</p>
       <div>
         <CapabilityRows compact />
-        <p class="more"><a href="/expertise/">Details and documentation</a> <span aria-hidden="true">→</span></p>
+        <MoreLink href="/expertise/" icon="grid">Details and documentation</MoreLink>
       </div>
     </section>
 
@@ -29,7 +30,7 @@ const selected = (await getCollection('publications', isPublished))
       <p class="label mono">02 — Codes</p>
       <div>
         <CodeGrid codes={codes} />
-        <p class="more"><a href="/codes/">All codes</a> <span aria-hidden="true">→</span></p>
+        <MoreLink href="/codes/" icon="braces">All codes</MoreLink>
       </div>
     </section>
 
@@ -37,7 +38,7 @@ const selected = (await getCollection('publications', isPublished))
       <p class="label mono">03 — Selected publications</p>
       <div>
         <PubRows pubs={selected} />
-        <p class="more"><a href="/about/publications/">All publications</a> <span aria-hidden="true">→</span></p>
+        <MoreLink href="/about/publications/" icon="scroll">All publications</MoreLink>
       </div>
     </section>
   </main>

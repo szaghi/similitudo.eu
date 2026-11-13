@@ -1,0 +1,122 @@
+#!/usr/bin/env python3
+"""Sumi brush icons for the home page's "more" links (src/lib/icons.ts is generated from this file).
+
+Each stroke is a cubic Bezier centreline turned into a filled outline whose width follows a brush profile: a press at
+the entry, a slowly thinning body, a tapered exit, plus a few dry-brush hairs past the tail. Seeded, so the output is
+reproducible: `python3 scripts/brush-icons.py > src/lib/icons.ts`.
+"""
+import math
+import random
+
+VIEW = 64
+
+
+def bez(p, t):
+    (x0, y0), (x1, y1), (x2, y2), (x3, y3) = p
+    u = 1 - t
+    return (u**3 * x0 + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t**3 * x3,
+            u**3 * y0 + 3 * u * u * t * y1 + 3 * u * t * t * y2 + t**3 * y3)
+
+
+def line(a, b, bow=0.0):
+    """A straight stroke from a to b, bowed sideways by `bow` (fraction of its length)."""
+    (ax, ay), (bx, by) = a, b
+    dx, dy = bx - ax, by - ay
+    nx, ny = -dy, dx
+    return [a, (ax + dx / 3 + nx * bow, ay + dy / 3 + ny * bow), (ax + 2 * dx / 3 + nx * bow, ay + 2 * dy / 3 + ny * bow), b]
+
+
+def profile(t, press, tail):
+    if t < 0.12:
+        return press + (1 - press) * (t / 0.12) ** 0.5 + 0.15 * math.sin(math.pi * t / 0.12)
+    body = 1 - 0.18 * (t - 0.12)
+    if t > 1 - tail:
+        return body * max(0.04, (1 - t) / tail) ** 0.8
+    return body
+
+
+def stroke(p, w, rng, press=0.85, tail=0.3, hairs=2, n=40):
+    pts = [bez(p, i / n) for i in range(n + 1)]
+    left, right = [], []
+    for i, (x, y) in enumerate(pts):
+        t = i / n
+        a, b = pts[max(0, i - 1)], pts[min(n, i + 1)]
+        tx, ty = b[0] - a[0], b[1] - a[1]
+        L = math.hypot(tx, ty) or 1
+        nx, ny = -ty / L, tx / L
+        h = w / 2 * profile(t, press, tail) * (1 + rng.uniform(-0.07, 0.07))
+        left.append((x + nx * h, y + ny * h))
+        right.append((x - nx * h, y - ny * h))
+    out = [poly(left + right[::-1])]
+    # dry-brush hairs: thin tapered slivers continuing the tail, fanned slightly
+    x, y = pts[-1]
+    tx, ty = pts[-1][0] - pts[-4][0], pts[-1][1] - pts[-4][1]
+    L = math.hypot(tx, ty) or 1
+    tx, ty = tx / L, ty / L
+    for k in range(hairs):
+        off = (k - (hairs - 1) / 2) * w * 0.32
+        sx, sy = pts[-6][0] - ty * off, pts[-6][1] + tx * off
+        ln = w * rng.uniform(0.9, 1.6)
+        ex, ey = x + tx * ln - ty * off * 1.3, y + ty * ln + tx * off * 1.3
+        hw = w * 0.07
+        out.append(poly([(sx - ty * hw, sy + tx * hw), (ex, ey), (sx + ty * hw, sy - tx * hw)]))
+    return out
+
+
+def poly(ps):
+    return 'M' + 'L'.join(f'{x:.2f} {y:.2f}' for x, y in ps) + 'Z'
+
+
+def grid(step=8):
+    return ''.join(f'M{v} 4V60M4 {v}H60' for v in range(8, VIEW, step))
+
+
+def icons():
+    rng = random.Random(7)
+    S = {}
+    # adaptive grid: the square, one refinement, a second one in the top-right quadrant
+    S['grid'] = [
+        *stroke(line((12, 12), (52, 12), -0.02), 5.2, rng),
+        *stroke(line((52, 11), (52, 52), 0.015), 5.2, rng),
+        *stroke(line((52, 52), (12, 52), -0.015), 5.2, rng),
+        *stroke(line((12, 52), (12, 12), 0.02), 5.2, rng, hairs=1),
+        *stroke(line((32, 12), (32, 52), 0.02), 3.4, rng, hairs=1),
+        *stroke(line((12, 32), (52, 32), -0.02), 3.4, rng, hairs=1),
+        *stroke(line((42, 13), (42, 31), 0.03), 2.2, rng, hairs=0, tail=0.4),
+        *stroke(line((33, 22), (51, 22), -0.03), 2.2, rng, hairs=0, tail=0.4),
+    ]
+    # curly braces
+    S['braces'] = [
+        *stroke([(27, 8), (17, 8), (21, 26), (19, 29)], 5.0, rng, hairs=0, tail=0.05),
+        *stroke([(19, 28), (17, 31), (13, 32), (10, 32)], 4.0, rng, press=1.0, hairs=0, tail=0.6),
+        *stroke([(11, 32), (15, 33), (18, 34), (19, 37)], 4.0, rng, press=0.3, hairs=0, tail=0.02),
+        *stroke([(19, 36), (21, 40), (16, 56), (27, 56)], 5.0, rng, press=0.9, hairs=2),
+        *stroke([(37, 8), (47, 8), (43, 26), (45, 29)], 5.0, rng, hairs=0, tail=0.05),
+        *stroke([(45, 28), (47, 31), (51, 32), (54, 32)], 4.0, rng, press=1.0, hairs=0, tail=0.6),
+        *stroke([(53, 32), (49, 33), (46, 34), (45, 37)], 4.0, rng, press=0.3, hairs=0, tail=0.02),
+        *stroke([(45, 36), (43, 40), (48, 56), (37, 56)], 5.0, rng, press=0.9, hairs=2),
+    ]
+    # hanging scroll (kakejiku): cord, top rod, mounting edges, two vertical text strokes, heavy bottom roller
+    S['scroll'] = [
+        *stroke(line((24, 12), (32, 4), 0.0), 1.6, rng, hairs=0, tail=0.2),
+        *stroke(line((32, 4), (40, 12), 0.0), 1.6, rng, hairs=0, tail=0.2),
+        *stroke(line((12, 13), (52, 13), -0.03), 4.2, rng, hairs=1),
+        *stroke(line((17, 15), (17, 51), 0.01), 1.8, rng, hairs=0, tail=0.15),
+        *stroke(line((47, 15), (47, 51), -0.01), 1.8, rng, hairs=0, tail=0.15),
+        *stroke(line((36, 20), (36, 44), 0.03), 3.6, rng, hairs=1, tail=0.4),
+        *stroke(line((28, 20), (28, 36), -0.03), 3.6, rng, hairs=1, tail=0.4),
+        *stroke(line((9, 54), (55, 54), 0.02), 6.0, rng, hairs=2),
+    ]
+    return S
+
+
+if __name__ == '__main__':
+    S = icons()
+    print('// Generated by scripts/brush-icons.py: do not edit by hand.')
+    print('// Sumi brush icons (viewBox 0 0 64 64): `ink` is one filled path drawn in currentColor, `grid` the faint tile.')
+    print(f"export const iconGrid = '{grid()}';")
+    print('export const icons = {')
+    for k, v in S.items():
+        print(f"  {k}: '{''.join(v)}',")
+    print('} as const;')
+    print('export type IconName = keyof typeof icons;')

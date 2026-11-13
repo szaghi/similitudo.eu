@@ -1,0 +1,19 @@
+---
+// "More" link closing a home section: a sumi brush icon (scripts/brush-icons.py), the label, the arrow. The icon is ink
+// on a faint grid tile, like the code logos without their seal (the seal stays one per screen); it sits inside the link,
+// so it is part of the click target, and is hidden from assistive tech (the label says it all).
+import { icons, iconGrid, type IconName } from '../lib/icons';
+interface Props { href: string; icon: IconName }
+const { href, icon } = Astro.props;
+---
+
+<p class="more"><a href={href}><svg class="ico" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path class="tile" d={iconGrid} /><path class="ink" d={icons[icon]} /></svg><span><slot /></span></a> <span aria-hidden="true">→</span></p>
+
+<style>
+  .more { display: flex; align-items: center; gap: 0.35rem; } /* the arrow on the label's centre line, not the baseline */
+  a { display: inline-flex; align-items: center; gap: 0.6rem; }
+  .ico { flex: none; width: 2rem; height: 2rem; }
+  .tile { fill: none; stroke: var(--grid-fine); stroke-width: 0.6; stroke-opacity: 0.45; }
+  .ink { fill: var(--text-1); transition: fill 0.15s; }
+  a:hover .ink, a:focus-visible .ink { fill: var(--link); }
+</style>
