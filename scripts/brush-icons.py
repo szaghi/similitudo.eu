@@ -64,6 +64,11 @@ def stroke(p, w, rng, press=0.85, tail=0.3, hairs=2, n=40):
 
 
 def poly(ps):
+    # One winding direction for every outline: an icon is a single path under the nonzero fill rule, and where two
+    # outlines of opposite winding overlap (a dot on a stem) the overlap would cancel into a hole.
+    area = sum(x0 * y1 - x1 * y0 for (x0, y0), (x1, y1) in zip(ps, ps[1:] + ps[:1]))
+    if area < 0:
+        ps = ps[::-1]
     return 'M' + 'L'.join(f'{x:.2f} {y:.2f}' for x, y in ps) + 'Z'
 
 
@@ -106,6 +111,64 @@ def icons():
         *stroke(line((36, 20), (36, 44), 0.03), 3.6, rng, hairs=1, tail=0.4),
         *stroke(line((28, 20), (28, 36), -0.03), 3.6, rng, hairs=1, tail=0.4),
         *stroke(line((9, 54), (55, 54), 0.02), 6.0, rng, hairs=2),
+    ]
+    # --- small icons (links and facts; drawn bolder, they show at 18-24 px) ---
+    def dot(x, y, w=9.0):
+        # a press of the brush: a horizontal dab about as long as it is wide, so it reads round, not as a sliver
+        return stroke(line((x - 0.42 * w, y + 0.6), (x + 0.42 * w, y - 0.6)), w, rng, press=1.0, tail=0.35, hairs=0, n=16)
+
+    # envelope: the body, then the flap
+    S['mail'] = [
+        *stroke(line((9, 17), (55, 17), -0.02), 5.0, rng, hairs=0, tail=0.15),
+        *stroke(line((55, 16), (55, 48), 0.02), 5.0, rng, hairs=0, tail=0.15),
+        *stroke(line((55, 48), (9, 48), -0.015), 5.0, rng, hairs=2, tail=0.3),
+        *stroke(line((9, 48), (9, 17), 0.02), 5.0, rng, hairs=0, tail=0.15),
+        *stroke([(11, 19), (20, 26), (26, 32), (32, 35)], 4.0, rng, hairs=0, tail=0.1),
+        *stroke([(32, 35), (38, 32), (44, 26), (54, 19)], 4.0, rng, press=0.6, hairs=1),
+    ]
+    # ORCID's identifier, written: i, then D
+    S['orcid'] = [
+        *dot(16, 13, 8.5),
+        *stroke(line((16, 24), (16, 54), 0.02), 6.0, rng, hairs=1, tail=0.25),
+        *stroke(line((29, 11), (29, 54), -0.01), 6.0, rng, hairs=0, tail=0.1),
+        *stroke([(29, 11), (62, 6), (62, 60), (29, 53)], 5.0, rng, press=0.6, hairs=2),
+    ]
+    # git branch: the trunk with its two commits, and a branch curving off to a third
+    S['branch'] = [
+        *stroke(line((20, 16), (20, 48), 0.02), 4.2, rng, hairs=0, tail=0.15),
+        *dot(20, 11, 12), *dot(20, 53, 12), *dot(45, 14, 12),
+        *stroke([(45, 21), (45, 34), (24, 30), (21, 44)], 3.8, rng, hairs=1, tail=0.35),
+    ]
+    # seedling (status: active, growing): a stem, two leaves opening from its top, each painted thin-thick-thin
+    S['sprout'] = [
+        *stroke([(31, 60), (33, 50), (30, 42), (32, 30)], 5.0, rng, press=1.0, hairs=0, tail=0.2),
+        *stroke([(31, 33), (25, 22), (15, 16), (5, 18)], 9.0, rng, press=0.12, hairs=1, tail=0.6),
+        *stroke([(33, 29), (37, 15), (47, 7), (60, 6)], 10.0, rng, press=0.12, hairs=1, tail=0.6),
+        *stroke(line((14, 61), (50, 61), -0.02), 3.0, rng, hairs=2, tail=0.4),
+    ]
+    # key (licence: permission to use)
+    S['key'] = [
+        *stroke([(18, 21), (5, 21), (5, 43), (18, 43)], 5.0, rng, hairs=0, tail=0.1),
+        *stroke([(18, 43), (31, 43), (31, 21), (17, 21)], 5.0, rng, press=0.7, hairs=0, tail=0.2),
+        *stroke(line((30, 32), (60, 32), -0.02), 5.0, rng, hairs=1, tail=0.25),
+        *stroke(line((48, 33), (48, 45), 0.02), 4.4, rng, hairs=0, tail=0.3),
+        *stroke(line((56, 33), (56, 42), 0.02), 4.0, rng, hairs=0, tail=0.3),
+    ]
+    # open book (documentation): spine, the pages' top and bottom edges, the outer edges
+    S['book'] = [
+        *stroke(line((32, 16), (32, 54), 0.0), 4.0, rng, hairs=0, tail=0.15),
+        *stroke([(31, 17), (24, 9), (13, 9), (4, 14)], 4.6, rng, hairs=0, tail=0.15),
+        *stroke([(33, 17), (40, 9), (51, 9), (60, 14)], 4.6, rng, hairs=0, tail=0.15),
+        *stroke(line((4, 13), (4, 50), 0.01), 4.0, rng, hairs=0, tail=0.1),
+        *stroke(line((60, 13), (60, 50), -0.01), 4.0, rng, hairs=0, tail=0.1),
+        *stroke([(4, 50), (14, 45), (25, 46), (32, 55)], 5.0, rng, hairs=0, tail=0.1),
+        *stroke([(32, 55), (39, 46), (50, 45), (60, 50)], 5.0, rng, press=0.7, hairs=2),
+    ]
+    # foundation (built on): three courses, the widest at the bottom
+    S['stack'] = [
+        *stroke(line((20, 20), (44, 20), -0.03), 6.0, rng, hairs=1, tail=0.3),
+        *stroke(line((13, 34), (51, 34), 0.02), 7.0, rng, hairs=1, tail=0.3),
+        *stroke(line((6, 49), (58, 49), -0.02), 8.0, rng, hairs=2, tail=0.3),
     ]
     return S
 

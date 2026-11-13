@@ -1,16 +1,17 @@
 ---
 // Footer on every page: what similitudo is, the contact address, then the colophon (with the privacy note).
 import { about, email } from '../lib/site';
+import Icon from './Icon.astro';
 const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
   <p class="label mono">About</p>
   <p class="profile">{about}</p>
-  <p class="mail"><a href={`mailto:${email}`}>{email}</a></p>
+  <p class="mail"><a href={`mailto:${email}`}><Icon name="mail" size="1.4em" />{email}</a></p>
   <div class="colophon">
     <p class="mono small">© {year} Stefano Zaghi · similitudo.eu</p>
-    <p class="mono small"><a href="/privacy/">Privacy</a> · <a href="https://github.com/szaghi">github.com/szaghi</a></p>
+    <p class="mono small"><a href="/privacy/">Privacy</a> · <a class="gh" href="https://github.com/szaghi"><Icon name="branch" size="1.3em" />github.com/szaghi</a></p>
   </div>
 </footer>
 
@@ -19,10 +20,11 @@ const year = new Date().getFullYear();
   .label { margin: 0; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; }
   .profile { margin: 0; max-width: 40rem; font-size: 0.95rem; line-height: 1.55; color: var(--text-2); }
   .mail { margin: 0 0 1.5rem; }
-  .mail a { font-family: var(--f-display); font-stretch: 112%; font-weight: 500; font-size: 1.05rem; text-decoration-thickness: 1px; overflow-wrap: anywhere; }
+  .mail a { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--f-display); font-stretch: 112%; font-weight: 500; font-size: 1.05rem; text-decoration-thickness: 1px; overflow-wrap: anywhere; }
   .colophon { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; border-top: 1px solid var(--rule); padding-top: 1rem; }
   .small { margin: 0; color: var(--text-3); }
   .small a { color: inherit; }
+  .gh { display: inline-flex; align-items: center; gap: 0.35rem; vertical-align: bottom; --icon-ink: var(--text-3); }
   @media (min-width: 64rem) {
     .site-footer { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 1.5rem; }
     .label { grid-column: 1 / 4; }

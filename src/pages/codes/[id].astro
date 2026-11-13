@@ -3,6 +3,10 @@ import { getCollection, getEntry, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import CodeLogo from '../../components/CodeLogo.astro';
 import CodeFigure from '../../components/CodeFigure.astro';
+import Icon from '../../components/Icon.astro';
+
+/** A URL shown without its scheme, breakable after each slash (narrow screens wrap at path boundaries, not mid-word). */
+const segments = (url: string) => url.replace('https://', '').split('/');
 import { isPublished } from '../../lib/content';
 
 export async function getStaticPaths() {
@@ -91,11 +95,11 @@ const facets = [
   <section class="sec">
     <p class="label mono">{num()} — Facts</p>
     <dl class="facts">
-      {parent && (<><dt class="mono">Built on</dt><dd><a href={`/codes/${parent.id}/`}>{parent.data.name}</a></dd></>)}
-      <dt class="mono">Status</dt><dd>{d.status}</dd>
-      <dt class="mono">Licence</dt><dd>{d.license}</dd>
-      {d.docs && (<><dt class="mono">Documentation</dt><dd><a href={d.docs}>{d.docs.replace('https://', '')}</a></dd></>)}
-      <dt class="mono">Source</dt><dd><a href={d.repo}>{d.repo.replace('https://', '')}</a></dd>
+      {parent && (<><dt class="mono"><Icon name="stack" size="1.7em" />Built on</dt><dd><a href={`/codes/${parent.id}/`}>{parent.data.name}</a></dd></>)}
+      <dt class="mono"><Icon name="sprout" size="1.7em" />Status</dt><dd>{d.status}</dd>
+      <dt class="mono"><Icon name="key" size="1.7em" />Licence</dt><dd>{d.license}</dd>
+      {d.docs && (<><dt class="mono"><Icon name="book" size="1.7em" />Documentation</dt><dd><a href={d.docs}>{segments(d.docs).map((s, i) => (<>{i > 0 && <>/<wbr /></>}{s}</>))}</a></dd></>)}
+      <dt class="mono"><Icon name="branch" size="1.7em" />Source</dt><dd><a href={d.repo}>{segments(d.repo).map((s, i) => (<>{i > 0 && <>/<wbr /></>}{s}</>))}</a></dd>
     </dl>
   </section>
 
@@ -117,7 +121,7 @@ const facets = [
   h1 { margin: 0 0 0 -0.03em; font-size: clamp(2.4rem, 6vw, 5.5rem); font-weight: 300; }
   .lead { margin: 1.5rem 0 0; max-width: 34rem; color: var(--text-2); }
   .facts { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0.5rem 2rem; margin: 0; border-top: 1px solid var(--text-1); padding-top: 1rem; }
-  .facts dt { color: var(--text-3); padding-top: 0.2em; }
+  .facts dt { display: flex; align-items: center; gap: 0.5rem; color: var(--text-3); --icon-ink: var(--text-2); }
   .facts dd { margin: 0; overflow-wrap: anywhere; }
   .facet > li { padding: 0.6rem 0; }
   .figs { display: grid; gap: 2rem; }

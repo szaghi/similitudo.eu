@@ -5,6 +5,11 @@ import PageHead from '../components/PageHead.astro';
 import PubRows from '../components/PubRows.astro';
 import { isPublished, byOrder } from '../lib/content';
 import { pad } from '../lib/site';
+import Icon from '../components/Icon.astro';
+import type { IconName } from '../lib/icons';
+
+// Brush icon per personal link, by label; a link without one shows its label alone.
+const linkIcon: Record<string, IconName> = { GitHub: 'branch' };
 
 // Publications live under About me: the newest journal articles here, the full list on its own page.
 const pubs = await getCollection('publications', isPublished);
@@ -27,9 +32,9 @@ const people = await Promise.all(
           <h2 class="name">{p.data.name}</h2>
           <div class="prose"><Content /></div>
           <p class="links mono">
-            {p.data.orcid && <a href={`https://orcid.org/${p.data.orcid}`}>ORCID</a>}
-            {p.data.links.map((l) => <a href={l.url}>{l.label}</a>)}
-            {p.data.cv && <a href={p.data.cv}>CV (PDF)</a>}
+            {p.data.orcid && <a href={`https://orcid.org/${p.data.orcid}`}><Icon name="orcid" size="1.6em" />ORCID</a>}
+            {p.data.links.map((l) => <a href={l.url}>{linkIcon[l.label] && <Icon name={linkIcon[l.label]} size="1.6em" />}{l.label}</a>)}
+            {p.data.cv && <a href={p.data.cv}><Icon name="scroll" size="1.6em" />CV (PDF)</a>}
           </p>
         </div>
       </article>
@@ -50,5 +55,6 @@ const people = await Promise.all(
 
 <style>
   .name { margin: 0 0 1rem; font-family: var(--f-display); font-stretch: 125%; font-weight: 560; font-size: clamp(1.35rem, 2.2vw, 1.8rem); letter-spacing: -0.02em; line-height: 1.1; }
-  .links { display: flex; flex-wrap: wrap; gap: 1.25rem; margin: 1rem 0 0; }
+  .links { display: flex; flex-wrap: wrap; gap: 1.5rem; margin: 1rem 0 0; }
+  .links a { display: inline-flex; align-items: center; gap: 0.4rem; }
 </style>
