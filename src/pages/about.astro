@@ -6,6 +6,7 @@ import PubRows from '../components/PubRows.astro';
 import { isPublished, byOrder } from '../lib/content';
 import { pad } from '../lib/site';
 import Icon from '../components/Icon.astro';
+import MoreLink from '../components/MoreLink.astro';
 import type { IconName } from '../lib/icons';
 
 // Brush icon per personal link, by label; a link without one shows its label alone.
@@ -46,7 +47,7 @@ const people = await Promise.all(
         <p class="label mono">{pad(people.length)} — Selected publications</p>
         <div>
           <PubRows pubs={selected} />
-          <p class="more"><a href="/about/publications/">All publications ({pubs.length})</a> <span aria-hidden="true">→</span></p>
+          <MoreLink href="/about/publications/" icon="scroll">All publications ({pubs.length})</MoreLink>
         </div>
       </section>
     )
