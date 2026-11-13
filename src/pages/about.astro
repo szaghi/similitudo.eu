@@ -6,7 +6,7 @@ import PubRows from '../components/PubRows.astro';
 import { isPublished, byOrder } from '../lib/content';
 import { pad } from '../lib/site';
 
-// Publications live under People (one author today): the newest journal articles here, the full list on its own page.
+// Publications live under About me: the newest journal articles here, the full list on its own page.
 const pubs = await getCollection('publications', isPublished);
 const selected = pubs.filter((p) => p.data.kind === 'journal').sort((a, b) => b.data.year - a.data.year).slice(0, 4);
 
@@ -17,8 +17,8 @@ const people = await Promise.all(
 );
 ---
 
-<Base title="People" description="Stefano Zaghi, the person behind similitudo.">
-  <PageHead title="People" />
+<Base title="About me" description="Stefano Zaghi, research scientist in numerical methods and high-performance simulation, the person behind similitudo.">
+  <PageHead title="About me" />
   {
     people.map(({ p, Content }, k) => (
       <article class="sec">
@@ -41,7 +41,7 @@ const people = await Promise.all(
         <p class="label mono">{pad(people.length)} — Selected publications</p>
         <div>
           <PubRows pubs={selected} />
-          <p class="more"><a href="/people/publications/">All publications ({pubs.length})</a> <span aria-hidden="true">→</span></p>
+          <p class="more"><a href="/about/publications/">All publications ({pubs.length})</a> <span aria-hidden="true">→</span></p>
         </div>
       </section>
     )

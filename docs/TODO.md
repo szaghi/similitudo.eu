@@ -15,14 +15,15 @@ underscore, add the entry back to `nav` in `src/lib/site.ts`, and, where noted, 
 
 ## Copy
 
-- **About** (`partner` in `src/lib/site.ts`, footer of every page): similitudo is not a legal entity (2026-11-09), so
-  the copy presents it as the name under which Stefano Zaghi works, never as a company or consortium partner. If that
-  changes (a registered business), revisit it, plus the legal notice and the VAT number Italian law then requires.
-- **Capabilities** (`src/data/capabilities.ts`): phrased as assignable tasks, each linked to the documentation
-  (ADAM landing page for generic items, the FLUME / PRISM starting pages for theirs) (2026-11-09).
-  Refine the wording as projects come in.
-- **People** (`src/content/people/stefano-zaghi.md`): bio written (sources: the CV `.tex` files, ORCID, CNR
-  IRIS). Still to do: confirm the title, CV PDF in `public/cv/`, update the ORCID record (it still says CNR-INSEAN).
+- **Portfolio, not startup** (2026-11-13): the site speaks in the first person as Stefano Zaghi's portfolio; the
+  startup-placeholder copy and how to bring it back are in `docs/startup-archive.md`. If similitudo becomes a
+  registered business, also add the legal notice and the VAT number Italian law then requires.
+- **About** (`about` in `src/lib/site.ts`, footer of every page): similitudo is the name of the owner's work, never a
+  company or consortium partner.
+- **Expertise** (`src/data/capabilities.ts`, page `/expertise/`): one line per area on what the work is, each linked to
+  the documentation (ADAM landing page for generic items, the FLUME / PRISM starting pages for theirs).
+- **About me** (`src/content/people/stefano-zaghi.md`, page `/about/`): first-person bio (sources: the CV `.tex` files,
+  ORCID, CNR IRIS). Still to do: CV PDF in `public/cv/`, update the ORCID record (it still says CNR-INSEAN).
 - **Codes** (`src/content/codes/*.md`): figure, verified numbers and paper added (2026-11-09). Gaps: no clean
   FLUME or PRISM performance figure yet (FLUME's speedup matrix is still `TBD`); no FLUME or PRISM paper; the figures
   are 720 px wide (soft on high-DPI screens): re-render larger posters from the existing runs when convenient.

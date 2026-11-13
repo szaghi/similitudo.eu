@@ -18,10 +18,10 @@ const selected = (await getCollection('publications', isPublished))
   <Hero />
   <main id="main" class="page">
     <section class="sec">
-      <p class="label mono">01 — Capabilities</p>
+      <p class="label mono">01 — Expertise</p>
       <div>
         <CapabilityRows compact />
-        <p class="more"><a href="/capabilities/">All capabilities</a> <span aria-hidden="true">→</span></p>
+        <p class="more"><a href="/expertise/">Details and documentation</a> <span aria-hidden="true">→</span></p>
       </div>
     </section>
 
@@ -37,7 +37,7 @@ const selected = (await getCollection('publications', isPublished))
       <p class="label mono">03 — Selected publications</p>
       <div>
         <PubRows pubs={selected} />
-        <p class="more"><a href="/people/publications/">All publications</a> <span aria-hidden="true">→</span></p>
+        <p class="more"><a href="/about/publications/">All publications</a> <span aria-hidden="true">→</span></p>
       </div>
     </section>
   </main>

@@ -1,4 +1,5 @@
-// Capabilities, phrased as the task a coordinator can assign in a work package. Each links to the documentation
+// Expertise (the /expertise/ page; until 2026-11-13 "Capabilities", phrased as tasks a project coordinator assigns:
+// see docs/startup-archive.md). Each area links to the documentation
 // (GitHub Pages), which follows the codebase: generic capabilities to the ADAM landing page (and MORTIF's for the Morton ordering), application-specific ones
 // to the FLUME or PRISM starting page, the GPU layer to FUNDAL's, geometry to ADAM's, FOSSIL's and VecFor's, visualisation output to MOTIOn's, VTKFortran's and foresight's;
 // software engineering to the general-purpose libraries on the Codes page (each linking its own docs) and to FoBiS's,
@@ -18,7 +19,7 @@ const MOSAIC = 'https://szaghi.github.io/mosaic/';
 
 export interface Capability {
   title: string;
-  task: string; // what a coordinator assigns
+  task: string; // one line on what the work is
   text: string;
   evidence: { label: string; url: string }[]; // the docs that back it, one link per code
 }
@@ -26,7 +27,7 @@ export interface Capability {
 export const capabilities: Capability[] = [
   {
     title: 'Adaptive mesh refinement',
-    task: 'Adaptive-grid infrastructure for a project solver',
+    task: 'Adaptive-grid infrastructure for solvers',
     text: 'Block-structured octree/quadtree AMR with Morton ordering (MORTIF), 2:1 balancing, load balancing and parallel I/O, on CPUs and GPUs.',
     evidence: [
       { label: 'ADAM docs', url: ADAM },
@@ -73,13 +74,13 @@ export const capabilities: Capability[] = [
   },
   {
     title: 'Verification and validation',
-    task: 'A verification work package a project can cite',
+    task: 'Evidence that a solver is right, on CPU and GPU',
     text: 'Convergence studies with observed-order bounds, and the same tests run on CPU and GPU against reference outputs.',
     evidence: [{ label: 'ADAM docs', url: ADAM }],
   },
   {
     title: 'Modern Fortran engineering',
-    task: 'Maintainable, tested Fortran for the codes of a project',
+    task: 'Maintainable, tested Fortran that other projects reuse',
     text: 'Fortran libraries designed for reuse, documented and tested in CI with coverage; eight general-purpose ones, several used by other open-source projects: PENF (portable kinds), FACE (terminal colours), BeFoR64 (Base64), StringiFor (strings), FiNeR (INI files), FLAP (command lines), forbear (progress bars), figure (GUIs and plots). All built and tested with FoBiS, a Fortran build system used beyond these codes.',
     evidence: [
       { label: 'General-purpose libraries', url: '/codes/#general' },
@@ -88,7 +89,7 @@ export const capabilities: Capability[] = [
   },
   {
     title: 'State of the art',
-    task: 'The literature review of a work package, kept current through the project',
+    task: 'Literature reviews that stay current',
     text: 'The literature searched across 22 scientific databases at once and merged by DOI, kept in a local library with the PDFs one is entitled to read; ranked, summarised and compared by a language model whose statements cite the papers; citation maps of the field, and saved searches that report only the new papers. With mosaic.',
     evidence: [{ label: 'mosaic docs', url: MOSAIC }],
   },

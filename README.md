@@ -1,7 +1,8 @@
 # similitudo.eu
 
-Sources of the [similitudo.eu](https://similitudo.eu) website: the brand front of similitudo, numerical methods and
-GPU-accelerated simulation software for research projects.
+Sources of the [similitudo.eu](https://similitudo.eu) website: the personal portfolio of Stefano Zaghi, published under
+the name similitudo (numerical methods and GPU-accelerated simulation software). Until 2026-11-13 it was the placeholder
+of a future startup; that copy is archived in `docs/startup-archive.md`.
 
 - **Generator:** [Astro](https://astro.build) 7, static output.
 - **Hosting:** GitHub Pages, built and deployed by GitHub Actions on every push to `main`
@@ -37,10 +38,11 @@ The same commands exist as `npm run dev | prod | check | shots`.
 |---|---|---|
 | Codes | `src/content/codes/*.md` | frontmatter + body |
 | Projects | `src/content/projects/*.md` | frontmatter + body |
-| People | `src/content/people/*.md` | frontmatter + body |
+| About me | `src/content/people/*.md` | frontmatter + body |
+| Expertise | `src/data/capabilities.ts` | typed array |
 | Publications | `src/data/publications.yaml` | one keyed entry each |
 
-Projects, Publications and Contact are parked until they have real content: see `docs/TODO.md`.
+Projects is parked until it has real content: see `docs/TODO.md`.
 
 Schemas live in `src/content.config.ts`; a missing or malformed field fails the build. Set `draft: true` to keep an
 entry out of production while still seeing it in `npm run dev`. Search for `TODO` to find unfinished copy.

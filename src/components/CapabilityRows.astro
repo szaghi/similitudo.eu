@@ -1,6 +1,6 @@
 ---
-// Capabilities as a numbered index: title, what it is, and the code that backs it. `compact` (the home page): number,
-// title and task only, each title linking to its full row on /capabilities/ (anchored by a slug of the title).
+// Expertise (src/data/capabilities.ts) as a numbered index: title, what it is, and the code that backs it. `compact` (the home page): number,
+// title and task only, each title linking to its full row on /expertise/ (anchored by a slug of the title).
 import { capabilities } from '../data/capabilities';
 import { pad } from '../lib/site';
 interface Props { compact?: boolean }
@@ -14,7 +14,7 @@ const slug = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(
       {capabilities.map((c, k) => (
         <li>
           <span class="n mono">{pad(k)}</span>
-          <div class="head"><h3><a href={`/capabilities/#${slug(c.title)}`}>{c.title}</a></h3><p class="task mono">{c.task}</p></div>
+          <div class="head"><h3><a href={`/expertise/#${slug(c.title)}`}>{c.title}</a></h3><p class="task mono">{c.task}</p></div>
         </li>
       ))}
     </ol>

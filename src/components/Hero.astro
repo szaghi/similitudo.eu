@@ -7,7 +7,7 @@ import ThemeToggle from './ThemeToggle.astro';
 import HeroMesh from './HeroMesh.astro';
 import { heroSpec } from '../lib/mesh/front';
 import { still } from '../lib/mesh/still';
-import { lead } from '../lib/site';
+import { lead, byline } from '../lib/site';
 import { getCollection } from 'astro:content';
 import { isPublished, byOrder } from '../lib/content';
 
@@ -21,7 +21,10 @@ const ring = (await getCollection('codes', isPublished)).sort(byOrder).filter((c
   <div class="ground"><HeroMesh /></div>
   <h1 class="word display">similitudo<span class="stamp"><Seal size={64} label="" /></span></h1>
   <div class="toggle"><ThemeToggle /></div>
-  <p class="lead hero-lead">{lead.map((line, i) => (<>{i > 0 && " "}<span class="line">{line}</span></>))}</p>
+  <div class="intro hero-lead">
+    <p class="by">by <a href="/about/">{byline.name}</a>, <span class="role">{byline.role}</span></p>
+    <p class="lead">{lead.map((line, i) => (<>{i > 0 && " "}<span class="line">{line}</span></>))}</p>
+  </div>
   <Nav class="hero-nav" ring={ring} />
   <p class="readout mono hero-readout">{initial}</p>
 </header>
@@ -50,11 +53,24 @@ const ring = (await getCollection('codes', isPublished)).sort(byOrder).filter((c
   @keyframes stamp { from { opacity: 0; transform: scale(1.8); } }
   .toggle { position: absolute !important; top: var(--gutter); right: var(--edge); }
 
-  /* The headline sits right under the wordmark; on a plate of the ground so the grid stops at its edge. */
+  /* The byline, then the headline, right under the wordmark; each on a plate of the ground so the grid stops at its
+     edge. The wrapper is `.hero-lead`: HeroMesh fits the phone front below it. */
+  .intro { grid-row: 2; display: grid; justify-items: start; margin-top: 1rem; }
+  .by {
+    margin: 0;
+    padding: 0.15rem 0.6rem 0.2rem 0;
+    background: var(--bg);
+    color: var(--text-2);
+    font-family: var(--f-display);
+    font-stretch: 112%;
+    font-weight: 450;
+    font-size: clamp(1rem, 1.3vw, 1.25rem);
+    line-height: 1.2;
+  }
+  .by .role { white-space: nowrap; } /* on phones the line breaks after the name, never inside the role */
+  .by a { color: var(--text-1); font-weight: 560; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
   .lead {
-    grid-row: 2;
-    justify-self: start;
-    margin: 1.25rem 0 0;
+    margin: 0.5rem 0 0;
     padding: 0.2rem 0.6rem 0.3rem 0;
     background: var(--bg);
     font-family: var(--f-display);
@@ -84,7 +100,7 @@ const ring = (await getCollection('codes', isPublished)).sort(byOrder).filter((c
   @media (min-width: 48rem) {
     .ground { background-size: 100px 100px; }
     .hero { grid-template-columns: minmax(0, 1fr) minmax(0, 24rem); column-gap: 2rem; }
-    .word, .lead, .hero :global(.hero-nav) { grid-column: 1 / -1; }
+    .word, .intro, .hero :global(.hero-nav) { grid-column: 1 / -1; }
     .hero :global(.hero-nav ul) { width: min(100%, 52%); }
     .readout { grid-row: 6; grid-column: 2; align-self: end; text-align: right; margin: 0; }
   }
