@@ -16,12 +16,13 @@ methods:
   - Code highlighted by Pygments, Mermaid and Graphviz diagrams
   - impress.js or reveal.js output, one flag; offline and PDF modes
 figures:
-  - src: /codes/matisse/latex.png
-    width: 945
-    height: 736
-    alt: A MaTiSSe slide with a title and the quadratic formula rendered from LaTeX
-    caption: "LaTeX in a slide: the equation typed as in a LaTeX source, rendered by MathJax."
-    source: https://szaghi.github.io/MaTiSSe/advanced/math
+  - src: /codes/matisse/deck.png
+    width: 960
+    height: 540
+    alt: Slides of a MaTiSSe talk on FLUME, cycling from the title to equations, figures, tables and an input listing
+    caption: "A real talk, FLUME on ADAM, compiled by MaTiSSe from one Markdown file to reveal.js: MathJax equations, two-column slides, tables, figures, code, header and footer decorators, and a sumi theme written in the talk's own YAML. Every number comes from the FLUME verification pages."
+    source: https://github.com/szaghi/MaTiSSe/tree/master/examples/showcase
+    animated: true
 ---
 
 **MaTiSSe** (*Ma*rkdown *T*o *I*mpressive *S*cientific *S*lid*e*s) compiles plain Markdown into self-contained HTML
