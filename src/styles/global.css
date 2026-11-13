@@ -1,18 +1,20 @@
 /* similitudo: sumi × architecture (docs/look-lab-brief.md, look B4). Architecture is the system, sumi is the accent:
-   plaster / sumi-charcoal grounds, extended grotesk display, hairline rules, numbered indexes; one ink gesture (the blast
+   cool-grey plaster / sumi-charcoal grounds, extended grotesk display, hairline rules, numbered indexes; one ink gesture (the blast
    front over its refined quadtree) and one vermilion seal per screen. The seal is the only colour, in both themes.
-   Contrast (WCAG 2.x, computed): plaster text-1 15.3, text-2 6.4, text-3 4.7, link 5.6, seal 4.3 (graphic);
-   charcoal text-1 13.6, text-2 6.5, text-3 4.8, link 6.2, seal 4.0 (graphic). text-3 is for labels on --bg only. */
+   Neutrals: the warm look-B4 greys turned cool on 2026-11-13 ("hint"): same OKLCH lightness, hue 90° → 250°, 0.4× the
+   chroma, so every contrast below is unchanged to ±0.1. The seal and link stay vermilion.
+   Contrast (WCAG 2.x, computed): plaster text-1 15.3, text-2 6.5, text-3 4.6, link 5.6, seal 4.3 (graphic);
+   charcoal text-1 13.5, text-2 6.4, text-3 4.8, link 6.2, seal 4.0 (graphic). text-3 is for labels on --bg only. */
 
 :root {
-  --bg: #ecebe6;
-  --bg-alt: #e3e1db;
+  --bg: #eaebed;
+  --bg-alt: #dfe1e3;
   --text-1: #151515;
-  --text-2: #55534e;
-  --text-3: #6b6862;
-  --rule: #c8c5bd;
-  --grid: #dcd9d2;
-  --grid-fine: #9d998f;
+  --text-2: #525355;
+  --text-3: #67696b;
+  --rule: #c3c5c8;
+  --grid: #d7d9dc;
+  --grid-fine: #979a9d;
   --stroke: #151515;
   --seal: #c73e1d;
   --link: #a8321a;
@@ -33,15 +35,15 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --bg: #1b1b1a;
-    --bg-alt: #151514;
-    --text-1: #e6e4de;
-    --text-2: #a19e97;
-    --text-3: #8a8780;
-    --rule: #3a3935;
-    --grid: #262624;
-    --grid-fine: #5e5c56;
-    --stroke: #e6e4de;
+    --bg: #1b1b1b;
+    --bg-alt: #151515;
+    --text-1: #e2e4e6;
+    --text-2: #9c9ea1;
+    --text-3: #85878a;
+    --rule: #38393a;
+    --grid: #252627;
+    --grid-fine: #5a5c5e;
+    --stroke: #e2e4e6;
     --seal: #d9472a;
     --link: #ee7a5f;
     color-scheme: dark;
@@ -49,15 +51,15 @@
 }
 
 :root[data-theme='dark'] {
-  --bg: #1b1b1a;
-  --bg-alt: #151514;
-  --text-1: #e6e4de;
-  --text-2: #a19e97;
-  --text-3: #8a8780;
-  --rule: #3a3935;
-  --grid: #262624;
-  --grid-fine: #5e5c56;
-  --stroke: #e6e4de;
+  --bg: #1b1b1b;
+  --bg-alt: #151515;
+  --text-1: #e2e4e6;
+  --text-2: #9c9ea1;
+  --text-3: #85878a;
+  --rule: #38393a;
+  --grid: #252627;
+  --grid-fine: #5a5c5e;
+  --stroke: #e2e4e6;
   --seal: #d9472a;
   --link: #ee7a5f;
   color-scheme: dark;
