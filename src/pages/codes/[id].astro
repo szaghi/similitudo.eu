@@ -57,7 +57,7 @@ const facets = [
     d.figures.length > 2 && (
       <section class="sec">
         <p class="label mono">{num()} — Gallery</p>
-        <div class="gallery">{d.figures.map((f) => <div class:list={[{ wide: f.width / f.height > 3 }]}><CodeFigure f={f} /></div>)}</div>
+        <div class="gallery">{d.figures.map((f) => <div class:list={[{ wide: f.width / f.height >= 3 }]}><CodeFigure f={f} /></div>)}</div>
       </section>
     )
   }
@@ -127,7 +127,7 @@ const facets = [
   .figs { display: grid; gap: 2rem; }
   /* More than two figures: a gallery under the overview instead of a tall column beside it. */
   .gallery { display: grid; gap: 2.5rem 2rem; }
-  /* a strip wider than 3:1 spans the row (at half width it would be a sliver); dense packing lets the next figure fill
+  /* a strip of 3:1 or wider spans the row (at half width it would be a sliver); dense packing lets the next figure fill
      the gap beside the one before it */
   @media (min-width: 64rem) {
     .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: row dense; align-items: start; }

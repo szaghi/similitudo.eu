@@ -22,3 +22,7 @@ Thumbs.db
 
 # screenshot sheet from ./site shots
 shots/
+
+# inputs and outputs of the compare-figure renderers (scripts/compare/README.md)
+scripts/compare/work/
+__pycache__/

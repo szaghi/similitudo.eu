@@ -1,5 +1,5 @@
 ---
-// A code's figure, one of three kinds:
+// A code's figure, one of four kinds (a figure with `compare` is handed to CompareFigure.astro):
 //   - a still (PNG, light / dark);
 //   - a clip (`animated`, PNG still + <name>.webm / <name>.mp4 next to it, light / dark);
 //   - an animated SVG (`animated`, src ending in .svg: SMIL animation, one version for both themes, as FOSSIL's are).
@@ -7,8 +7,12 @@
 // a pause/play button (WCAG 2.2.2: the loops run past 5 s), and under reduced motion the clip shows its still and the
 // SVG the frame at `hold` seconds (the first by default; a terminal cast starts blank, so it holds the finished session). Without JavaScript: the still, or the SVG as a plain image. An SVG sits in an <object>, not
 // inline, so the ids inside several SVGs on one page cannot collide; SMIL is then paused through its own document.
+import CompareFigure from './CompareFigure.astro';
 interface Props {
-  f: { src: string; dark?: string; width: number; height: number; alt: string; caption: string; source?: string; animated: boolean; hold?: number };
+  f: {
+    src: string; dark?: string; width: number; height: number; alt: string; caption: string; source?: string; animated: boolean; hold?: number;
+    compare?: { twin: string; twinDark?: string; labels: [string, string]; reveal: string; plate?: string };
+  };
 }
 const { f } = Astro.props;
 const svg = f.animated && f.src.endsWith('.svg');
@@ -19,6 +23,8 @@ const variants = [
 ];
 ---
 
+{f.compare && <CompareFigure f={{ ...f, compare: f.compare }} />}
+{!f.compare && (
 <figure class="fig" data-animated={f.animated ? '' : undefined}>
   <div class="frame">
     {
@@ -44,6 +50,7 @@ const variants = [
   </div>
   <figcaption class="mono">{f.caption}{f.source && <> <a href={f.source}>Source</a></>}</figcaption>
 </figure>
+)}
 
 <script>
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;

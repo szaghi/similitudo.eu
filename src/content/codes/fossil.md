@@ -21,6 +21,17 @@ parallelism:
   - CPU (gfortran, ifx, nvfortran)
   - OpenACC on the GPU, bit for bit equal to the CPU
 figures:
+  - src: /codes/fossil/dragon-body.svg
+    width: 640
+    height: 420
+    alt: A dragon made of 6588 flat triangular facets, seen from the side
+    caption: "A body and what a solver sees of it: the dragon, 6588 facets, and the signed distance to its surface on a 96 × 63 Cartesian grid in its middle plane, teal inside and ember outside, the section in ink. Move the pointer across the figure, or drag."
+    source: https://szaghi.github.io/FOSSIL/manual/tutorial/04-distance
+    compare:
+      twin: /codes/fossil/dragon-field.svg
+      labels: [body, distance field]
+      reveal: Reveal the distance field
+      plate: "#1b1714"
   - src: /codes/fossil/dragon-deviation.svg
     width: 640
     height: 420

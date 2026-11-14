@@ -21,6 +21,18 @@ parallelism:
   - OpenACC (nvfortran)
   - OpenMP offloading (amdflang)
 figures:
+  - src: /codes/adam/step-body.webp
+    dark: /codes/adam/step-body-dark.webp
+    width: 1440
+    height: 480
+    alt: "Density of a Mach 3 flow over a forward-facing step at t = 4: a bow shock ahead of the step and its reflections along the channel"
+    caption: "The solution and the blocks that carry it: the Woodward–Colella Mach 3 step, density at t = 4, on a forest of three quadtree realms; 342 blocks, the 280 refined once (cell 1/160) tinted, the rest at the base cell 1/80, the inter-realm seams dashed. Move the pointer across the figure, or drag. Run with FLUME on ADAM."
+    source: https://szaghi.github.io/adam/applications/flume/verification/euler/forward-facing-step
+    compare:
+      twin: /codes/adam/step-mesh.webp
+      twinDark: /codes/adam/step-mesh-dark.webp
+      labels: [solution, mesh]
+      reveal: Reveal the mesh
   - src: /codes/adam/figure.png
     dark: /codes/adam/figure-dark.png
     width: 720

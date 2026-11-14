@@ -1,0 +1,190 @@
+---
+// A compare figure: two pixel-registered images stacked, the body under and its twin over (the solution and its mesh,
+// a surface and its distance field). The twin is masked by a soft vertical edge at --x (percent of the stage width):
+// right of the edge shows the twin. Mouse: the edge follows the pointer and eases back to the body on leave. Touch and
+// pen: a horizontal drag moves the edge and it stays (a vertical drag scrolls the page). Keyboard: a hidden range
+// input. The first time the figure is 60% in view the edge sweeps once, so the reader sees there is a second layer.
+// Reduced motion: no sweep and no easing, the edge follows directly. Without JavaScript: the body, a plain still.
+// Per frame the script writes two custom properties on the stage (--x, and --p, the same as 0..1, for the label
+// opacities) and nothing else: what moves is a mask or a transform, so no layout runs.
+interface Props {
+  f: {
+    src: string; dark?: string; width: number; height: number; alt: string; caption: string; source?: string;
+    compare: { twin: string; twinDark?: string; labels: [string, string]; reveal: string; plate?: string };
+  };
+  more?: { href: string; text: string }; // on the home: a link to the code's page closes the caption, in place of the source
+}
+const { f, more } = Astro.props;
+const c = f.compare;
+const pair = (light: string, dark?: string) => [
+  { src: light, cls: dark ? 'light-only' : undefined },
+  ...(dark ? [{ src: dark, cls: 'dark-only' }] : []),
+];
+---
+
+<figure class="cmp" data-compare>
+  <div class="stage" style={c.plate ? `--plate: ${c.plate}` : undefined}>
+    {pair(f.src, f.dark).map((v) => <img class={v.cls} src={v.src} alt={f.alt} width={f.width} height={f.height} loading="lazy" />)}
+    <div class="twin" aria-hidden="true">
+      {pair(c.twin, c.twinDark).map((v) => <img class={v.cls} src={v.src} alt="" width={f.width} height={f.height} loading="lazy" />)}
+    </div>
+    <div class="line"></div>
+    <div class="tag tag-l" aria-hidden="true"><span>{c.labels[0]}</span></div>
+    <div class="tag tag-r" aria-hidden="true"><span>{c.labels[1]}</span></div>
+    <input class="range" type="range" min="0" max="100" step="5" value="100" aria-label={c.reveal} />
+  </div>
+  <figcaption class="mono">
+    {f.caption}{more ? <> <a href={more.href}>{more.text}</a></> : f.source && <> <a href={f.source}>Source</a></>}
+  </figcaption>
+</figure>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)');
+  const TAU = 120; // ms, time constant of the easing
+  const SWEEP = 1800; // ms, 100% → 45% → 100%
+
+  document.querySelectorAll<HTMLElement>('figure[data-compare]').forEach((fig) => {
+    const stage = fig.querySelector<HTMLElement>('.stage')!;
+    const range = stage.querySelector<HTMLInputElement>('.range')!;
+    const tags = [...stage.querySelectorAll<HTMLElement>('.tag > span')];
+    let x = 1;
+    let target = 1;
+    let raf = 0;
+    let last = 0;
+    let sweep = 0;
+    let touched = false;
+    let down: { id: number; x: number; y: number; on: boolean } | null = null;
+
+    const paint = () => {
+      stage.style.setProperty('--x', `${(x * 100).toFixed(2)}%`);
+      stage.style.setProperty('--p', x.toFixed(4));
+    };
+    const frame = (now: number) => {
+      if (sweep) {
+        const t = (now - sweep) / SWEEP;
+        x = t < 1 ? 1 - 0.55 * Math.sin(Math.PI * Math.max(t, 0)) ** 2 : 1;
+        if (t >= 1) sweep = 0;
+      } else {
+        x += (target - x) * (1 - Math.exp(-(now - last) / TAU));
+        if (Math.abs(target - x) < 5e-4) x = target;
+      }
+      last = now;
+      paint();
+      raf = sweep || x !== target ? requestAnimationFrame(frame) : 0;
+    };
+    const run = () => {
+      if (raf) return;
+      last = performance.now();
+      raf = requestAnimationFrame(frame);
+    };
+    const go = (t: number) => { // the reader moves the edge
+      touched = true;
+      sweep = 0;
+      target = Math.min(1, Math.max(0, t));
+      range.value = String(Math.round(target * 100));
+      range.setAttribute('aria-valuetext', `${100 - Number(range.value)}% revealed`);
+      if (still.matches) { x = target; paint(); } else run();
+    };
+    const at = (e: PointerEvent) => {
+      const r = stage.getBoundingClientRect();
+      return (e.clientX - r.left) / r.width;
+    };
+
+    stage.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse') down = { id: e.pointerId, x: e.clientX, y: e.clientY, on: false };
+    });
+    stage.addEventListener('pointermove', (e) => {
+      if (e.pointerType === 'mouse') { go(at(e)); return; }
+      if (!down || down.id !== e.pointerId) return;
+      const dx = Math.abs(e.clientX - down.x);
+      const dy = Math.abs(e.clientY - down.y);
+      if (!down.on && dx > 6 && dx > dy) { down.on = true; stage.setPointerCapture(e.pointerId); } // a drag, not a scroll
+      if (down.on) go(at(e));
+    });
+    for (const type of ['pointerup', 'pointercancel'] as const) stage.addEventListener(type, () => { down = null; }); // it stays
+    stage.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') go(1); });
+    range.addEventListener('input', () => go(Number(range.value) / 100));
+
+    new ResizeObserver(() => { // the label sizes, for the clamps and fades in the stylesheet
+      const w = stage.clientWidth;
+      tags.forEach((el, i) => {
+        const lw = el.offsetWidth + 14;
+        stage.style.setProperty(i ? '--rw' : '--lw', `${lw}px`);
+        stage.style.setProperty(i ? '--rp' : '--lp', (lw / w).toFixed(4));
+      });
+    }).observe(stage);
+
+    if (!still.matches) {
+      new IntersectionObserver(([e], io) => {
+        if (e.intersectionRatio < 0.6) return;
+        io.disconnect();
+        const start = () => { if (!touched && !still.matches) { sweep = performance.now(); run(); } };
+        const twin = [...stage.querySelectorAll<HTMLImageElement>('.twin img')].find((i) => i.offsetParent !== null); // this theme's
+        if (!twin || twin.complete) start(); else twin.addEventListener('load', start, { once: true });
+      }, { threshold: 0.6 }).observe(stage);
+    }
+    fig.dataset.ready = '';
+  });
+</script>
+
+<style>
+  .cmp { margin: 0; }
+  .stage {
+    --x: 100%; /* rest: the body only */
+    --p: 1;
+    --feather: 6; /* half-width of the soft edge, percent of the stage width */
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    background: var(--plate, transparent); /* FOSSIL's rounded cards: their plate colour behind the corners */
+    line-height: 0;
+    touch-action: pan-y;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .cmp[data-ready] .stage { cursor: ew-resize; }
+  /* No `display` on the images: the global .light-only / .dark-only rules must decide which version shows. */
+  .stage img { width: 100%; height: auto; vertical-align: top; pointer-events: none; }
+  .twin {
+    position: absolute;
+    inset: 0;
+    /* The edge runs from −feather (x = 0%) to 100% + feather (x = 100%), so both ends are clean: all twin, all body. */
+    --fe: calc(var(--feather) * 1%);
+    --edge: calc(var(--x) * (100 + 2 * var(--feather)) / 100 - var(--fe));
+    -webkit-mask-image: linear-gradient(to right, transparent calc(var(--edge) - var(--fe)), #000 calc(var(--edge) + var(--fe)));
+    mask-image: linear-gradient(to right, transparent calc(var(--edge) - var(--fe)), #000 calc(var(--edge) + var(--fe)));
+  }
+  .twin img { height: 100%; }
+  @supports not ((mask-image: linear-gradient(#000, #000)) or (-webkit-mask-image: linear-gradient(#000, #000))) {
+    .twin { display: none; }
+  }
+
+  /* Hairline and labels: stage-sized boxes moved by a transform (a percentage there is the stage width). */
+  .line, .tag { position: absolute; inset: 0; pointer-events: none; }
+  .cmp:not([data-ready]) :is(.line, .tag) { display: none; }
+  .line { transform: translateX(var(--x)); border-left: 1px solid var(--stroke); box-shadow: -1px 0 0 color-mix(in srgb, var(--bg) 55%, transparent); }
+  .tag > span {
+    position: absolute;
+    bottom: 0.6rem;
+    padding: 0.2rem 0.4rem;
+    background: var(--bg);
+    font-family: var(--f-mono);
+    font-size: 0.6875rem;
+    line-height: 1.2;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  /* --lw / --rw: a label's width plus its gaps (px); --lp / --rp: the same as a fraction of the stage (set by the
+     script on resize). A label follows the hairline, stops before it would leave the stage, and fades as its side closes. */
+  .tag-l { transform: translateX(clamp(var(--lw, 0px), var(--x), 100%)); opacity: clamp(0, calc((var(--p) - var(--lp, 0)) * 20 + 1), 1); }
+  .tag-l > span { right: 100%; margin-right: 0.5rem; color: var(--text-1); }
+  .tag-r { transform: translateX(clamp(0%, var(--x), calc(100% - var(--rw, 0px)))); opacity: clamp(0, calc((1 - var(--p) - var(--rp, 0)) * 20 + 1), 1); }
+  .tag-r > span { left: 0; margin-left: 0.5rem; color: var(--link); }
+
+  /* Keyboard: a range input, visually hidden; the stage shows its focus. */
+  .range { position: absolute; left: 0; bottom: 0; width: 1px; height: 1px; margin: 0; opacity: 0; clip-path: inset(50%); pointer-events: none; }
+  .stage:focus-within { outline: 2px solid var(--link); outline-offset: 2px; }
+
+  figcaption { margin-top: 0.6rem; color: var(--text-3); line-height: 1.5; }
+</style>

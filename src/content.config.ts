@@ -33,6 +33,16 @@ const codes = defineCollection({
           source: z.url().optional(),
           animated: z.boolean().default(false), // a looping clip next to the still: <name>.webm and <name>.mp4
           hold: z.number().nonnegative().optional(), // animated SVG: the time (s) of the frame held under reduced motion, default 0
+          // a compare figure (CompareFigure.astro): `src` / `dark` are the body, the twin is revealed over it
+          compare: z
+            .object({
+              twin: z.string(), // under public/, registered with src: same size, same frame
+              twinDark: z.string().optional(),
+              labels: z.tuple([z.string(), z.string()]), // body, twin
+              reveal: z.string(), // the accessible name of the control, e.g. "Reveal the mesh"
+              plate: z.string().optional(), // the colour behind a figure with rounded corners
+            })
+            .optional(),
         }),
       )
       .default([]),
