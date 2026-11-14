@@ -1,5 +1,5 @@
 /* similitudo: sumi × architecture (docs/look-lab-brief.md, look B4). Architecture is the system, sumi is the accent:
-   cool-grey plaster / sumi-charcoal grounds, extended grotesk display, hairline rules, numbered indexes; one ink gesture (the blast
+   cool-grey plaster / sumi-charcoal grounds, IBM Plex Sans display and body (Plex Mono labels), hairline rules, numbered indexes; one ink gesture (the blast
    front over its refined quadtree) and one vermilion seal per screen. The seal is the only colour, in both themes.
    Neutrals: the warm look-B4 greys turned cool on 2026-11-13 ("hint"): same OKLCH lightness, hue 90° → 250°, 0.4× the
    chroma, so every contrast below is unchanged to ±0.1. The seal and link stay vermilion.
@@ -19,8 +19,8 @@
   --seal: #c73e1d;
   --link: #a8321a;
 
-  --f-body: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --f-display: 'Archivo Variable', 'Inter Variable', system-ui, sans-serif;
+  --f-body: 'IBM Plex Sans Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --f-display: var(--f-body);
   --f-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
   --gutter: 1rem;
@@ -104,16 +104,14 @@ code { font-family: var(--f-mono); font-size: 0.9em; background: var(--bg-alt); 
 .muted { color: var(--text-2); }
 .display {
   font-family: var(--f-display);
-  font-stretch: 125%;
   font-weight: 560;
   line-height: 0.85;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.025em;
 }
 .statement {
   margin: 0;
   max-width: 30em;
   font-family: var(--f-display);
-  font-stretch: 112%;
   font-weight: 400;
   font-size: clamp(1.45rem, 3vw, 2.5rem);
   line-height: 1.18;

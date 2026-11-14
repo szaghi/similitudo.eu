@@ -47,7 +47,7 @@ const ring = (await getCollection('codes', isPublished)).sort(byOrder).filter((c
   }
   .hero > :not(.ground) { position: relative; z-index: 1; }
 
-  .word { grid-row: 1; margin: 0 3rem 0 -0.04em; font-size: clamp(3.1rem, 11.6vw, calc(0.116 * (var(--maxw) + 2 * var(--gutter)))); line-height: 0.82; }
+  .word { grid-row: 1; margin: 0 3rem 0 -0.04em; font-size: clamp(3.9rem, 11.6vw, calc(0.116 * (var(--maxw) + 2 * var(--gutter)))); line-height: 0.82; }
   .stamp { display: inline-block; vertical-align: top; margin-left: 0.08em; animation: stamp 0.35s cubic-bezier(0.3, 1.6, 0.6, 1) 3.1s backwards; /* stamped last, as the front settles */ }
   .stamp :global(svg) { width: 0.2em; height: 0.2em; }
   @keyframes stamp { from { opacity: 0; transform: scale(1.8); } }
@@ -62,7 +62,6 @@ const ring = (await getCollection('codes', isPublished)).sort(byOrder).filter((c
     background: var(--bg);
     color: var(--text-2);
     font-family: var(--f-display);
-    font-stretch: 112%;
     font-weight: 450;
     font-size: clamp(1rem, 1.3vw, 1.25rem);
     line-height: 1.2;
@@ -74,11 +73,11 @@ const ring = (await getCollection('codes', isPublished)).sort(byOrder).filter((c
     padding: 0.2rem 0.6rem 0.3rem 0;
     background: var(--bg);
     font-family: var(--f-display);
-    font-stretch: 112%;
     font-weight: 400;
     font-size: clamp(1.35rem, 2.6vw, 2.4rem);
     line-height: 1.15;
     letter-spacing: -0.015em;
+    text-wrap: pretty; /* phones: no single-word last line */
   }
   /* The nav is another component: Hero's scoped `.hero > :not(.ground)` does not reach it, so lift it explicitly or the
      canvas sits on top and swallows its clicks. */

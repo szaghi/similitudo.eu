@@ -43,7 +43,7 @@ const rows = await Promise.all(
 <style>
   .row { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr) auto; grid-template-areas: 'n acr yrs' 'n title title' 'n prog prog' 'n role role' 'n codes codes' 'n body body'; gap: 0.15rem 1rem; }
   .n { grid-area: n; color: var(--text-3); padding-top: 0.45em; }
-  .acr { grid-area: acr; font-family: var(--f-display); font-stretch: 125%; font-weight: 600; font-size: clamp(1.35rem, 2vw, 1.75rem); line-height: 1.1; letter-spacing: -0.01em; white-space: nowrap; }
+  .acr { grid-area: acr; font-family: var(--f-display); font-weight: 600; font-size: clamp(1.35rem, 2vw, 1.75rem); line-height: 1.1; letter-spacing: -0.01em; white-space: nowrap; }
   .acr a { color: inherit; }
   .title { grid-area: title; }
   .draft { color: var(--seal); }
