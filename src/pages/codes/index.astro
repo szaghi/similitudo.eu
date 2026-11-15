@@ -17,8 +17,8 @@ const groups = [
 const shown = groups.map((g) => ({ ...g, items: codes.filter((c) => c.data.kind === g.kind) })).filter((g) => g.items.length > 0);
 ---
 
-<Base title="Codes" description="Open-source simulation codes by Stefano Zaghi and co-authors, the Fortran libraries under them and the tools around them.">
-  <PageHead title="Codes" count={codes.length} lead="Open-source simulation codes I write with co-authors, the Fortran libraries under them and the tools around them." />
+<Base title="Code" description="Open-source simulation codes by Stefano Zaghi and co-authors, the Fortran libraries under them and the tools around them.">
+  <PageHead title="Code" count={codes.length} lead="Open-source simulation codes I write with co-authors, the Fortran libraries under them and the tools around them." />
   {
     shown.map((g, k) => (
       <section class="sec" id={g.kind}>

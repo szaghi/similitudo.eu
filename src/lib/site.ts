@@ -1,7 +1,7 @@
 // Site-wide copy and navigation, shared by the hero, the header and the pages.
 export const nav = [
   { href: '/expertise/', label: 'Expertise' },
-  { href: '/codes/', label: 'Codes' },
+  { href: '/codes/', label: 'Code' },
   { href: '/about/', label: 'About me' },
   { href: '/contact/', label: 'Contact' },
   // Parked until it has real content (docs/TODO.md): Projects.
