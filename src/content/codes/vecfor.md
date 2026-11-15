@@ -2,7 +2,7 @@
 name: VecFor
 tagline: Vector algebra for Fortran, written as you write the maths, on the CPU or inside a GPU kernel.
 kind: library
-order: 10
+order: 11
 status: active
 license: GPLv3 / BSD / MIT
 repo: https://github.com/szaghi/VecFor
