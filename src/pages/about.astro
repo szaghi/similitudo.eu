@@ -25,6 +25,18 @@ const people = await Promise.all(
 
 <Base title="About me" description="Stefano Zaghi, research scientist in numerical methods and high-performance simulation, the person behind similitudo.">
   <PageHead title="About me" />
+  <section class="intro">
+    <p>
+      Thrilled and humbled to announce that this week, once again, I have not revolutionised science. No paradigm
+      shift, no breakthrough for humanity, no award from a committee of close friends.
+    </p>
+    <p>
+      My actual title is <em>Chief Yak Shaver and Accidental Research Scientist</em>: I set out to simulate fluids, and
+      to do it properly I first had to write a build system, a command-line parser, a string library, a few file-format
+      writers and a great deal of other plumbing that nobody announces. The fluids did get simulated, on GPUs, in the
+      end. I publish when there is a result, and once per result: a ruinous strategy for a publication count.
+    </p>
+  </section>
   {
     people.map(({ p, Content }, k) => (
       <article class="sec">
@@ -55,6 +67,9 @@ const people = await Promise.all(
 </Base>
 
 <style>
+  .intro { max-width: 40rem; padding: 0 0 3rem; }
+  .intro p { margin: 0 0 1rem; font-size: clamp(1.05rem, 1.4vw, 1.2rem); line-height: 1.55; text-wrap: pretty; }
+  .intro p:last-child { margin-bottom: 0; }
   .name { margin: 0 0 1rem; font-family: var(--f-display); font-weight: 560; font-size: clamp(1.35rem, 2.2vw, 1.8rem); letter-spacing: -0.02em; line-height: 1.1; }
   .links { display: flex; flex-wrap: wrap; gap: 1.5rem; margin: 1rem 0 0; }
   .links a { display: inline-flex; align-items: center; gap: 0.4rem; }
