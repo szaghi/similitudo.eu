@@ -2,7 +2,7 @@
 name: figure
 tagline: Windows, widgets and plots for Fortran programs, Dear ImGui and ImPlot declared every frame, on a desktop or in a browser.
 kind: general
-order: 18
+order: 20
 status: active
 license: MIT
 repo: https://github.com/szaghi/figure

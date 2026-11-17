@@ -2,7 +2,7 @@
 name: MORTIF
 tagline: Morton (Z-order) encoding of 2D and 3D integer indexes, in pure Fortran.
 kind: library
-order: 14
+order: 16
 status: active
 license: GPLv3 / BSD / MIT
 repo: https://github.com/szaghi/MORTIF
