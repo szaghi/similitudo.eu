@@ -9,10 +9,10 @@ export default defineConfig({
   trailingSlash: 'ignore',
   // Languages (src/i18n/index.ts): English at the root, the others under /it/, /fr/, /es/, /de/. The routing is the
   // pages' own ([...lang]); the sitemap only needs the map to write the hreflang alternates of every URL.
-  // The dialect pages (/vec/, /rgn/: a joke for Italian friends) are noindex and left out.
+  // The dialect pages (/vec/, /rgn/, /scn/: a joke for Italian friends) are noindex and left out.
   integrations: [
     sitemap({
-      filter: (page) => !/^https:\/\/similitudo\.eu\/(vec|rgn)\//.test(page),
+      filter: (page) => !/^https:\/\/similitudo\.eu\/(vec|rgn|scn)\//.test(page),
       i18n: { defaultLocale: 'en', locales: { en: 'en', it: 'it', fr: 'fr', es: 'es', de: 'de' } },
     }),
   ],

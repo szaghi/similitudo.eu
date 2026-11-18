@@ -12,13 +12,15 @@ import { es } from './es';
 import { de } from './de';
 import { vec } from './vec';
 import { rgn } from './rgn';
+import { scn } from './scn';
 
 /** The languages offered to everyone: in the switcher, the sitemap and the hreflang alternates. */
 export const langs = ['en', 'it', 'fr', 'es', 'de'] as const;
-/** Dialects, for Italian friends (2026-11-18, self-ironic): Venetian of Venice (vec) and Romagnol of Rimini (rgn).
+/** Dialects, for Italian friends (2026-11-18, self-ironic): Venetian of Venice (vec), Romagnol of Rimini (rgn) and
+ *  Sicilian of Palermo (scn).
  *  Each overrides only some of the Italian words and inherits the rest; listed in the switcher only on Italian and
  *  dialect pages; noindex, out of the sitemap and of the hreflang alternates. */
-export const dialects = ['vec', 'rgn'] as const;
+export const dialects = ['vec', 'rgn', 'scn'] as const;
 export const allLangs = [...langs, ...dialects] as const;
 export type Lang = (typeof allLangs)[number];
 export const defaultLang: Lang = 'en';
@@ -26,10 +28,10 @@ export const isDialect = (l: Lang) => (dialects as readonly string[]).includes(l
 
 /** Each language named in itself, for the switcher. */
 export const langNames: Record<Lang, string> = {
-  en: 'English', it: 'Italiano', fr: 'Français', es: 'Español', de: 'Deutsch', vec: 'Venesian', rgn: 'Rumagnòl',
+  en: 'English', it: 'Italiano', fr: 'Français', es: 'Español', de: 'Deutsch', vec: 'Venesian', rgn: 'Rumagnòl', scn: 'Sicilianu',
 };
 /** og:locale. British spelling throughout the English copy (licence, visualisation). */
-export const ogLocale: Record<Lang, string> = { en: 'en_GB', it: 'it_IT', fr: 'fr_FR', es: 'es_ES', de: 'de_DE', vec: 'vec_IT', rgn: 'rgn_IT' };
+export const ogLocale: Record<Lang, string> = { en: 'en_GB', it: 'it_IT', fr: 'fr_FR', es: 'es_ES', de: 'de_DE', vec: 'vec_IT', rgn: 'rgn_IT', scn: 'scn_IT' };
 /** Number notation: the dialects write numbers as Italian does (browsers know no `vec` or `rgn` locale). */
 export const numLocale = (l: Lang) => (isDialect(l) ? 'it' : l);
 
@@ -47,7 +49,7 @@ function over<T>(base: T, top: unknown): T {
   return out as T;
 }
 
-const dicts: Record<Lang, Dict> = { en, it, fr, es, de, vec: over(it, vec), rgn: over(it, rgn) };
+const dicts: Record<Lang, Dict> = { en, it, fr, es, de, vec: over(it, vec), rgn: over(it, rgn), scn: over(it, scn) };
 
 /** Build-time parity check: same keys, same value types (string, array, function), recursively. */
 function shape(v: unknown, at: string, out: Map<string, string>) {

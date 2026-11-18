@@ -89,7 +89,7 @@ function pages() {
   const xml = fs.readFileSync(path.join(DIST, 'sitemap-0.xml'), 'utf8');
   const listed = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname);
   // the dialect pages are out of the sitemap (noindex): check them too, one per English page
-  const dialects = listed.filter((p) => !/^\/(it|fr|es|de)\//.test(p)).flatMap((p) => ['vec', 'rgn'].map((d) => `/${d}${p}`));
+  const dialects = listed.filter((p) => !/^\/(it|fr|es|de)\//.test(p)).flatMap((p) => ['vec', 'rgn', 'scn'].map((d) => `/${d}${p}`));
   return [...listed, ...dialects];
 }
 
