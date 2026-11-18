@@ -2,21 +2,24 @@
 // The nav on its hairline datum: numbered, large, clearly clickable labels. Each label sits on an opaque plate of the
 // ground colour, so grid lines (and the hero mesh) stop at its edge instead of running through the text.
 import { nav, isCurrent, pad } from '../lib/site';
+import { langOf, t, href, unlocalize } from '../i18n';
 interface Props {
   class?: string;
 }
 const { class: cls } = Astro.props;
-const here = Astro.url.pathname;
+const lang = langOf(Astro.url);
+const T = t(lang);
+const here = unlocalize(Astro.url.pathname);
 ---
 
-<nav class:list={['datum', cls]} aria-label="Main">
+<nav class:list={['datum', cls]} aria-label={T.nav.main}>
   <ul>
     {
       nav.map((n, k) => (
         <li>
-          <a href={n.href} aria-current={isCurrent(here, n.href) ? 'page' : undefined}>
+          <a href={href(lang, n.href)} aria-current={isCurrent(here, n.href) ? 'page' : undefined}>
             <span class="n mono">{pad(k)}</span>
-            <span class="t">{n.label}</span>
+            <span class="t">{T.nav[n.key]}</span>
             <span class="arrow" aria-hidden="true">→</span>
           </a>
         </li>

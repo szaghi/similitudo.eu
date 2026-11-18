@@ -4,17 +4,19 @@
 import type { CollectionEntry } from 'astro:content';
 import CodeLogo from './CodeLogo.astro';
 interface Props { codes: CollectionEntry<'codes'>[] }
+import { langOf, t, href } from '../i18n';
 const { codes } = Astro.props;
-const kindLabel = (k: string) => (k === 'general' ? 'general-purpose' : k);
+const lang = langOf(Astro.url);
+const T = t(lang);
 ---
 
 <ul class="grid">
   {
     codes.map((c) => (
       <li>
-        <a href={`/codes/${c.id}/`}>
+        <a href={href(lang, `/codes/${c.id}/`)}>
           <CodeLogo folder={c.data.logo} name={c.data.name} size={44} decorative />
-          <span class="txt"><span class="name">{c.data.name}</span><span class="kind mono">{kindLabel(c.data.kind)}</span></span>
+          <span class="txt"><span class="name">{c.data.name}</span><span class="kind mono">{T.kinds.short[c.data.kind]}</span></span>
         </a>
       </li>
     ))

@@ -7,6 +7,7 @@
 // Reduced motion: no sweep and no easing, the edge follows directly. Without JavaScript: the body, a plain still.
 // Per frame the script writes two custom properties on the stage (--x, and --p, the same as 0..1, for the label
 // opacities) and nothing else: what moves is a mask or a transform, so no layout runs.
+import { langOf, t } from '../i18n';
 interface Props {
   f: {
     src: string; dark?: string; width: number; height: number; alt: string; caption: string; source?: string;
@@ -15,6 +16,7 @@ interface Props {
   more?: { href: string; text: string }; // on the home: a link to the code's page closes the caption, in place of the source
 }
 const { f, more } = Astro.props;
+const T = t(langOf(Astro.url));
 const c = f.compare;
 const pair = (light: string, dark?: string) => [
   { src: light, cls: dark ? 'light-only' : undefined },
@@ -34,7 +36,7 @@ const pair = (light: string, dark?: string) => [
     <input class="range" type="range" min="0" max="100" step="5" value="100" aria-label={c.reveal} />
   </div>
   <figcaption class="mono">
-    {f.caption}{more ? <> <a href={more.href}>{more.text}</a></> : f.source && <> <a href={f.source}>Source</a></>}
+    {f.caption}{more ? <> <a href={more.href}>{more.text}</a></> : f.source && <> <a href={f.source}>{T.ui.source}</a></>}
   </figcaption>
 </figure>
 

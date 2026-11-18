@@ -4,8 +4,10 @@
 import type { CollectionEntry } from 'astro:content';
 import CodeLogo from './CodeLogo.astro';
 interface Props { codes: CollectionEntry<'codes'>[] }
-const { codes } = Astro.props;
-const kindLabel = (k: string) => (k === 'general' ? 'general-purpose library' : k);
+import { langOf, t, href, enIn } from '../i18n';
+const { codes } = Astro.props; // taglines are English in every language
+const lang = langOf(Astro.url);
+const T = t(lang);
 ---
 
 <ul class="index codes">
@@ -14,10 +16,10 @@ const kindLabel = (k: string) => (k === 'general' ? 'general-purpose library' : 
       <li>
         <div class="ident">
           <span class="slot"><CodeLogo folder={c.data.logo} name={c.data.name} size={56} decorative /></span>
-          <a class="cname" href={`/codes/${c.id}/`}>{c.data.name}</a>
+          <a class="cname" href={href(lang, `/codes/${c.id}/`)}>{c.data.name}</a>
         </div>
-        <p class="tag">{c.data.tagline}</p>
-        <p class="meta mono">{kindLabel(c.data.kind)}{c.data.parent && ` · built on ${c.data.parent.id.toUpperCase()}`} · {c.data.license}</p>
+        <p class="tag" lang={enIn(lang)}>{c.data.tagline}</p>
+        <p class="meta mono">{T.kinds.long[c.data.kind]}{c.data.parent && ` · ${T.codes.builtOn(c.data.parent.id.toUpperCase())}`} · {c.data.license}</p>
       </li>
     ))
   }

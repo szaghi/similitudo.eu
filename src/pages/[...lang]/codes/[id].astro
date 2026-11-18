@@ -1,38 +1,44 @@
 ---
 import { getCollection, getEntry, render } from 'astro:content';
-import Base from '../../layouts/Base.astro';
-import CodeLogo from '../../components/CodeLogo.astro';
-import CodeFigure from '../../components/CodeFigure.astro';
-import Icon from '../../components/Icon.astro';
+import Base from '../../../layouts/Base.astro';
+import CodeLogo from '../../../components/CodeLogo.astro';
+import CodeFigure from '../../../components/CodeFigure.astro';
+import Icon from '../../../components/Icon.astro';
 
 /** A URL shown without its scheme, breakable after each slash (narrow screens wrap at path boundaries, not mid-word). */
 const segments = (url: string) => url.replace('https://', '').split('/');
-import { isPublished } from '../../lib/content';
+import { isPublished } from '../../../lib/content';
+import { langPaths, langOf, t, href, enIn } from '../../../i18n';
 
 export async function getStaticPaths() {
   const codes = await getCollection('codes', isPublished);
-  return codes.map((code) => ({ params: { id: code.id }, props: { code } }));
+  return langPaths().flatMap(({ params }) => codes.map((code) => ({ params: { ...params, id: code.id }, props: { code } })));
 }
 
 const { code } = Astro.props;
-const { Content } = await render(code);
-const parent = code.data.parent ? await getEntry(code.data.parent) : undefined;
+const lang = langOf(Astro.url);
+const T = t(lang);
+// The code's own words are English in every language (only the labels are translated): marked lang="en" on the other
+// languages' pages, so screen readers switch voice.
 const d = code.data;
+const { Content } = await render(code);
+const en = enIn(lang);
+const parent = code.data.parent ? await getEntry(code.data.parent) : undefined;
 
 // FLUME and PRISM are built on ADAM: until they have papers of their own, show the platform's, labelled as such.
 const papers = d.papers.length > 0 ? { list: d.papers, from: undefined } : parent && parent.data.papers.length > 0 ? { list: parent.data.papers, from: parent.data.name } : undefined;
 const evidence = [
-  { kind: 'verification', title: 'Verification' },
-  { kind: 'performance', title: 'Performance' },
+  { kind: 'verification', title: T.code.verification },
+  { kind: 'performance', title: T.code.performance },
 ].map((g) => ({ ...g, items: d.evidence.filter((e) => e.kind === g.kind) })).filter((g) => g.items.length > 0);
 
 let n = 0;
 const num = () => String(++n).padStart(2, '0');
 
 const facets = [
-  { label: 'Physics', items: d.physics },
-  { label: 'Methods', items: d.methods },
-  { label: 'Parallelism', items: d.parallelism },
+  { label: T.code.physics, items: d.physics },
+  { label: T.code.methods, items: d.methods },
+  { label: T.code.parallelism, items: d.parallelism },
 ].filter((f) => f.items.length > 0);
 ---
 
@@ -42,12 +48,12 @@ const facets = [
       <h1 class="display">{d.name}</h1>
       {d.logo && <CodeLogo folder={d.logo} name={d.name} size={112} />}
     </div>
-    <p class="lead">{d.tagline}</p>
+    <p class="lead" lang={en}>{d.tagline}</p>
   </header>
 
   <section class="sec">
-    <p class="label mono">{num()} — Overview</p>
-    <div class:list={['overview', { flow: d.figures.length > 2 }]}>
+    <p class="label mono">{num()} — {T.code.overview}</p>
+    <div class:list={['overview', { flow: d.figures.length > 2 }]} lang={en}>
       <div class="prose"><Content /></div>
       {d.figures.length > 0 && d.figures.length <= 2 && <div class="figs">{d.figures.map((f) => <CodeFigure f={f} />)}</div>}
     </div>
@@ -56,8 +62,8 @@ const facets = [
   {
     d.figures.length > 2 && (
       <section class="sec">
-        <p class="label mono">{num()} — Gallery</p>
-        <div class="gallery">{d.figures.map((f) => <div class:list={[{ wide: f.width / f.height >= 3 }]}><CodeFigure f={f} /></div>)}</div>
+        <p class="label mono">{num()} — {T.code.gallery}</p>
+        <div class="gallery" lang={en}>{d.figures.map((f) => <div class:list={[{ wide: f.width / f.height >= 3 }]}><CodeFigure f={f} /></div>)}</div>
       </section>
     )
   }
@@ -66,12 +72,12 @@ const facets = [
     evidence.map((g) => (
       <section class="sec">
         <p class="label mono">{num()} — {g.title}</p>
-        <ol class="index ev">
+        <ol class="index ev" lang={en}>
           {g.items.map((e) => (
             <li>
               <p class="test">{e.test}</p>
               <p class="result">{e.result}</p>
-              <a class="src mono" href={e.source}>source →</a>
+              <a class="src mono" href={e.source}>{T.code.sourceLink} →</a>
             </li>
           ))}
         </ol>
@@ -82,10 +88,10 @@ const facets = [
   {
     papers && (
       <section class="sec">
-        <p class="label mono">{num()} — {papers.from ? `Reference paper (${papers.from} platform)` : 'Reference paper'}</p>
+        <p class="label mono">{num()} — {papers.from ? T.code.paperFrom(papers.from) : T.code.paper}</p>
         <ul class="index">
           {papers.list.map((p) => (
-            <li><p class="cite">{p.cite}</p><a class="mono" href={`https://doi.org/${p.doi}`}>doi:{p.doi}</a></li>
+            <li><p class="cite" lang={en}>{p.cite}</p><a class="mono" href={`https://doi.org/${p.doi}`}>doi:{p.doi}</a></li>
           ))}
         </ul>
       </section>
@@ -93,13 +99,13 @@ const facets = [
   }
 
   <section class="sec">
-    <p class="label mono">{num()} — Facts</p>
+    <p class="label mono">{num()} — {T.code.facts}</p>
     <dl class="facts">
-      {parent && (<><dt class="mono"><Icon name="stack" size="1.7em" />Built on</dt><dd><a href={`/codes/${parent.id}/`}>{parent.data.name}</a></dd></>)}
-      <dt class="mono"><Icon name="sprout" size="1.7em" />Status</dt><dd>{d.status}</dd>
-      <dt class="mono"><Icon name="key" size="1.7em" />Licence</dt><dd>{d.license}</dd>
-      {d.docs && (<><dt class="mono"><Icon name="book" size="1.7em" />Documentation</dt><dd><a href={d.docs}>{segments(d.docs).map((s, i) => (<>{i > 0 && <>/<wbr /></>}{s}</>))}</a></dd></>)}
-      <dt class="mono"><Icon name="branch" size="1.7em" />Source</dt><dd><a href={d.repo}>{segments(d.repo).map((s, i) => (<>{i > 0 && <>/<wbr /></>}{s}</>))}</a></dd>
+      {parent && (<><dt class="mono"><Icon name="stack" size="1.7em" />{T.code.builtOn}</dt><dd><a href={href(lang, `/codes/${parent.id}/`)}>{parent.data.name}</a></dd></>)}
+      <dt class="mono"><Icon name="sprout" size="1.7em" />{T.code.status}</dt><dd>{T.code.statuses[d.status]}</dd>
+      <dt class="mono"><Icon name="key" size="1.7em" />{T.code.licence}</dt><dd>{d.license}</dd>
+      {d.docs && (<><dt class="mono"><Icon name="book" size="1.7em" />{T.code.docs}</dt><dd><a href={d.docs}>{segments(d.docs).map((s, i) => (<>{i > 0 && <>/<wbr /></>}{s}</>))}</a></dd></>)}
+      <dt class="mono"><Icon name="branch" size="1.7em" />{T.code.source}</dt><dd><a href={d.repo}>{segments(d.repo).map((s, i) => (<>{i > 0 && <>/<wbr /></>}{s}</>))}</a></dd>
     </dl>
   </section>
 
@@ -107,7 +113,7 @@ const facets = [
     facets.map((f) => (
       <section class="sec">
         <p class="label mono">{num()} — {f.label}</p>
-        <ul class="index facet">{f.items.map((i) => <li>{i}</li>)}</ul>
+        <ul class="index facet" lang={en}>{f.items.map((i) => <li>{i}</li>)}</ul>
       </section>
     ))
   }

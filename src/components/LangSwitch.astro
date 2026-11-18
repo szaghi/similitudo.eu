@@ -1,0 +1,68 @@
+---
+// Language switch beside the theme switch: the current language's code on a tile the size of the theme switch, opening
+// the list of languages, each named in itself and linking to this same page in that language. A native <details>:
+// it works without JavaScript; the script only closes it on Escape and on a click elsewhere.
+import { langs, langNames, langOf, t, href, unlocalize } from '../i18n';
+const lang = langOf(Astro.url);
+const bare = unlocalize(Astro.url.pathname);
+---
+
+<details class="lang-switch">
+  <summary class="mono" aria-label={`${t(lang).ui.language}: ${langNames[lang]}`}>{lang.toUpperCase()}</summary>
+  <ul>
+    {
+      langs.map((l) => (
+        <li>
+          <a href={href(l, bare)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>
+            <span class="code mono">{l.toUpperCase()}</span>{langNames[l]}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</details>
+
+<script>
+  for (const d of document.querySelectorAll<HTMLDetailsElement>('.lang-switch')) {
+    document.addEventListener('click', (e) => { if (d.open && !d.contains(e.target as Node)) d.open = false; });
+    d.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && d.open) { d.open = false; d.querySelector('summary')?.focus(); }
+    });
+  }
+</script>
+
+<style>
+  .lang-switch { position: relative; }
+  summary {
+    display: inline-grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1px solid var(--rule);
+    background: var(--bg);
+    color: var(--text-2);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary:hover, .lang-switch[open] summary { color: var(--text-1); border-color: var(--text-1); }
+  ul {
+    position: absolute;
+    top: calc(100% + 0.35rem);
+    right: 0;
+    z-index: 40;
+    min-width: 10rem;
+    margin: 0;
+    padding: 0.25rem 0;
+    list-style: none;
+    background: var(--bg);
+    border: 1px solid var(--text-1);
+  }
+  a { display: flex; align-items: baseline; gap: 0.75rem; padding: 0.4rem 0.9rem; color: var(--text-1); text-decoration: none; white-space: nowrap; }
+  a:hover, a:focus-visible { color: var(--link); }
+  a[aria-current='true'] { color: var(--text-3); }
+  .code { font-size: 0.75rem; color: var(--text-3); }
+</style>

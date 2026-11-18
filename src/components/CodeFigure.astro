@@ -8,6 +8,8 @@
 // SVG the frame at `hold` seconds (the first by default; a terminal cast starts blank, so it holds the finished session). Without JavaScript: the still, or the SVG as a plain image. An SVG sits in an <object>, not
 // inline, so the ids inside several SVGs on one page cannot collide; SMIL is then paused through its own document.
 import CompareFigure from './CompareFigure.astro';
+import { langOf, t } from '../i18n';
+const T = t(langOf(Astro.url));
 interface Props {
   f: {
     src: string; dark?: string; width: number; height: number; alt: string; caption: string; source?: string; animated: boolean; hold?: number;
@@ -46,9 +48,9 @@ const variants = [
         )
       )
     }
-    {f.animated && <button class="toggle mono" type="button" hidden>pause</button>}
+    {f.animated && <button class="toggle mono" type="button" data-play={T.ui.play} hidden>{T.ui.pause}</button>}
   </div>
-  <figcaption class="mono">{f.caption}{f.source && <> <a href={f.source}>Source</a></>}</figcaption>
+  <figcaption class="mono">{f.caption}{f.source && <> <a href={f.source}>{T.ui.source}</a></>}</figcaption>
 </figure>
 )}
 
@@ -57,6 +59,7 @@ const variants = [
 
   document.querySelectorAll<HTMLElement>('figure.fig[data-animated]').forEach((fig) => {
     const button = fig.querySelector<HTMLButtonElement>('.toggle')!;
+    const labels = { pause: button.textContent ?? '', play: button.dataset.play ?? '' };
     const obj = fig.querySelector<HTMLObjectElement>('object.svg-anim');
     let paused = false; // the reader's choice, kept while scrolling
     let onScreen = false;
@@ -86,7 +89,7 @@ const variants = [
         button.hidden = false;
         button.addEventListener('click', () => {
           paused = !paused;
-          button.textContent = paused ? 'play' : 'pause';
+          button.textContent = paused ? labels.play : labels.pause;
           sync();
         });
       }
@@ -102,7 +105,7 @@ const variants = [
     button.hidden = false;
     button.addEventListener('click', () => {
       paused = !paused;
-      button.textContent = paused ? 'play' : 'pause';
+      button.textContent = paused ? labels.play : labels.pause;
       paused ? stop() : play();
     });
     new IntersectionObserver(([e]) => (e.isIntersecting && !paused ? play() : stop()), { threshold: 0.25 }).observe(fig);

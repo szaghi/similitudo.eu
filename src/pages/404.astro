@@ -1,9 +1,31 @@
 ---
+// One 404 for the whole site (GitHub Pages serves the root 404.html for every missing path). The message follows the
+// language of the missing URL (/it/..., /de/...): a small inline script swaps it in. The page chrome stays English.
 import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
+import { langs, t } from '../i18n';
+
+const T = t('en');
+const messages = Object.fromEntries(langs.map((l) => [l, { ...t(l).notFound, home: l === 'en' ? '/' : `/${l}/` }]));
 ---
 
-<Base title="Page not found">
-  <PageHead title="Not found" lead="This page does not exist, or has moved." />
-  <p><a href="/">Back to the home page</a> <span aria-hidden="true">→</span></p>
+<Base title={T.notFound.title} alternates={false}>
+  <div data-nf={JSON.stringify(messages)}>
+    <PageHead title={T.notFound.heading} lead={T.notFound.lead} />
+    <p><a class="nf-back" href="/">{T.notFound.back}</a> <span aria-hidden="true">→</span></p>
+  </div>
 </Base>
+
+<script is:inline>
+  (() => {
+    const box = document.querySelector('[data-nf]');
+    const m = JSON.parse(box.dataset.nf)[location.pathname.split('/')[1]];
+    if (!m || m.home === '/') return;
+    box.lang = location.pathname.split('/')[1];
+    box.querySelector('h1').firstChild.textContent = m.heading;
+    box.querySelector('.lead').textContent = m.lead;
+    const a = box.querySelector('.nf-back');
+    a.textContent = m.back;
+    a.href = m.home;
+  })();
+</script>

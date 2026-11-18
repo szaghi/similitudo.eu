@@ -1,0 +1,15 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import CapabilityRows from '../../components/CapabilityRows.astro';
+import { capabilities } from '../../data/capabilities';
+import { langPaths, langOf, t } from '../../i18n';
+
+export const getStaticPaths = langPaths;
+const T = t(langOf(Astro.url));
+---
+
+<Base title={T.expertise.title} description={T.expertise.description}>
+  <PageHead title={T.expertise.title} count={capabilities.length} lead={T.expertise.lead} />
+  <CapabilityRows />
+</Base>

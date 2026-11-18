@@ -1,0 +1,33 @@
+---
+// Privacy note; the words are in src/i18n/<lang>.ts (`privacy`). Every statement there must stay true, in every language:
+// re-check them all when hosting, analytics, embeds or mail change.
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import { email } from '../../lib/site';
+import { langPaths, langOf, t } from '../../i18n';
+import { pad } from '../../lib/site';
+
+export const getStaticPaths = langPaths;
+const T = t(langOf(Astro.url));
+const fill = (html: string) => html.replace('{mailto}', `<a href="mailto:${email}">${email}</a>`).replace('{email}', email);
+const last = T.privacy.sections.length - 1;
+---
+
+<Base title={T.privacy.title} description={T.privacy.description}>
+  <PageHead title={T.privacy.title} lead={T.privacy.lead} />
+  {
+    T.privacy.sections.map((s, k) => (
+      <section class="sec">
+        <p class="label mono">{pad(k)} — {s.label}</p>
+        <div class="prose">
+          {s.paras.map((p) => <p set:html={fill(p)} />)}
+          {k === last && <p class="mono updated">{T.privacy.updated}</p>}
+        </div>
+      </section>
+    ))
+  }
+</Base>
+
+<style>
+  .updated { color: var(--text-3); }
+</style>

@@ -39,10 +39,26 @@ The same commands exist as `npm run dev | prod | check | shots`.
 | Codes | `src/content/codes/*.md` | frontmatter + body |
 | Projects | `src/content/projects/*.md` | frontmatter + body |
 | About me | `src/content/people/*.md` | frontmatter + body |
-| Expertise | `src/data/capabilities.ts` | typed array |
+| Expertise | `src/data/capabilities.ts` (ids, links) + `capabilities` in `src/i18n/<lang>.ts` (words) | typed array |
+| Interface and page copy | `src/i18n/<lang>.ts` | one dictionary per language |
+| Translation of the bio | `src/content/people-i18n/<lang>/<id>.md` | words only |
 | Publications | `src/data/publications.yaml` | one keyed entry each |
 
 Projects is parked until it has real content: see `docs/TODO.md`.
 
 Schemas live in `src/content.config.ts`; a missing or malformed field fails the build. Set `draft: true` to keep an
 entry out of production while still seeing it in `npm run dev`. Search for `TODO` to find unfinished copy.
+
+## Languages
+
+English at `/`, Italian, French, Spanish and German under `/it/`, `/fr/`, `/es/`, `/de/` (same slugs). Every page exists
+in every language. `src/i18n/en.ts` is the reference dictionary: the build fails if another language's keys differ.
+
+**Code pages are English only**: their taglines, bodies, lists and captions are written once, in English, and shown as
+they are on every language's pages (marked `lang="en"`); only the labels around them are translated. Adding or editing
+a code needs no translation.
+
+The bio is translated by an overlay that holds only its words. After editing the English bio:
+
+    ./site i18n                 # table: ok / missing / stale per language
+    ./site i18n stamp it        # after updating the Italian bio: mark it current

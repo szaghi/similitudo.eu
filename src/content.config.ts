@@ -105,4 +105,14 @@ const publications = defineCollection({
   }),
 });
 
-export const collections = { codes, projects, people, publications };
+// Translation of the bio (src/i18n/index.ts): an overlay per language, `people-i18n/<lang>/<id>.md`, holding ONLY the
+// words (role and body); everything else stays in the English entry. `basis` is the hash of the English words it was
+// made from: `./site i18n` lists the translations that are missing or older than their English entry. The code pages
+// are English only (owner, 2026-11-18: the upkeep of five languages was not worth it there).
+const basis = z.string().regex(/^[0-9a-f]{12}$/);
+const peopleI18n = defineCollection({
+  loader: glob({ pattern: '*/*.md', base: './src/content/people-i18n' }),
+  schema: z.object({ basis, role: z.string() }),
+});
+
+export const collections = { codes, projects, people, publications, peopleI18n };

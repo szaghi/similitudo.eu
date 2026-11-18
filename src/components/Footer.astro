@@ -1,17 +1,20 @@
 ---
 // Footer on every page: what similitudo is, the contact address, then the colophon (with the privacy note).
-import { about, email } from '../lib/site';
+import { email } from '../lib/site';
+import { langOf, t, href } from '../i18n';
+const lang = langOf(Astro.url);
+const T = t(lang);
 import Icon from './Icon.astro';
 const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
-  <p class="label mono">About</p>
-  <p class="profile">{about}</p>
+  <p class="label mono">{T.footer.label}</p>
+  <p class="profile">{T.footer.about}</p>
   <p class="mail"><a href={`mailto:${email}`}><Icon name="mail" size="1.4em" />{email}</a></p>
   <div class="colophon">
     <p class="mono small">© {year} Stefano Zaghi · similitudo.eu</p>
-    <p class="mono small"><a href="/privacy/">Privacy</a> · <a class="gh" href="https://github.com/szaghi"><Icon name="branch" size="1.3em" />github.com/szaghi</a></p>
+    <p class="mono small"><a href={href(lang, '/privacy/')}>{T.footer.privacy}</a> · <a class="gh" href="https://github.com/szaghi"><Icon name="branch" size="1.3em" />github.com/szaghi</a></p>
   </div>
 </footer>
 

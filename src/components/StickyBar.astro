@@ -4,17 +4,20 @@
 // Also the reading-progress hairline at the bottom (Lattice), filled by a CSS scroll timeline where supported.
 import Seal from './Seal.astro';
 import { nav, pad, isCurrent } from '../lib/site';
-const here = Astro.url.pathname;
+import { langOf, t, href, unlocalize } from '../i18n';
+const lang = langOf(Astro.url);
+const T = t(lang);
+const here = unlocalize(Astro.url.pathname);
 ---
 
 <div class="bar" data-bar inert>
-  <a class="brand" href="/" aria-label="similitudo, home"><Seal size={18} label="" /><span>similitudo</span></a>
-  <button class="menu" type="button" aria-expanded="false" aria-controls="menu-panel">Menu</button>
+  <a class="brand" href={href(lang, '/')} aria-label={T.site.home}><Seal size={18} label="" /><span>similitudo</span></a>
+  <button class="menu" type="button" aria-expanded="false" aria-controls="menu-panel" data-open={T.nav.close}>{T.nav.menu}</button>
 </div>
 <div class="panel" id="menu-panel" hidden>
-  <nav aria-label="Main (menu)">
+  <nav aria-label={T.nav.mainMenu}>
     <ol>
-      {nav.map((n, k) => <li><a href={n.href} aria-current={isCurrent(here, n.href) ? 'page' : undefined}><span class="n mono">{pad(k)}</span>{n.label}</a></li>)}
+      {nav.map((n, k) => <li><a href={href(lang, n.href)} aria-current={isCurrent(here, n.href) ? 'page' : undefined}><span class="n mono">{pad(k)}</span>{T.nav[n.key]}</a></li>)}
     </ol>
   </nav>
 </div>
@@ -27,9 +30,10 @@ const here = Astro.url.pathname;
   const datum = document.querySelector('.datum');
 
   if (bar && button && panel) {
+    const labels = { closed: button.textContent ?? '', open: button.dataset.open ?? '' };
     const setOpen = (open: boolean, refocus = true) => {
       button.setAttribute('aria-expanded', String(open));
-      button.textContent = open ? 'Close' : 'Menu';
+      button.textContent = open ? labels.open : labels.closed;
       panel.hidden = !open;
       document.documentElement.classList.toggle('menu-open', open);
       if (open) panel.querySelector('a')?.focus();

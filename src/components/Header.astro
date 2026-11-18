@@ -3,12 +3,15 @@
 import Seal from './Seal.astro';
 import Nav from './Nav.astro';
 import ThemeToggle from './ThemeToggle.astro';
+import LangSwitch from './LangSwitch.astro';
+import { langOf, t, href } from '../i18n';
+const lang = langOf(Astro.url);
 ---
 
 <header class="site-header">
   <div class="bar">
-    <a class="brand" href="/" aria-label="similitudo, home"><Seal size={22} label="" /><span>similitudo</span></a>
-    <ThemeToggle />
+    <a class="brand" href={href(lang, '/')} aria-label={t(lang).site.home}><Seal size={22} label="" /><span>similitudo</span></a>
+    <div class="tools"><LangSwitch /><ThemeToggle /></div>
   </div>
   <Nav />
 </header>
@@ -16,5 +19,6 @@ import ThemeToggle from './ThemeToggle.astro';
 <style>
   .site-header { padding: var(--gutter) var(--edge) 0; }
   .bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .tools { display: flex; gap: 0.5rem; }
   .brand { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--text-1); text-decoration: none; font-family: var(--f-display); font-weight: 600; font-size: 1.05rem; letter-spacing: -0.01em; }
 </style>

@@ -20,6 +20,8 @@
 
   if (canvas && hero && ctx) {
     const outs = hero.querySelectorAll<HTMLElement>('.hero-readout');
+    const tpl = outs[0]?.dataset.tpl ?? '';
+    const lang = document.documentElement.lang;
     const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const PLAY = 3.2; // s
     const U0 = 0.03;
@@ -103,7 +105,7 @@
       ctx.closePath();
       ctx.fill();
 
-      const text = readout(fr.mesh.maxLevelUsed, fr.mesh.leaves, u);
+      const text = readout(tpl, lang, { max: fr.mesh.maxLevelUsed, leaves: fr.mesh.leaves, u });
       outs.forEach((o) => (o.textContent = text));
     };
 

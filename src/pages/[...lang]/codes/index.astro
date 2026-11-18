@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import PageHead from '../../../components/PageHead.astro';
+import CodeRows from '../../../components/CodeRows.astro';
+import { isPublished, byOrder } from '../../../lib/content';
+import { langPaths, langOf, t } from '../../../i18n';
+
+export const getStaticPaths = langPaths;
+const lang = langOf(Astro.url);
+const T = t(lang);
+const codes = (await getCollection('codes', isPublished)).sort(byOrder);
+
+const groups = (['sdk', 'solver', 'tool', 'library', 'general'] as const).map((kind) => ({ kind, title: T.kinds.groups[kind] }));
+const shown = groups.map((g) => ({ ...g, items: codes.filter((c) => c.data.kind === g.kind) })).filter((g) => g.items.length > 0);
+---
+
+<Base title={T.codes.title} description={T.codes.description}>
+  <PageHead title={T.codes.title} count={codes.length} lead={T.codes.lead} />
+  {
+    shown.map((g, k) => (
+      <section class="sec" id={g.kind}>
+        <p class="label mono">{String(k + 1).padStart(2, '0')} — {g.title}</p>
+        <CodeRows codes={g.items} />
+      </section>
+    ))
+  }
+</Base>

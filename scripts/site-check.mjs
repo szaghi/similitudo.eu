@@ -16,7 +16,8 @@
 //   - every nav link is on top at its centre (nothing, e.g. the hero canvas, covers it);
 //   - every internal link resolves (HTTP 200);
 //   - theme pairs (.light-only / .dark-only) never show both versions at once.
-// And once, on dist/: no lab pages and no draft placeholders leaked into the build.
+// And once, on dist/: no lab pages and no draft placeholders leaked into the build. Then the translation status
+// (scripts/i18n.mjs), as a warning only.
 //
 // Browser: $CHROMIUM_PATH, else the newest ~/.cache/ms-playwright/chromium-*/chrome-linux64/chrome.
 import { spawnSync } from 'node:child_process';
@@ -204,6 +205,9 @@ try {
     const failures = await check(browser, list);
     failed = leaks.length > 0 || failures.length > 0;
     console.log(failed ? bad(`\nFAILED: ${failures.length + leaks.length} problem(s)`) : ok(`\nALL GOOD: ${list.length} pages × 2 widths × 2 themes`));
+    // Translations: reported, never failing (an untranslated page shows its English words): `./site i18n` for the table.
+    const tr = spawnSync('node', [path.join(ROOT, 'scripts', 'i18n.mjs'), 'status'], { encoding: 'utf8' }).stdout.trim().split('\n').pop();
+    console.log(tr.startsWith('all') ? dim(`translations: ${tr}`) : `\x1b[33mtranslations: ${tr}\x1b[0m`);
   }
 } finally {
   await browser.close();

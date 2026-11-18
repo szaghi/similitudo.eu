@@ -1,0 +1,72 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Hero from '../../components/Hero.astro';
+import CapabilityRows from '../../components/CapabilityRows.astro';
+import CodeGrid from '../../components/CodeGrid.astro';
+import CompareFigure from '../../components/CompareFigure.astro';
+import PubRows from '../../components/PubRows.astro';
+import MoreLink from '../../components/MoreLink.astro';
+import { isPublished, byOrder } from '../../lib/content';
+import { langPaths, langOf, t, href, enIn } from '../../i18n';
+
+export const getStaticPaths = langPaths;
+const lang = langOf(Astro.url);
+const T = t(lang);
+const codes = (await getCollection('codes', isPublished)).sort(byOrder);
+// The compare figures of the codes (a result and what carries it), each linked to its code's page.
+const inside = codes.flatMap((c) =>
+  c.data.figures.flatMap((f) => (f.compare ? [{ f: { ...f, compare: f.compare }, more: { href: href(lang, `/codes/${c.id}/`), text: c.data.name } }] : [])),
+);
+const selected = (await getCollection('publications', isPublished))
+  .filter((p) => p.data.kind === 'journal')
+  .sort((a, b) => b.data.year - a.data.year)
+  .slice(0, 4);
+---
+
+<Base home>
+  <Hero />
+  <main id="main" class="page">
+    <section class="sec">
+      <p class="label mono">01 — {T.home.expertise}</p>
+      <div>
+        <CapabilityRows compact />
+        <MoreLink href="/expertise/" icon="grid">{T.home.moreExpertise}</MoreLink>
+      </div>
+    </section>
+
+    {
+      inside.length > 0 && (
+        <section class="sec">
+          <p class="label mono">02 — {T.home.inside}</p>
+          <div class="inside" lang={enIn(lang)}>{inside.map((i) => <div style={`--ar: ${i.f.width / i.f.height}`}><CompareFigure f={i.f} more={i.more} /></div>)}</div>
+        </section>
+      )
+    }
+
+    <section class="sec">
+      <p class="label mono">03 — {T.home.code}</p>
+      <div>
+        <CodeGrid codes={codes} />
+        <MoreLink href="/codes/" icon="braces">{T.home.moreCode}</MoreLink>
+      </div>
+    </section>
+
+    <section class="sec">
+      <p class="label mono">04 — {T.home.publications}</p>
+      <div>
+        <PubRows pubs={selected} />
+        <MoreLink href="/about/publications/" icon="scroll">{T.home.morePublications}</MoreLink>
+      </div>
+    </section>
+  </main>
+</Base>
+
+<style>
+  /* The compare figures side by side at one height: each takes a share of the row equal to its aspect ratio. */
+  .inside { display: grid; gap: 2.5rem 2rem; }
+  @media (min-width: 64rem) {
+    .inside { display: flex; align-items: flex-start; }
+    .inside > div { flex: var(--ar) 1 0; min-width: 0; }
+  }
+</style>

@@ -1,0 +1,71 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import PubRows from '../../components/PubRows.astro';
+import { isPublished, byOrder } from '../../lib/content';
+import { pad } from '../../lib/site';
+import Icon from '../../components/Icon.astro';
+import MoreLink from '../../components/MoreLink.astro';
+import type { IconName } from '../../lib/icons';
+import { localPerson } from '../../lib/i18n-content';
+import { langPaths, langOf, t } from '../../i18n';
+
+export const getStaticPaths = langPaths;
+const lang = langOf(Astro.url);
+const T = t(lang);
+
+// Brush icon per personal link, by label; a link without one shows its label alone.
+const linkIcon: Record<string, IconName> = { GitHub: 'branch' };
+
+// Publications live under About me: the newest journal articles here, the full list on its own page.
+const pubs = await getCollection('publications', isPublished);
+const selected = pubs.filter((p) => p.data.kind === 'journal').sort((a, b) => b.data.year - a.data.year).slice(0, 4);
+
+const people = await Promise.all(
+  (await getCollection('people', isPublished))
+    .sort(byOrder)
+    .map(async (p) => localPerson(p, lang)),
+);
+---
+
+<Base title={T.about.title} description={T.about.description}>
+  <PageHead title={T.about.title} />
+  <section class="intro">{T.about.intro.map((p) => <p set:html={p} />)}</section>
+  {
+    people.map(({ data, Content, translated }, k) => (
+      <article class="sec">
+        <p class="label mono" lang={translated ? undefined : 'en'}>{pad(k)} — {data.role}</p>
+        <div>
+          <h2 class="name">{data.name}</h2>
+          <div class="prose" lang={translated ? undefined : 'en'}><Content /></div>
+          <p class="links mono">
+            {data.orcid && <a href={`https://orcid.org/${data.orcid}`}><Icon name="orcid" size="1.6em" />ORCID</a>}
+            {data.links.map((l) => <a href={l.url}>{linkIcon[l.label] && <Icon name={linkIcon[l.label]} size="1.6em" />}{l.label}</a>)}
+            {data.cv && <a href={data.cv}><Icon name="scroll" size="1.6em" />{T.about.cv}</a>}
+          </p>
+        </div>
+      </article>
+    ))
+  }
+  {
+    selected.length > 0 && (
+      <section class="sec">
+        <p class="label mono">{pad(people.length)} — {T.about.publications}</p>
+        <div>
+          <PubRows pubs={selected} />
+          <MoreLink href="/about/publications/" icon="scroll">{T.about.allPublications(pubs.length)}</MoreLink>
+        </div>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .intro { max-width: 40rem; padding: 0 0 3rem; }
+  .intro p { margin: 0 0 1rem; font-size: clamp(1.05rem, 1.4vw, 1.2rem); line-height: 1.55; text-wrap: pretty; }
+  .intro p:last-child { margin-bottom: 0; }
+  .name { margin: 0 0 1rem; font-family: var(--f-display); font-weight: 560; font-size: clamp(1.35rem, 2.2vw, 1.8rem); letter-spacing: -0.02em; line-height: 1.1; }
+  .links { display: flex; flex-wrap: wrap; gap: 1.5rem; margin: 1rem 0 0; }
+  .links a { display: inline-flex; align-items: center; gap: 0.4rem; }
+</style>

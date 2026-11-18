@@ -9,8 +9,10 @@ interface Props {
   size?: number;
   decorative?: boolean; // next to the name it repeats: empty alt, so it is not read twice
 }
+import { langOf, t } from '../i18n';
 const { folder, name, size = 96, decorative = false } = Astro.props;
-const alt = decorative ? '' : `${name} logo`;
+const T = t(langOf(Astro.url));
+const alt = decorative ? '' : T.ui.logo(name);
 const initials = name.slice(0, 2);
 const grid = [16, 32, 48].map((v) => `M${v} 0V64M0 ${v}H64`).join('');
 ---
@@ -24,7 +26,7 @@ const grid = [16, 32, 48].map((v) => `M${v} 0V64M0 ${v}H64`).join('');
       </>
     ) : (
       <svg class="tile" viewBox="0 0 64 64" width={size} height={size} role={decorative ? undefined : 'img'}
-           aria-hidden={decorative ? 'true' : undefined} aria-label={decorative ? undefined : `${name} (no logo yet)`}>
+           aria-hidden={decorative ? 'true' : undefined} aria-label={decorative ? undefined : T.ui.noLogo(name)}>
         <rect x="0.5" y="0.5" width="63" height="63" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.5" />
         <path d={grid} fill="none" stroke="currentColor" stroke-width="0.25" opacity="0.35" />
         <text x="32" y="33" text-anchor="middle" dominant-baseline="central">{initials}</text>

@@ -4,24 +4,27 @@
 import Seal from './Seal.astro';
 import Nav from './Nav.astro';
 import ThemeToggle from './ThemeToggle.astro';
+import LangSwitch from './LangSwitch.astro';
 import HeroMesh from './HeroMesh.astro';
 import { heroSpec } from '../lib/mesh/front';
-import { still } from '../lib/mesh/still';
-import { lead, byline } from '../lib/site';
+import { still, readout } from '../lib/mesh/still';
+import { langOf, t, href } from '../i18n';
 
-const initial = still(heroSpec(1440, 900)).readout; // shown until the script draws
+const lang = langOf(Astro.url);
+const T = t(lang);
+const initial = readout(T.readout, lang, still(heroSpec(1440, 900)).stats); // shown until the script draws
 ---
 
 <header class="hero">
   <div class="ground"><HeroMesh /></div>
   <h1 class="word display">similitudo<span class="stamp"><Seal size={64} label="" /></span></h1>
-  <div class="toggle"><ThemeToggle /></div>
+  <div class="toggle"><LangSwitch /><ThemeToggle /></div>
   <div class="intro hero-lead">
-    <p class="by">by <a href="/about/">{byline.name}</a>, <span class="role">{byline.role}</span></p>
-    <p class="lead">{lead.map((line, i) => (<>{i > 0 && " "}<span class="line">{line}</span></>))}</p>
+    <p class="by">{T.byline.by} <a href={href(lang, '/about/')}>Stefano Zaghi</a>, <span class="role">{T.byline.role}</span></p>
+    <p class="lead">{T.lead.map((line, i) => (<>{i > 0 && " "}<span class="line">{line}</span></>))}</p>
   </div>
   <Nav class="hero-nav" />
-  <p class="readout mono hero-readout">{initial}</p>
+  <p class="readout mono hero-readout" data-tpl={T.readout}>{initial}</p>
 </header>
 
 <style>
@@ -42,15 +45,24 @@ const initial = still(heroSpec(1440, 900)).readout; // shown until the script dr
   }
   .hero > :not(.ground) { position: relative; z-index: 1; }
 
-  .word { grid-row: 1; margin: 0 3rem 0 -0.04em; font-size: clamp(3.9rem, 11.6vw, calc(0.116 * (var(--maxw) + 2 * var(--gutter)))); line-height: 0.82; }
+  .word { grid-row: 1; margin: 0 3rem 0 -0.04em; /* clear of the switches (a column on phones, a row from 48rem) */ font-size: clamp(3.9rem, 11.6vw, calc(0.116 * (var(--maxw) + 2 * var(--gutter)))); line-height: 0.82; }
   .stamp { display: inline-block; vertical-align: top; margin-left: 0.08em; animation: stamp 0.35s cubic-bezier(0.3, 1.6, 0.6, 1) 3.1s backwards; /* stamped last, as the front settles */ }
   .stamp :global(svg) { width: 0.2em; height: 0.2em; }
   @keyframes stamp { from { opacity: 0; transform: scale(1.8); } }
-  .toggle { position: absolute !important; top: var(--gutter); right: var(--edge); }
+  /* The language and theme switches. Phones: a column of two smaller tiles in the wordmark's 3rem margin (side by side
+     they would push the seal under the word), reaching below the wordmark: the byline starts a little lower. */
+  .toggle { position: absolute !important; top: var(--gutter); right: var(--edge); z-index: 5 !important; display: flex; flex-direction: column; gap: 0.35rem; }
+  .toggle :global(.theme-toggle), .toggle :global(.lang-switch summary) { width: 2rem; height: 2rem; }
+  @media (min-width: 48rem) {
+    .toggle { flex-direction: row; gap: 0.5rem; }
+    .toggle :global(.theme-toggle), .toggle :global(.lang-switch summary) { width: 2.25rem; height: 2.25rem; }
+    .word { margin-right: 5.5rem; }
+  }
 
   /* The byline, then the headline, right under the wordmark; each on a plate of the ground so the grid stops at its
      edge. The wrapper is `.hero-lead`: HeroMesh fits the phone front below it. */
-  .intro { grid-row: 2; display: grid; justify-items: start; margin-top: 1rem; }
+  .intro { grid-row: 2; display: grid; justify-items: start; margin-top: 1.4rem; }
+  @media (min-width: 48rem) { .intro { margin-top: 1rem; } }
   .by {
     margin: 0;
     padding: 0.15rem 0.6rem 0.2rem 0;

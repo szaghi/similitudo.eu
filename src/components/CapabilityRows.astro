@@ -1,31 +1,39 @@
 ---
-// Expertise (src/data/capabilities.ts) as a numbered index: title, what it is, and the code that backs it. `compact` (the home page): number,
-// title and task only, each title linking to its full row on /expertise/ (anchored by a slug of the title).
+// Expertise (src/data/capabilities.ts, words in src/i18n/<lang>.ts) as a numbered index: title, what it is, and the
+// code that backs it. `compact` (the home page): number, title and task only, each title linking to its full row on
+// /expertise/ (anchored by the area's `anchor`, the same in every language).
 import { capabilities } from '../data/capabilities';
 import { pad } from '../lib/site';
+import { langOf, t, href } from '../i18n';
 interface Props { compact?: boolean }
 const { compact = false } = Astro.props;
-const slug = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const lang = langOf(Astro.url);
+const T = t(lang);
+const rows = capabilities.map((c) => ({
+  ...c,
+  ...T.capabilities[c.id],
+  links: c.evidence.map((e) => ('code' in e ? { label: T.expertise.docs(e.code), url: e.url } : { label: T.kinds.groups[e.group], url: href(lang, e.url) })),
+}));
 ---
 
 {
   compact ? (
     <ol class="index caps compact">
-      {capabilities.map((c, k) => (
+      {rows.map((c, k) => (
         <li>
           <span class="n mono">{pad(k)}</span>
-          <div class="head"><h3><a href={`/expertise/#${slug(c.title)}`}>{c.title}</a></h3><p class="task mono">{c.task}</p></div>
+          <div class="head"><h3><a href={href(lang, `/expertise/#${c.anchor}`)}>{c.title}</a></h3><p class="task mono">{c.task}</p></div>
         </li>
       ))}
     </ol>
   ) : (
     <ol class="index caps">
-      {capabilities.map((c, k) => (
-        <li id={slug(c.title)}>
+      {rows.map((c, k) => (
+        <li id={c.anchor}>
           <span class="n mono">{pad(k)}</span>
           <div class="head"><h3>{c.title}</h3><p class="task mono">{c.task}</p></div>
           <p>{c.text}</p>
-          <p class="ev mono">{c.evidence.map((e) => <a href={e.url}>{e.label} →</a>)}</p>
+          <p class="ev mono">{c.links.map((e) => <a href={e.url}>{e.label} →</a>)}</p>
         </li>
       ))}
     </ol>

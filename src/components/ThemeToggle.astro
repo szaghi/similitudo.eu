@@ -1,9 +1,11 @@
 ---
 // Light (plaster) / dark (charcoal) switch. The choice is a per-viewer convenience kept in localStorage;
 // without it the page follows prefers-color-scheme. The early script in Base.astro applies it before paint.
+import { langOf, t } from '../i18n';
+const T = t(langOf(Astro.url));
 ---
 
-<button class="theme-toggle" type="button" aria-label="Switch light or dark theme" title="Switch theme">
+<button class="theme-toggle" type="button" aria-label={T.ui.theme} title={T.ui.themeTitle}>
   <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
     <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.6"></circle>
     <path d="M12 4 A8 8 0 0 1 12 20 Z" fill="currentColor"></path>

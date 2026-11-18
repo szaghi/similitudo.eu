@@ -9,21 +9,28 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import StickyBar from '../components/StickyBar.astro';
 import Reveal from '../components/Reveal.astro';
-import { description as SITE_DESCRIPTION, email } from '../lib/site';
+import { email } from '../lib/site';
+import { langs, langOf, t, href, unlocalize, ogLocale, defaultLang } from '../i18n';
 
 interface Props {
   title?: string;
   description?: string;
   home?: boolean; // the home page draws its own hero (with the nav) and its own <main>
+  alternates?: boolean; // false: no hreflang links (the 404, which has no per-language URL)
 }
 
 
+const lang = langOf(Astro.url);
+const T = t(lang);
 const SITE = 'similitudo';
-const DEFAULT_DESCRIPTION = `similitudo: ${SITE_DESCRIPTION.charAt(0).toLowerCase()}${SITE_DESCRIPTION.slice(1)}`;
+const DEFAULT_DESCRIPTION = `similitudo: ${T.site.description.charAt(0).toLowerCase()}${T.site.description.slice(1)}`;
 
-const { title, description = DEFAULT_DESCRIPTION, home = false } = Astro.props;
+const { title, description = DEFAULT_DESCRIPTION, home = false, alternates: linked = true } = Astro.props;
 const fullTitle = title ? `${title} · ${SITE}` : SITE;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+// The same page in every language (each exists; a code page has translated labels around English prose); x-default: English.
+const bare = unlocalize(Astro.url.pathname);
+const alternates = linked ? langs.map((l) => ({ l, url: new URL(href(l, bare), Astro.site) })) : [];
 const ogImage = new URL('/og.png', Astro.site); // regenerate with `./site og`
 
 // Structured data: the site, and the person behind it. A Person, not an Organization: similitudo is not a legal entity.
@@ -31,14 +38,14 @@ const site = Astro.site!.href;
 const ld = {
   '@context': 'https://schema.org',
   '@graph': [
-    { '@type': 'WebSite', '@id': `${site}#website`, url: site, name: SITE, description: DEFAULT_DESCRIPTION, inLanguage: 'en', publisher: { '@id': `${site}#person` } },
+    { '@type': 'WebSite', '@id': `${site}#website`, url: site, name: SITE, description: DEFAULT_DESCRIPTION, inLanguage: langs, publisher: { '@id': `${site}#person` } },
     {
       '@type': 'Person',
       '@id': `${site}#person`,
       name: 'Stefano Zaghi',
       url: `${site}about/`,
       email: `mailto:${email}`,
-      jobTitle: 'Research scientist',
+      jobTitle: T.site.jobTitle,
       affiliation: { '@type': 'Organization', name: 'CNR Istituto per le Applicazioni del Calcolo', url: 'https://www.iac.cnr.it/' },
       sameAs: ['https://github.com/szaghi', 'https://orcid.org/0000-0001-9834-9590'],
     },
@@ -47,13 +54,15 @@ const ld = {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {alternates.map((a) => <link rel="alternate" hreflang={a.l} href={a.url} />)}
+    {linked && <link rel="alternate" hreflang="x-default" href={new URL(href(defaultLang, bare), Astro.site)} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#eaebed" />
@@ -63,10 +72,12 @@ const ld = {
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={ogLocale[lang]} />
+    {langs.filter((l) => l !== lang).map((l) => <meta property="og:locale:alternate" content={ogLocale[l]} />)}
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="similitudo: a blast front drawn as an ink circle over an adaptive grid" />
+    <meta property="og:image:alt" content={T.site.ogAlt} />
     <meta name="twitter:card" content="summary_large_image" />
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
     <meta name="generator" content={Astro.generator} />
@@ -79,7 +90,7 @@ const ld = {
     </script>
   </head>
   <body>
-    <a class="skip" href="#main">Skip to content</a>
+    <a class="skip" href="#main">{T.site.skip}</a>
     {
       home ? (
         <slot />

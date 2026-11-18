@@ -17,80 +17,33 @@ const FORESIGHT = 'https://szaghi.github.io/foresight/';
 const FOBIS = 'https://szaghi.github.io/FoBiS/';
 const MOSAIC = 'https://szaghi.github.io/mosaic/';
 
+import type { Dict } from '../i18n/en';
+
+// The words of each area (title, task, text) are in the dictionaries (src/i18n/<lang>.ts, `capabilities`), by id.
+// `anchor` is the area's #fragment on /expertise/, the same in every language (links to it must not break).
 export interface Capability {
-  title: string;
-  task: string; // one line on what the work is
-  text: string;
-  evidence: { label: string; url: string }[]; // the docs that back it, one link per code
+  id: keyof Dict['capabilities'];
+  anchor: string;
+  // the docs that back it, one link per code; a `group` link points to a section of /codes/ instead
+  evidence: ({ code: string; url: string } | { group: keyof Dict['kinds']['groups']; url: string })[];
 }
 
 export const capabilities: Capability[] = [
+  { id: 'amr', anchor: 'adaptive-mesh-refinement', evidence: [{ code: 'ADAM', url: ADAM }, { code: 'MORTIF', url: MORTIF }] },
+  { id: 'gpu', anchor: 'gpu-acceleration', evidence: [{ code: 'FUNDAL', url: FUNDAL }] },
+  { id: 'mhd', anchor: 'compressible-flows-and-mhd', evidence: [{ code: 'FLUME', url: FLUME }] },
+  { id: 'plasma', anchor: 'electromagnetics-and-plasmas', evidence: [{ code: 'PRISM', url: PRISM }] },
   {
-    title: 'Adaptive mesh refinement',
-    task: 'Adaptive-grid infrastructure for solvers',
-    text: 'Block-structured octree/quadtree AMR with Morton ordering (MORTIF), 2:1 balancing, load balancing and parallel I/O, on CPUs and GPUs.',
-    evidence: [
-      { label: 'ADAM docs', url: ADAM },
-      { label: 'MORTIF docs', url: MORTIF },
-    ],
+    id: 'geometry',
+    anchor: 'complex-geometries',
+    evidence: [{ code: 'ADAM', url: ADAM }, { code: 'FOSSIL', url: FOSSIL }, { code: 'VecFor', url: VECFOR }],
   },
   {
-    title: 'GPU acceleration',
-    task: 'Porting and scaling solvers on GPU clusters',
-    text: 'A programming-model-agnostic device layer, FUNDAL: one Fortran API and one kernel source for OpenACC (NVIDIA GPUs) and OpenMP offloading (AMD GPUs), plus a CPU mode, chosen at compile time; MPI across nodes, one device per rank.',
-    evidence: [{ label: 'FUNDAL docs', url: FUNDAL }],
+    id: 'output',
+    anchor: 'output-for-visualisation',
+    evidence: [{ code: 'MOTIOn', url: MOTION }, { code: 'VTKFortran', url: VTKFORTRAN }, { code: 'foresight', url: FORESIGHT }],
   },
-  {
-    title: 'Compressible flows and MHD',
-    task: 'High-order compressible and MHD simulation',
-    text: 'Euler and ideal MHD with WENO schemes, dissipative terms, gravity, self-gravity, cooling and sink particles. Observed fifth-order convergence on smooth problems.',
-    evidence: [{ label: 'FLUME docs', url: FLUME }],
-  },
-  {
-    title: 'Electromagnetics and plasmas',
-    task: 'Maxwell and particle-in-cell modelling',
-    text: 'Maxwell equations coupled with particle-in-cell plasmas, with PEC, Silver–Müller and PML boundaries; second-order convergence verified on CPU and GPU.',
-    evidence: [{ label: 'PRISM docs', url: PRISM }],
-  },
-  {
-    title: 'Complex geometries',
-    task: 'Flows around complex bodies, and the geometry pipeline from CAD surfaces to the grid',
-    text: 'Immersed boundaries on adaptive grids, running on GPUs, in ADAM. The geometry a solver needs, in FOSSIL: surfaces read, repaired and measured with certified bounds; signed distances and level sets; immersed-boundary queries, AMR tagging and exact cut cells; overset assembly and body-fitted grids; moving bodies and collision detection; on the CPU or bit for bit on the GPU, on top of VecFor, vector algebra callable inside GPU kernels.',
-    evidence: [
-      { label: 'ADAM docs', url: ADAM },
-      { label: 'FOSSIL docs', url: FOSSIL },
-      { label: 'VecFor docs', url: VECFOR },
-    ],
-  },
-  {
-    title: 'Output for visualisation',
-    task: 'Simulation output for ParaView and VisIt, and runs watched live',
-    text: 'Three Fortran libraries. MOTIOn: HDF5 data with XDMF metadata from MPI codes, one file per rank and one descriptor gathered on the master. VTKFortran: VTK files of every grid type, parallel pieces with ghost cells, multi-block assemblies, time series that stay valid if a run crashes, compressed binary, arrays beyond 2 GiB; both read their files back. foresight: gnuplot-like plots of the logs as interactive HTML, SVG or text, re-rendered while the job runs.',
-    evidence: [
-      { label: 'MOTIOn docs', url: MOTION },
-      { label: 'VTKFortran docs', url: VTKFORTRAN },
-      { label: 'foresight docs', url: FORESIGHT },
-    ],
-  },
-  {
-    title: 'Verification and validation',
-    task: 'Evidence that a solver is right, on CPU and GPU',
-    text: 'Convergence studies with observed-order bounds, and the same tests run on CPU and GPU against reference outputs.',
-    evidence: [{ label: 'ADAM docs', url: ADAM }],
-  },
-  {
-    title: 'Modern Fortran engineering',
-    task: 'Maintainable, tested Fortran that other projects reuse',
-    text: 'Fortran libraries designed for reuse, documented and tested in CI with coverage; eight general-purpose ones, several used by other open-source projects: PENF (portable kinds), FACE (terminal colours), BeFoR64 (Base64), StringiFor (strings), FiNeR (INI files), FLAP (command lines), forbear (progress bars), figure (GUIs and plots). All built and tested with FoBiS, a Fortran build system used beyond these codes.',
-    evidence: [
-      { label: 'General-purpose libraries', url: '/codes/#general' },
-      { label: 'FoBiS docs', url: FOBIS },
-    ],
-  },
-  {
-    title: 'State of the art',
-    task: 'Literature reviews that stay current',
-    text: 'The literature searched across 22 scientific databases at once and merged by DOI, kept in a local library with the PDFs one is entitled to read; ranked, summarised and compared by a language model whose statements cite the papers; citation maps of the field, and saved searches that report only the new papers. With mosaic.',
-    evidence: [{ label: 'mosaic docs', url: MOSAIC }],
-  },
+  { id: 'verification', anchor: 'verification-and-validation', evidence: [{ code: 'ADAM', url: ADAM }] },
+  { id: 'fortran', anchor: 'modern-fortran-engineering', evidence: [{ group: 'general', url: '/codes/#general' }, { code: 'FoBiS', url: FOBIS }] },
+  { id: 'literature', anchor: 'state-of-the-art', evidence: [{ code: 'mosaic', url: MOSAIC }] },
 ];

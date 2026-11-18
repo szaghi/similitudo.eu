@@ -3,11 +3,13 @@
 // without their seal (the seal stays one per screen); the icon is inside the link, so it is part of the click target.
 import Icon from './Icon.astro';
 import type { IconName } from '../lib/icons';
-interface Props { href: string; icon: IconName }
+import { langOf, href as localize } from '../i18n';
+interface Props { href: string; icon: IconName } // a site path, put in the page's language here
 const { href, icon } = Astro.props;
+const to = localize(langOf(Astro.url), href);
 ---
 
-<p class="more"><a href={href}><Icon name={icon} size="2rem" tile /><span><slot /></span></a> <span aria-hidden="true">→</span></p>
+<p class="more"><a href={to}><Icon name={icon} size="2rem" tile /><span><slot /></span></a> <span aria-hidden="true">→</span></p>
 
 <style>
   .more { display: flex; align-items: center; gap: 0.35rem; } /* the arrow on the label's centre line, not the baseline */

@@ -1,0 +1,33 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import PageHead from '../../../components/PageHead.astro';
+import PubRows from '../../../components/PubRows.astro';
+import { isPublished } from '../../../lib/content';
+import { langPaths, langOf, t, href } from '../../../i18n';
+
+export const getStaticPaths = langPaths;
+const lang = langOf(Astro.url);
+const T = t(lang);
+
+const pubs = (await getCollection('publications', isPublished)).sort((a, b) => b.data.year - a.data.year || a.data.title.localeCompare(b.data.title));
+const groups = (['journal', 'chapter', 'conference'] as const).map((kind) => ({ kind, title: T.publications.groups[kind] })).map((g) => ({ ...g, items: pubs.filter((p) => p.data.kind === g.kind) })).filter((g) => g.items.length > 0);
+---
+
+<Base title={T.publications.title} description={T.publications.description}>
+  <p class="crumb mono"><a href={href(lang, '/about/')}>{T.about.title}</a> / {T.publications.title}</p>
+  <PageHead title={T.publications.title} count={pubs.length} lead={T.publications.lead} />
+  {
+    groups.map((g, k) => (
+      <section class="sec">
+        <p class="label mono">{String(k + 1).padStart(2, '0')} — {g.title} ({g.items.length})</p>
+        <PubRows pubs={g.items} />
+      </section>
+    ))
+  }
+</Base>
+
+<style>
+  .crumb { margin: 2rem 0 -2rem; color: var(--text-3); }
+  .crumb a { color: inherit; }
+</style>
