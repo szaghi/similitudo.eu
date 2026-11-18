@@ -8,11 +8,11 @@ import LangSwitch from './LangSwitch.astro';
 import HeroMesh from './HeroMesh.astro';
 import { heroSpec } from '../lib/mesh/front';
 import { still, readout } from '../lib/mesh/still';
-import { langOf, t, href } from '../i18n';
+import { langOf, t, href, numLocale } from '../i18n';
 
 const lang = langOf(Astro.url);
 const T = t(lang);
-const initial = readout(T.readout, lang, still(heroSpec(1440, 900)).stats); // shown until the script draws
+const initial = readout(T.readout, numLocale(lang), still(heroSpec(1440, 900)).stats); // shown until the script draws
 ---
 
 <header class="hero">
@@ -24,7 +24,7 @@ const initial = readout(T.readout, lang, still(heroSpec(1440, 900)).stats); // s
     <p class="lead">{T.lead.map((line, i) => (<>{i > 0 && " "}<span class="line">{line}</span></>))}</p>
   </div>
   <Nav class="hero-nav" />
-  <p class="readout mono hero-readout" data-tpl={T.readout}>{initial}</p>
+  <p class="readout mono hero-readout" data-tpl={T.readout} data-num={numLocale(lang)}>{initial}</p>
 </header>
 
 <style>

@@ -10,7 +10,7 @@ import Footer from '../components/Footer.astro';
 import StickyBar from '../components/StickyBar.astro';
 import Reveal from '../components/Reveal.astro';
 import { email } from '../lib/site';
-import { langs, langOf, t, href, unlocalize, ogLocale, defaultLang } from '../i18n';
+import { langs, langOf, t, href, unlocalize, ogLocale, defaultLang, isDialect } from '../i18n';
 
 interface Props {
   title?: string;
@@ -30,7 +30,9 @@ const fullTitle = title ? `${title} · ${SITE}` : SITE;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 // The same page in every language (each exists; a code page has translated labels around English prose); x-default: English.
 const bare = unlocalize(Astro.url.pathname);
-const alternates = linked ? langs.map((l) => ({ l, url: new URL(href(l, bare), Astro.site) })) : [];
+// A dialect page (a joke for Italian friends) is noindex and out of the alternates, both ways.
+const dialect = isDialect(lang);
+const alternates = linked && !dialect ? langs.map((l) => ({ l, url: new URL(href(l, bare), Astro.site) })) : [];
 const ogImage = new URL('/og.png', Astro.site); // regenerate with `./site og`
 
 // Structured data: the site, and the person behind it. A Person, not an Organization: similitudo is not a legal entity.
@@ -62,7 +64,8 @@ const ld = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     {alternates.map((a) => <link rel="alternate" hreflang={a.l} href={a.url} />)}
-    {linked && <link rel="alternate" hreflang="x-default" href={new URL(href(defaultLang, bare), Astro.site)} />}
+    {dialect && <meta name="robots" content="noindex" />}
+    {linked && !dialect && <link rel="alternate" hreflang="x-default" href={new URL(href(defaultLang, bare), Astro.site)} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#eaebed" />

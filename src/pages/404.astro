@@ -3,10 +3,10 @@
 // language of the missing URL (/it/..., /de/...): a small inline script swaps it in. The page chrome stays English.
 import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
-import { langs, t } from '../i18n';
+import { allLangs, t } from '../i18n';
 
 const T = t('en');
-const messages = Object.fromEntries(langs.map((l) => [l, { ...t(l).notFound, home: l === 'en' ? '/' : `/${l}/` }]));
+const messages = Object.fromEntries(allLangs.map((l) => [l, { ...t(l).notFound, home: l === 'en' ? '/' : `/${l}/` }]));
 ---
 
 <Base title={T.notFound.title} alternates={false}>

@@ -21,7 +21,7 @@
   if (canvas && hero && ctx) {
     const outs = hero.querySelectorAll<HTMLElement>('.hero-readout');
     const tpl = outs[0]?.dataset.tpl ?? '';
-    const lang = document.documentElement.lang;
+    const lang = outs[0]?.dataset.num ?? 'en';
     const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const PLAY = 3.2; // s
     const U0 = 0.03;

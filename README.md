@@ -62,3 +62,8 @@ The bio is translated by an overlay that holds only its words. After editing the
 
     ./site i18n                 # table: ok / missing / stale per language
     ./site i18n stamp it        # after updating the Italian bio: mark it current
+
+**Dialects** (a joke for Italian friends): Venetian of Venice at `/vec/` and Romagnol of Rimini at `/rgn/`. Each
+dictionary (`src/i18n/vec.ts`, `rgn.ts`) overrides only some Italian keys and inherits the rest from `it.ts`, so a new
+key never breaks them. They appear in the language switch only on Italian and dialect pages, and are `noindex`, out of
+the sitemap and of the hreflang alternates. `./site check` still checks their pages.

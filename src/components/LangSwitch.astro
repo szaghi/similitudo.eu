@@ -2,8 +2,10 @@
 // Language switch beside the theme switch: the current language's code on a tile the size of the theme switch, opening
 // the list of languages, each named in itself and linking to this same page in that language. A native <details>:
 // it works without JavaScript; the script only closes it on Escape and on a click elsewhere.
-import { langs, langNames, langOf, t, href, unlocalize } from '../i18n';
+// On Italian and dialect pages only, the dialects follow under a rule (src/i18n/index.ts).
+import { langs, dialects, isDialect, langNames, langOf, t, href, unlocalize } from '../i18n';
 const lang = langOf(Astro.url);
+const groups = [langs, ...(lang === 'it' || isDialect(lang) ? [dialects] : [])];
 const bare = unlocalize(Astro.url.pathname);
 ---
 
@@ -11,13 +13,15 @@ const bare = unlocalize(Astro.url.pathname);
   <summary class="mono" aria-label={`${t(lang).ui.language}: ${langNames[lang]}`}>{lang.toUpperCase()}</summary>
   <ul>
     {
-      langs.map((l) => (
-        <li>
-          <a href={href(l, bare)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>
-            <span class="code mono">{l.toUpperCase()}</span>{langNames[l]}
-          </a>
-        </li>
-      ))
+      groups.map((g, k) =>
+        g.map((l, i) => (
+          <li class:list={[{ sep: k > 0 && i === 0 }]}>
+            <a href={href(l, bare)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>
+              <span class="code mono">{l.toUpperCase()}</span>{langNames[l]}
+            </a>
+          </li>
+        )),
+      )
     }
   </ul>
 </details>
@@ -64,5 +68,6 @@ const bare = unlocalize(Astro.url.pathname);
   a { display: flex; align-items: baseline; gap: 0.75rem; padding: 0.4rem 0.9rem; color: var(--text-1); text-decoration: none; white-space: nowrap; }
   a:hover, a:focus-visible { color: var(--link); }
   a[aria-current='true'] { color: var(--text-3); }
-  .code { font-size: 0.75rem; color: var(--text-3); }
+  .code { font-size: 0.75rem; color: var(--text-3); min-width: 1.9rem; }
+  .sep { margin-top: 0.25rem; padding-top: 0.25rem; border-top: 1px solid var(--rule); }
 </style>

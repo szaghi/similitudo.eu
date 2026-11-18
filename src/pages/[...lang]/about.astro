@@ -33,12 +33,12 @@ const people = await Promise.all(
   <PageHead title={T.about.title} />
   <section class="intro">{T.about.intro.map((p) => <p set:html={p} />)}</section>
   {
-    people.map(({ data, Content, translated }, k) => (
+    people.map(({ data, Content, lang: wrote }, k) => (
       <article class="sec">
-        <p class="label mono" lang={translated ? undefined : 'en'}>{pad(k)} — {data.role}</p>
+        <p class="label mono" lang={wrote === lang ? undefined : wrote}>{pad(k)} — {data.role}</p>
         <div>
           <h2 class="name">{data.name}</h2>
-          <div class="prose" lang={translated ? undefined : 'en'}><Content /></div>
+          <div class="prose" lang={wrote === lang ? undefined : wrote}><Content /></div>
           <p class="links mono">
             {data.orcid && <a href={`https://orcid.org/${data.orcid}`}><Icon name="orcid" size="1.6em" />ORCID</a>}
             {data.links.map((l) => <a href={l.url}>{linkIcon[l.label] && <Icon name={linkIcon[l.label]} size="1.6em" />}{l.label}</a>)}
