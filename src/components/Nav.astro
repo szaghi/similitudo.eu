@@ -22,6 +22,7 @@ const here = unlocalize(Astro.url.pathname);
             <span class="t">{T.nav[n.key]}</span>
             <span class="arrow" aria-hidden="true">→</span>
           </a>
+          {n.key === 'code' && Astro.slots.has('code') && <div class="under"><slot name="code" /></div>}
         </li>
       ))
     }
@@ -31,6 +32,10 @@ const here = unlocalize(Astro.url.pathname);
 <style>
   .datum { border-top: 1px solid var(--text-1); }
   ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 1rem; list-style: none; margin: 0; padding: 0; }
+  li { display: flex; flex-direction: column; align-items: flex-start; } /* the label, then the hero's `code` slot under it */
+  /* The slot under "Code", as wide as the label's word: in from the left by the number and its gap, in from the right
+     by the gap, the arrow (about 1em of the label) and the padding. Content centred in it centres on the word. */
+  .under { align-self: stretch; font-size: clamp(1.15rem, 1.6vw, 1.5rem); margin: 0 calc(0.5rem + 1em + 0.75rem) 0 calc(0.9rem + 0.5rem); }
   a {
     display: inline-flex;
     align-items: baseline;

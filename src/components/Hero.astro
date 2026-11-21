@@ -6,6 +6,7 @@ import Nav from './Nav.astro';
 import ThemeToggle from './ThemeToggle.astro';
 import LangSwitch from './LangSwitch.astro';
 import HeroMesh from './HeroMesh.astro';
+import HeroCodes from './HeroCodes.astro';
 import { heroSpec } from '../lib/mesh/front';
 import { still, readout } from '../lib/mesh/still';
 import { langOf, t, href, numLocale } from '../i18n';
@@ -23,7 +24,8 @@ const initial = readout(T.readout, numLocale(lang), still(heroSpec(1440, 900)).s
     <p class="by">{T.byline.by} <a href={href(lang, '/about/')}>Stefano Zaghi</a>, <span class="role">{T.byline.role}</span></p>
     <p class="lead">{T.lead.map((line, i) => (<>{i > 0 && " "}<span class="line">{line}</span></>))}</p>
   </div>
-  <Nav class="hero-nav" />
+  <Nav class="hero-nav"><HeroCodes slot="code" /></Nav>
+  <HeroCodes class="hero-codes-row" phone />
   <p class="readout mono hero-readout" data-tpl={T.readout} data-num={numLocale(lang)}>{initial}</p>
 </header>
 
@@ -92,6 +94,8 @@ const initial = readout(T.readout, numLocale(lang), still(heroSpec(1440, 900)).s
      so the sentence wraps naturally there (a forced break would strand "simulated" on a line of its own). */
   @media (min-width: 48rem) { .lead .line { display: block; white-space: nowrap; } }
   .hero :global(.hero-nav) { grid-row: 4; position: relative; z-index: 1; }
+  /* The code pyramid. From 48rem it is inside the nav, under "Code"; this phone copy sits below the whole nav. */
+  .hero :global(.hero-codes-row) { grid-row: 5; align-self: start; position: relative; z-index: 1; }
   .readout { grid-row: 6; align-self: end; margin: 1.25rem 0 0; color: var(--text-3); max-width: 40rem; font-variant-numeric: tabular-nums; }
 
   /* Parallax as the hero scrolls out: the wordmark lags behind the page (CSS scroll timeline; browsers
@@ -107,7 +111,7 @@ const initial = readout(T.readout, numLocale(lang), still(heroSpec(1440, 900)).s
     .ground { background-size: 100px 100px; }
     .hero { grid-template-columns: minmax(0, 1fr) minmax(0, 24rem); column-gap: 2rem; }
     .word, .intro, .hero :global(.hero-nav) { grid-column: 1 / -1; }
-    .hero :global(.hero-nav ul) { width: min(100%, 52%); }
+    .hero :global(.hero-nav > ul) { width: min(100%, 52%); }
     .readout { grid-row: 6; grid-column: 2; align-self: end; text-align: right; margin: 0; }
   }
 </style>
