@@ -36,6 +36,9 @@ const here = unlocalize(Astro.url.pathname);
   /* The slot under "Code", as wide as the label's word: in from the left by the number and its gap, in from the right
      by the gap, the arrow (about 1em of the label) and the padding. Content centred in it centres on the word. */
   .under { align-self: stretch; font-size: clamp(1.15rem, 1.6vw, 1.5rem); margin: 0 calc(0.5rem + 1em + 0.75rem) 0 calc(0.9rem + 0.5rem); }
+  /* Wider content (the hero's pyramid) overhangs into the next items' boxes, and a later flex item paints over an
+     earlier one: lift the slot, or the overhanging links are covered by the neighbouring <li> and cannot be clicked. */
+  .under { position: relative; z-index: 1; }
   a {
     display: inline-flex;
     align-items: baseline;
